@@ -1,0 +1,391 @@
+import {observable, action, computed, observe} from 'mobx'
+import firebase from 'firebase/app'
+import EntitiesStore from './entities-store'
+import {messagesFromFirebase} from './utils'
+import {
+  AUTH_STORE, PEOPLE_STORE, FEED_CHUNK_LENGTH, POSTS_REFERENCE,
+  LIKES_REFERENCE, NAVIGATION_STORE
+} from '../constants/index'
+import {entitiesFromFB} from './utils'
+import loremIpsum from 'lorem-ipsum'
+import {MapView, Permissions, Location} from 'expo'
+
+
+class FeedStore extends EntitiesStore {
+
+  @observable postId = null
+
+  @observable title = ''
+  @observable text = ''
+  @observable address = ''
+  @observable attachedCoords = null
+  @observable coords = null
+
+  @action setTitle = title => this.title = title
+  @action setText = text => this.text = text
+  @action setAddress = address => this.address = address
+  @action setCoords = (coords) => this.coords = coords
+
+  fetchUserLikes = async (uid) => {
+    const callback = (data) => {
+
+      let posts = []
+
+      data.forEach(post => {
+        const {likes} = post.val()
+        if (!likes) return
+
+        const res = Object.values(likes).some(({userId}) => userId === uid)
+
+        if (!res) return
+
+        posts.push({postId: post.key, title: post.val().title})
+      })
+
+      return posts
+    }
+
+    return await this.reference
+      .orderByChild(LIKES_REFERENCE)
+      //   .orderByKey()
+      .limitToLast(10)
+      .once('value')
+      .then(callback)
+  }
+
+  getLikes = async (postId) => {
+    const {likes} = this.entities[postId]
+    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+
+    // return Promise.all(Object.entries(likes)
+    //   .map(async ([key, {userId}]) => {
+    //       const user = await fetchUserInfo(userId)
+    //       if (!user) return
+    //       return {userId, user, key}
+    //     },
+    //   ))
+
+    return Promise.resolve(Object.entries(likes)
+      .reduce(async (accPromise, [key, {userId}]) => {
+          const acc = await accPromise
+          const user = await fetchUserInfo(userId)
+          if (!user) return acc
+          return [...acc, {userId, user, key}]
+        }, []
+      ))
+  }
+
+  @action attachLocation = () => {
+    const {latitude, longitude} = this.coords
+    this.attachedCoords = {latitude, longitude}
+    this.getStore(NAVIGATION_STORE).goBack()
+  }
+
+  @action clearPostForm = () => {
+    this.title = ''
+    this.text = ''
+    this.attachedCoords = null
+    this.coords = null
+    this.address = ''
+  }
+
+  @action clearLocationForm = () => {
+    this.coords = null
+    this.address = ''
+  }
+
+  @action getCoordsFromAddress = async () => {
+
+    if (!this.address) {
+      alert('No address!')
+      return
+    }
+
+    const [coords] = await Location.geocodeAsync(this.address)
+
+    if (!coords) {
+      alert('Nothing has been found!')
+      return
+    }
+
+    this.setCoords(coords)
+  }
+
+  get reference() {
+    return firebase.database()
+      .ref(POSTS_REFERENCE)
+  }
+
+  getLikesReference(postId) {
+    return firebase.database()
+      .ref(POSTS_REFERENCE)
+      .child(postId)
+      .child(LIKES_REFERENCE)
+  }
+
+  @computed
+  get posts() {
+    return Object.entries(this.entities).map(([key, value]) => ({...value, key})).sort((a, b) => a.key < b.key)
+  }
+
+  @computed
+  get lastPost() {
+    return this.posts[this.posts.length - 1]
+  }
+
+  @computed
+  get firstPost() {
+    return this.posts[0]
+  }
+
+  subscribeOnPosts = () => {
+    this.refreshAllPosts()
+    this.timer = setTimeout(this.subscribeOnPosts, 3000)
+  }
+
+  clearTimer = () => {
+    clearTimeout(this.timer)
+  }
+
+  @action fetchPosts = () => {
+    if (this.loaded || this.loading) return
+
+    this.loading = true
+
+    const chunkShift = this.lastPost ? 1 : 0
+    const chunkLength = FEED_CHUNK_LENGTH + chunkShift
+
+    const callback = action((snapshot) => {
+      const payload = snapshot.val() || []
+      const currentChunkLength = Object.keys(payload).length
+      const isEmpty = currentChunkLength === chunkShift
+
+      !isEmpty && this.appendAllPosts(payload)
+      this.loaded = isEmpty || currentChunkLength < chunkLength
+      this.loading = false
+
+    })
+
+    let ref = this.reference
+      .orderByKey()
+      .limitToLast(chunkLength)
+
+    if (this.lastPost) {
+      ref = ref.endAt(this.lastPost.key)
+    }
+
+    ref.once('value', callback)
+
+  }
+
+  @action appendAllPosts = (payload) => {
+    Object.entries(payload).forEach(([postId, post]) => this.appendPost(postId, post))
+  }
+
+  @action appendPost = (postId, post) => {
+    const likes = Object.values(post.likes || {})
+
+    this.entities[postId] = post
+    this.entities[postId].uid = postId
+    this.entities[postId].likesNumber = likes.length
+    this.entities[postId].isLiked = likes.some(like => like.userId === this.user.uid)
+
+  }
+
+  @action refreshAllPosts = () => {
+    console.log('refreshing...')
+    if (this.loading || !this.size) return
+
+    this.loading = true
+    const callback = (snapshot) => {
+      const payload = snapshot.val() || []
+
+      this.appendAllPosts(payload)
+
+      // console.log(Object.values(payload).map(x => x.title))
+
+      this.loading = false
+
+    }
+
+    this.reference
+      .orderByKey()
+      .startAt(this.lastPost.key)
+      .once('value', callback)
+  }
+
+  @action refreshPost = (postId) => {
+    const callback = (snapshot) => {
+      const post = snapshot.val()
+      const postId = snapshot.key
+
+      this.appendPost(postId, post)
+    }
+
+    return this.reference
+      .child(postId)
+      .once('value', callback)
+
+  }
+
+  @action setLike = async (postId) => {
+    const ref = this.getLikesReference(postId)
+    const post = this.entities[postId]
+
+    if (post.likePending) return
+
+    if (post.isLiked) {
+      const {likes} = post
+      // console.log('dislike')
+      // const likes = Object.entries(this.entities[postId].likes).map(([key, like]) => ({...like, key}))
+      // const {key} = likes.find(like => like.userId === this.user.uid)
+      // ref.child(key).remove()
+
+      // this thing is necessary for immediate likes
+      // without waiting for update from server
+      post.isLiked = false
+      post.likesNumber--
+      post.likePending = true
+
+      // promise.all
+      // const likesArr = Object.entries(likes).map(([key, value]) => ({...value, key}))
+      // if (likesArr.some(like => like.userId === this.user.uid )) {}
+
+      let likeId
+
+      for (let key in likes) {
+        if (likes[key].userId === this.user.uid) {
+          // console.log('remove', key)
+          likeId = key
+        }
+      }
+
+      if (likeId) {
+        await ref.child(likeId).remove()
+      }
+
+    } else {
+      // console.log('like')
+      post.isLiked = true
+      post.likesNumber++
+      post.likePending = true
+
+      await ref.push({userId: this.user.uid})
+    }
+
+    post.likePending = false
+    this.refreshPost(postId)
+
+
+  }
+
+  @action subscribeOnLikes = (postId) => {
+    const callback = action((snapshot) => {
+      const payload = snapshot.val()
+      const likes = Object.values(payload || {})
+      const post = this.entities[postId]
+
+      post.likes = payload
+      post.likesNumber = likes.length
+      post.isLiked = likes.some(like => like.userId === this.user.uid)
+
+
+      // this.appendLikes(payload, post)
+    })
+
+    this.getLikesReference(postId).on('value', callback)
+  }
+
+  @action appendLikes = (payload, post) => {
+    const likes = Object.values(payload || {})
+
+    // post.likes = payload
+    post.likesNumber = likes.length
+    post.isLiked = likes.some(like => like.userId === this.user.uid)
+  }
+
+  @action sendPost = async () => {
+    const post = {
+      title: 'New! ' + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, x => x.toUpperCase()),
+      text: loremIpsum({count: Math.random() * 10, units: 'sentences'}),
+      coords: Math.round(Math.random()) ? {
+        latitude: Math.random() * 20 + 40,
+        longitude: Math.random() * 20
+      } : null
+    }
+
+    const newPost = {
+      title: this.title,
+      text: this.text,
+      userId: this.user.uid,
+      coords: this.attachedCoords && {
+        latitude: this.attachedCoords.latitude,
+        longitude: this.attachedCoords.longitude
+      }
+    }
+
+    // console.log(newPost)
+    if (!this.title || !this.text) {
+      alert('No text or title!')
+      return
+    }
+
+    await this.reference.push(newPost)
+    this.refreshAllPosts()
+    this.getStore(NAVIGATION_STORE).goBack()
+    this.clearPostForm()
+    this.clearLocationForm()
+  }
+
+
+  @action setLikeBackend = (postId) => {
+    const ref = this.getLikesReference(postId)
+
+    const callback = (currentUserLikesData) => {
+      const currentUserLikes = currentUserLikesData.val()
+
+      if (currentUserLikes) {
+        const [likeId] = Object.keys(currentUserLikes)
+
+        ref.child(likeId).remove()
+
+      } else {
+        ref.push({userId: this.user.uid})
+      }
+    }
+
+    ref.orderByChild('userId')
+      .equalTo(this.user.uid)
+      .once('value', callback)
+
+  }
+
+  postsToFb = () => {
+    const feedFixtures = Array.from({length: 50}, (_, i) => ({
+      title: i + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, x => x.toUpperCase()),
+      text: loremIpsum({count: Math.random() * 10, units: 'sentences'}),
+      // comments: [],
+      coords: Math.round(Math.random()) ? {
+        latitude: Math.random() * 20 + 40,
+        longitude: Math.random() * 20
+      } : null
+      // likes: Array.from({length: Math.round(Math.random() * 200)}, (_, i) => ({uid: 'uid'}))
+    }))
+
+    feedFixtures.forEach(post => {
+      const ref = this.reference.push(post)
+
+      let random = Math.round(Math.random() * 200)
+
+      if (Math.round(Math.random())) {
+        while (random--) {
+          this.getLikesReference(ref.key).push({userId: loremIpsum({count: 1, units: 'words'})})
+        }
+      }
+    })
+
+  }
+
+}
+
+export default FeedStore
