@@ -5,7 +5,7 @@ import {LoginManager, AccessToken} from 'react-native-fbsdk'
 import EntitiesStore from './entities-store'
 import {AsyncStorage} from 'react-native'
 import {FileSystem} from 'expo'
-import {LOCAL_AVATAR_URI, PEOPLE_REFERENCE} from '../constants'
+import {USER_AVATAR_REFERENCE, LOCAL_AVATAR_URI, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE} from '../constants'
 import {entitiesFromFB} from './utils'
 
 // 1. Merge user and user-avatar
@@ -28,7 +28,7 @@ class UserAvatarStore extends EntitiesStore {
   @action
   off() {
     this.clear()
-    this.currentUserReference.child('avatar').off()
+    this.currentUserReference.child(USER_AVATAR_REFERENCE).off()
   }
 
   @computed
@@ -96,7 +96,7 @@ class UserAvatarStore extends EntitiesStore {
       console.log('Avatar is up-to-date')
     })
 
-    this.currentUserReference.child('avatar').on('value', callback)
+    this.currentUserReference.child(USER_AVATAR_REFERENCE).on('value', callback)
 
   }
 
@@ -231,9 +231,10 @@ class UserAvatarStore extends EntitiesStore {
     this.entities.avatar = uri
 
     const file = await fetch(uri).then(res => res.blob())
-    const ref = firebase.storage().ref(`/avatars/${uid}.jpg`)
+    const ref = firebase.storage().ref(`/${AVATARS_STORAGE_REFERENCE}/${uid}.jpg`)
 
     console.log('Avatar uploading...')
+
     await ref.put(file).then(res => console.log('Avatar uploaded!'))
     const avatar = await ref.getDownloadURL()
     const {md5Hash} = await ref.getMetadata()

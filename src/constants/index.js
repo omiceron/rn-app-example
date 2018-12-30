@@ -46,3 +46,6 @@ export const CHATS_REFERENCE = 'chats'
 export const MESSAGES_REFERENCE = 'messages'
 export const LIKES_REFERENCE = 'likes'
 export const PEOPLE_REFERENCE = 'people'
+export const USER_AVATAR_REFERENCE = 'avatar'
+
+export const AVATARS_STORAGE_REFERENCE = 'avatars'
