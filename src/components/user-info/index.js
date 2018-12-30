@@ -30,7 +30,7 @@ class UserInfo extends Component {
   @observable posts = null
 
   async componentDidMount() {
-    this.posts = await this.props.feed.fetchUserLikes(this.props.user.uid)
+    this.posts = await this.props.feed.getUserLikedPosts(this.props.user.uid)
   }
 
   render() {

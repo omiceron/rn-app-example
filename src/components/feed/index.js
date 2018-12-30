@@ -14,13 +14,12 @@ class Feed extends Component {
       loading: PropTypes.bool.isRequired,
       loaded: PropTypes.bool.isRequired,
       setLike: PropTypes.func.isRequired,
-      refreshAllPosts: PropTypes.func.isRequired,
-      getLikes: PropTypes.func.isRequired
+      refreshFeed: PropTypes.func.isRequired,
     })
   }
 
   render() {
-    const {fetchPosts, posts, loading, loaded, setLike, refreshAllPosts} = this.props.feed
+    const {fetchPosts, posts, loading, loaded, setLike, refreshFeed} = this.props.feed
     // const {onLikeNumberPress} = this.props
 
     const renderItem = ({item: {title, text, comments, coords, uid, likesNumber, isLiked}}) =>
@@ -42,7 +41,7 @@ class Feed extends Component {
       <FlatList
         data = {posts}
         refreshing = {loading}
-        onRefresh = {refreshAllPosts}
+        onRefresh = {refreshFeed}
         // ListEmptyComponent = {() => <View><Text>empty</Text></View>}
         onEndReached = {fetchPosts}
         initialNumToRender = {Number.MAX_SAFE_INTEGER}

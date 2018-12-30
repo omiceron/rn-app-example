@@ -12,7 +12,7 @@ class LikesListScreen extends Component {
   static propTypes = {
     feed: PropTypes.shape({
       attachLocation: PropTypes.func.isRequired,
-      getLikes: PropTypes.func.isRequired
+      getPostLikes: PropTypes.func.isRequired
     }),
     navigation: PropTypes.shape({
       state: PropTypes.shape({
@@ -38,10 +38,10 @@ class LikesListScreen extends Component {
   // @observable error = false
 
   async componentWillMount() {
-    const {attachLocation, getLikes} = this.props.feed
+    const {attachLocation, getPostLikes} = this.props.feed
     const {state: {params: {postId}}, setParams} = this.props.navigation
 
-    this.likes = await getLikes(postId)
+    this.likes = await getPostLikes(postId)
     // .catch(action(e => {
     //   this.error = true
     //   return null
