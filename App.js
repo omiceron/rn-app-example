@@ -12,12 +12,6 @@ import stores from './src/stores'
 
 configure({enforceActions: 'never'})
 
-function concat(a: string, b: string) {
-  return a + b
-}
-
-concat(123, "123")
-
 export default class App extends React.Component {
 
   componentDidMount() {
