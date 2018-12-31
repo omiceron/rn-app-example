@@ -1,17 +1,18 @@
-import mobx, {observable, action, computed} from 'mobx'
+import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
 import {AsyncStorage} from 'react-native'
 import validator from 'validator'
 import {
   PEOPLE_STORE,
-  EVENTS_STORE,
   AVATAR_STORE,
   USER_STORE,
   FEED_STORE,
   MESSENGER_STORE,
   NAVIGATION_STORE
 } from '../constants'
+import {Facebook, Google} from 'expo'
+import {facebookAppId, googleClientId} from '../config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'
 // import {FileSystem} from 'expo'
@@ -41,14 +42,14 @@ class AuthStore extends BasicStore {
 
   }
 
+  @observable user = null
+
   @observable email = ''
   @observable password = ''
 
   @observable signUpEmail = ''
   @observable signUpPassword = ''
   @observable firstName = ''
-
-  @observable user = null
 
   @action setUser = user => this.user = user
   @action setEmail = email => this.email = email
@@ -100,7 +101,37 @@ class AuthStore extends BasicStore {
     this.getStore(USER_STORE).off()
     firebase.auth().signOut()
     this.getStore(NAVIGATION_STORE).navigate('auth')
+  }
 
+  loginWithFacebook = async () => {
+    const {type, token} = await Facebook.logInWithReadPermissionsAsync(
+      facebookAppId,
+      {permissions: ['public_profile', 'email']}
+    )
+
+    console.log(type, token)
+
+    if (type === 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+
+      console.log(credential)
+
+      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
+
+    }
+  }
+
+  loginWithGoogle = async () => {
+    const {type, idToken, accessToken} = await Google.logInAsync({
+      iosClientId: googleClientId,
+      scopes: ['profile']
+    })
+
+    if (type === 'success') {
+      const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
+
+      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
+    }
   }
 
   /*
@@ -131,36 +162,6 @@ class AuthStore extends BasicStore {
         )*!/
     }
   */
-
-  loginWithFacebook = async () => {
-    const {type, token} = await Expo.Facebook.logInWithReadPermissionsAsync(
-      '1943342692364166',
-      {permissions: ['public_profile', 'email']}
-    )
-
-    console.log(type, token)
-
-    if (type === 'success') {
-      const credential = firebase.auth.FacebookAuthProvider.credential(token)
-
-      console.log(credential)
-      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
-
-    }
-  }
-
-  loginWithGoogle = async () => {
-    const {type, idToken, accessToken} = await Expo.Google.logInAsync({
-      iosClientId: '865615408319-j22iilsbcld7of9nd4mbf98u3b2nfiqq.apps.googleusercontent.com',
-      scopes: ['profile']
-    })
-
-    if (type === 'success') {
-      const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
-
-      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
-    }
-  }
 
   /*
     updateDisplayName = () => {
