@@ -35,7 +35,7 @@ class Settings extends Component {
       updateUserData: func.isRequired
     }),
     avatar: shape({
-      avatar: string.isRequired,
+      avatar: string,
       loading: bool.isRequired,
     }),
   }
