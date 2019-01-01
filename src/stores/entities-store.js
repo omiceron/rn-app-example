@@ -63,7 +63,7 @@ export function subscribeHelper(refName) {
     return () => firebase.database().ref(refName).off('value', callback)
   })
 }
-
+//
 export function loadDataHelper(refName) {
   return action(function (uid) {
     const path = refName + '/' + uid
