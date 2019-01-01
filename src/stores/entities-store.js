@@ -2,7 +2,7 @@ import {observable, computed, action} from 'mobx'
 import BasicStore from './basic-store'
 import firebase from 'firebase'
 import {entitiesFromFB} from './utils'
-import {AUTH_STORE} from "../constants/index";
+import {AUTH_STORE} from '../constants'
 
 class EntitiesStore extends BasicStore {
 
@@ -11,7 +11,8 @@ class EntitiesStore extends BasicStore {
 
   @observable entities = {}
 
-  @computed get user() {
+  @computed
+  get user() {
     return this.getStore(AUTH_STORE).user
   }
 
@@ -20,7 +21,8 @@ class EntitiesStore extends BasicStore {
     return Object.values(this.entities)
   }
 
-  @action clear() {
+  @action
+  clear() {
     this.entities = {}
     this.loading = false
     this.loaded = false
@@ -29,10 +31,6 @@ class EntitiesStore extends BasicStore {
   @computed
   get size() {
     return Object.keys(this.entities).length
-  }
-
-  @computed get getEntities() {
-    return this.entities
   }
 }
 
@@ -84,6 +82,5 @@ export function loadDataHelper(refName) {
       }))
   })
 }
-
 
 export default EntitiesStore
