@@ -48,39 +48,39 @@ export function loadAllHelper(refName) {
   })
 }
 
-export function subscribeHelper(refName) {
-  return action(function () {
-    this.loading = true
-
-    const callback = action(data => {
-      this.entities = entitiesFromFB(data.val())
-      this.loading = false
-      this.loaded = true
-    })
-
-    firebase.database().ref(refName).on('value', callback)
-
-    return () => firebase.database().ref(refName).off('value', callback)
-  })
-}
+// export function subscribeHelper(refName) {
+//   return action(function () {
+//     this.loading = true
 //
-export function loadDataHelper(refName) {
-  return action(function (uid) {
-    const path = refName + '/' + uid
+//     const callback = action(data => {
+//       this.entities = entitiesFromFB(data.val())
+//       this.loading = false
+//       this.loaded = true
+//     })
+//
+//     firebase.database().ref(refName).on('value', callback)
+//
+//     return () => firebase.database().ref(refName).off('value', callback)
+//   })
+// }
 
-    this.loading = true
-
-    console.log('loading user ', path)
-
-    firebase.database().ref(path)
-      .once('value', action(data => {
-        this.entities = data.val()
-        this.loading = false
-        this.loaded = true
-
-        // console.log(this.entities)
-      }))
-  })
-}
+// export function loadDataHelper(refName) {
+//   return action(function (uid) {
+//     const path = refName + '/' + uid
+//
+//     this.loading = true
+//
+//     console.log('loading user ', path)
+//
+//     firebase.database().ref(path)
+//       .once('value', action(data => {
+//         this.entities = data.val()
+//         this.loading = false
+//         this.loaded = true
+//
+//         // console.log(this.entities)
+//       }))
+//   })
+// }
 
 export default EntitiesStore
