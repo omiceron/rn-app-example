@@ -109,6 +109,7 @@ class FeedStore extends EntitiesStore {
 
     this.entities[postId] = post
     this.entities[postId].uid = postId
+    this.entities[postId].key = postId
     this.entities[postId].likesNumber = likes.length
     this.entities[postId].isLiked = likes.some(like => like.userId === this.user.uid)
   }
@@ -282,22 +283,29 @@ class FeedStore extends EntitiesStore {
   }
 
   getUserLikedPosts = async (uid) => {
-    const callback = (data) => {
-      let posts = []
+    const callback = (snapshot) =>
+      Object.entries(snapshot.val())
+        .reduce((acc, [postId, {likes, title}]) =>
+            likes && Object.values(likes).some(({userId}) => userId === uid)
+              ? [...acc, {postId, title}]
+              : acc,
+          [])
 
-      data.forEach(post => {
-        const {likes} = post.val()
-        if (!likes) return
-
-        const res = Object.values(likes).some(({userId}) => userId === uid)
-
-        if (!res) return
-
-        posts.push({postId: post.key, title: post.val().title})
-      })
-
-      return posts
-    }
+      // let posts = []
+      //
+      // data.forEach(snapshot => {
+      //   const {likes, title} = snapshot.val()
+      //   const postId = snapshot.key
+      //   if (!likes) return
+      //
+      //   const isLiked = Object.values(likes).some(({userId}) => userId === uid)
+      //
+      //   if (!isLiked) return
+      //
+      //   posts.push({postId, title})
+      // })
+      //
+      // return posts
 
     return await this.reference
       .orderByChild(LIKES_REFERENCE)
