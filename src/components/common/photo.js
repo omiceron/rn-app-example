@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 class Photo extends Component {
   static propTypes = {
     base64: PropTypes.bool,
-    photoHandler: PropTypes.func.isRequired
+    photoHandler: PropTypes.func.isRequired,
   }
 
   @observable permitted = false
@@ -37,7 +37,7 @@ class Photo extends Component {
     StatusBar.setHidden(false, 'slide')
   }
 
-    renderSnapshotButton() {
+  renderSnapshotButton() {
     return <TouchableOpacity style = {styles.cameraButton} onPress = {this.takePicture}>
       <View style = {styles.snapshotOuterCircle}>
         <View style = {styles.snapshotInnerCircle}/>
@@ -86,7 +86,7 @@ class Photo extends Component {
     const {base64, photoHandler} = this.props
     const photo = await this.camera.takePictureAsync({base64, quality: 0.1})
 
-    photoHandler && photoHandler(photo)
+    photoHandler && await photoHandler(photo)
 
     this.goBack()
   }
@@ -98,38 +98,39 @@ class Photo extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
-  cameraButton: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  controls: {
-    height: 120,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  snapshotOuterCircle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    height: 80,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 40
-  },
-  snapshotInnerCircle: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#FFF',
-    borderRadius: 25
-  }
-})
+const
+  styles = StyleSheet.create({
+    container: {
+      flex: 1
+    },
+    overlay: {
+      flex: 1,
+      justifyContent: 'flex-end'
+    },
+    cameraButton: {
+      flex: 1,
+      justifyContent: 'space-around',
+      alignItems: 'center'
+    },
+    controls: {
+      height: 120,
+      flexDirection: 'row',
+      justifyContent: 'space-around'
+    },
+    snapshotOuterCircle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 80,
+      height: 80,
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      borderRadius: 40
+    },
+    snapshotInnerCircle: {
+      width: 50,
+      height: 50,
+      backgroundColor: '#FFF',
+      borderRadius: 25
+    }
+  })
 
 export default Photo

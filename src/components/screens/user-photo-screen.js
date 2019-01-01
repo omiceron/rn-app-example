@@ -20,8 +20,13 @@ class UserPhotoScreen extends Component {
   })
 
   render() {
-    return <Photo base64 photoHandler = {this.props.avatar.takePhoto}/>
+    return <Photo photoHandler = {this.getPhoto.bind(this)}/>
   }
+
+  getPhoto(photo) {
+    this.props.avatar.takePhoto(photo)
+  }
+
 }
 
 export default UserPhotoScreen

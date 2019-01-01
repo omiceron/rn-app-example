@@ -3,11 +3,10 @@ import {View, StyleSheet, Modal, ActivityIndicator, Image} from 'react-native'
 import Photo from '../common/photo'
 import {observer, inject} from 'mobx-react'
 import {observable, action} from 'mobx'
-import {NAVIGATION_STORE, PEOPLE_STORE} from '../../constants'
+import {PEOPLE_STORE} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(PEOPLE_STORE)
-@inject(NAVIGATION_STORE)
 @observer
 class PersonPhoto extends Component {
   static propTypes = {
@@ -31,17 +30,17 @@ class PersonPhoto extends Component {
   render() {
     if (this.uri) return this.renderPreview()
 
-    return <Photo base64 photoHandler = {this.getPhoto.bind(this)}/>
+    return <Photo photoHandler = {this.getPhoto.bind(this)}/>
   }
 
-  async getPhoto({base64, uri}) {
-    const {userId, people, navigation} = this.props
+  async getPhoto({uri}) {
+    const {userId, people} = this.props
 
     this.setUri(uri)
 
     await people.takePhoto(userId, uri)
 
-    navigation.goBack()
+    // navigation.goBack()
   }
 
 }
