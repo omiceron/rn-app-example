@@ -231,7 +231,9 @@ class UserAvatarStore extends EntitiesStore {
     this.entities.avatar = uri
 
     const file = await fetch(uri).then(res => res.blob())
-    const ref = firebase.storage().ref(`/${AVATARS_STORAGE_REFERENCE}/${uid}.jpg`)
+    const ref = firebase.storage()
+      .ref(AVATARS_STORAGE_REFERENCE)
+      .child(`${uid}.jpg`)
 
     console.log('Avatar uploading...')
 
