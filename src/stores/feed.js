@@ -38,6 +38,11 @@ class FeedStore extends EntitiesStore {
     this.address = ''
   }
 
+  off() {
+    this.clearPostForm()
+    this.clear()
+  }
+
   get reference() {
     return firebase.database()
       .ref(POSTS_REFERENCE)
@@ -52,14 +57,12 @@ class FeedStore extends EntitiesStore {
 
   @computed
   get posts() {
-    return Object.entries(this.entities)
-      .map(([key, value]) => ({...value, key}))
-      .sort((a, b) => a.key < b.key)
+    return this.list.sort((a, b) => a.uid < b.uid)
   }
 
   @computed
   get lastPost() {
-    return this.posts[this.posts.length - 1]
+    return this.posts[this.size - 1]
   }
 
   @action fetchPosts = () => {
@@ -78,7 +81,6 @@ class FeedStore extends EntitiesStore {
       !isEmpty && this.appendFetchedPosts(payload)
       this.loaded = isEmpty || currentChunkLength < chunkLength
       this.loading = false
-
     })
 
     let ref = this.reference
