@@ -1,9 +1,8 @@
-import EntitiesStore, {subscribeHelper} from './entities-store'
+import EntitiesStore from './entities-store'
 import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
-import {decode} from 'base64-arraybuffer'
-import {AUTH_STORE, PEOPLE_REFERENCE} from '../constants'
+import {AUTH_STORE, AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, USER_STORE} from '../constants'
 
 class PeopleStore extends EntitiesStore {
 
@@ -17,52 +16,30 @@ class PeopleStore extends EntitiesStore {
     })).sort((a, b) => a.title > b.title)
   }
 
-  get ref() {
+  get reference() {
     return firebase.database().ref(PEOPLE_REFERENCE)
   }
 
-  @action updatePerson = (uid, data) => this.ref.child(uid).update(data)
-
-  getFirstNameByUID = async (uid) => {
-    return await firebase.database().ref(PEOPLE_REFERENCE).child(uid)
-      .once('value')
-      .then(data => data.val() && data.val().firstName || 'DELETED')
-  }
-
-  getLastNameByUID = async (uid) => {
-    return await firebase.database().ref(PEOPLE_REFERENCE).child(uid)
-      .once('value')
-      .then(data => data.val() && data.val().lastName || 'DELETED')
+  off() {
+    this.reference.off()
   }
 
   fetchUserInfo = async (uid) => {
-    return await this.ref.child(uid)
+    return await this.reference.child(uid)
       .once('value')
-      .then(data => {
+      .then(snapshot => {
+        const userData = snapshot.val()
 
-        if (!data.val()) return
+        if (!userData) return
 
-        const {avatar, email, firstName, lastName, userInfo} = data.val()
+        const {avatar, email, firstName, lastName, userInfo} = userData
         return {avatar, email, firstName, lastName, userInfo, uid}
       })
   }
 
-
-  fetchUserInfo2 = async (uid) => {
-    const callback = (data) => {
-      const {avatar, email, firstName, lastName} = data.val()
-      // console.log(123, data.val())
-      return {avatar, email, firstName, lastName}
-    }
-
-    return await this.ref
-      .child(uid)
-      .on('value', callback)
-  }
-
   @action
   async createPerson(uid) {
-    await this.ref
+    await this.reference
       .child(uid)
       .once('value', async snapshot => {
         if (!snapshot.exists()) {
@@ -80,7 +57,7 @@ class PeopleStore extends EntitiesStore {
             }
           }
 
-          this.ref.child(uid).update({firstName, lastName, email, avatar: photoURL})
+          this.reference.child(uid).update({firstName, lastName, email, avatar: photoURL})
         }
       })
   }
@@ -94,22 +71,19 @@ class PeopleStore extends EntitiesStore {
       this.loaded = true
     })
 
-    this.ref.on('value', callback)
-
-    return () => this.ref.off('value', callback)
+    this.reference.on('value', callback)
   }
 
-  // @action loadAll = subscribeHelper('people')
-
   async takePhoto(userId, uri) {
-    //const buf = decode(base64)
     const file = await fetch(uri).then(res => res.blob())
-    const ref = firebase.storage().ref(`/avatars/${userId}.jpg`)
+    const ref = firebase.storage()
+      .ref(AVATARS_STORAGE_REFERENCE)
+      .child(`${userId}.jpg`)
 
     await ref.put(file)
     const avatar = await ref.getDownloadURL()
 
-    this.updatePerson(userId, {avatar})
+    await this.getStore(USER_STORE).updatePerson(userId, {avatar})
   }
 
 }
