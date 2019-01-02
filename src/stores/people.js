@@ -64,7 +64,9 @@ class PeopleStore extends EntitiesStore {
       })
   }
 
-  @action loadAll = () => {
+  @action fetchPeople = () => {
+    if (this.loading) return
+
     this.loading = true
     const callback = action(data => {
       this.entities = Object.entries(data.val()).map(([key, {avatar, email, firstName, lastName, userInfo}]) =>
@@ -73,7 +75,7 @@ class PeopleStore extends EntitiesStore {
       this.loaded = true
     })
 
-    this.reference.on('value', callback)
+    this.reference.once('value', callback)
   }
 
   async takePhoto(userId, uri) {

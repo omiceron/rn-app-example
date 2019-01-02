@@ -12,19 +12,11 @@ import {shape, bool, func, array} from 'prop-types'
 class PeopleList extends Component {
   static propTypes = {
     people: shape({
-      loaded: bool.isRequired,
-      loading: bool.isRequired,
-      loadAll: func.isRequired,
       sections: array.isRequired
-    }).isRequired,
+    }),
     getPhoto: func,
     openChatScreen: func.isRequired,
     openUserInfoScreen: func.isRequired
-  }
-
-  componentDidMount() {
-    const {loaded, loadAll} = this.props.people
-    if (!loaded) loadAll()
   }
 
   render() {
@@ -33,12 +25,9 @@ class PeopleList extends Component {
       openChatScreen,
       openUserInfoScreen,
       people: {
-        loading,
         sections
       }
     } = this.props
-
-    if (loading) return <Loader/>
 
     const renderSectionHeader = ({section}) =>
       <Text style = {styles.header}>

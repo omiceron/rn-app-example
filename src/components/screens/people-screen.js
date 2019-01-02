@@ -18,8 +18,8 @@ class PeopleListScreen extends Component {
   }
 
   componentWillMount() {
-    const {loading, loaded, loadAll} = this.props.people
-    if (!loaded && !loading) loadAll()
+    const {loading, loaded, fetchPeople} = this.props.people
+    if (!loaded && !loading) fetchPeople()
   }
 
   render() {
