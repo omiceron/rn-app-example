@@ -10,10 +10,12 @@ class PeopleStore extends EntitiesStore {
   get sections() {
     const grouped = groupBy(this.list, ({firstName, email}) => (firstName || email)[0].toUpperCase())
 
-    return Object.entries(grouped).map(([letter, list]) => ({
-      title: `${letter}`,
-      data: list.map(person => ({key: person.uid, person})),
-    })).sort((a, b) => a.title > b.title)
+    return Object.entries(grouped)
+      .map(([title, list]) => ({
+        title,
+        data: list.map(person => ({key: person.uid, person})).sort((a, b) => a.firstName > b.firstName)
+      }))
+      .sort((a, b) => a.title > b.title)
   }
 
   get reference() {
