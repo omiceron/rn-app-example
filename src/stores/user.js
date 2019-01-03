@@ -78,8 +78,8 @@ class UserStore extends EntitiesStore {
     await AsyncStorage.mergeItem('user', JSON.stringify(data)).catch(console.error)
   }
 
-  @action retrieveCachedUserData = async () => {
-    await AsyncStorage.getItem('user')
+  @action retrieveCachedUserData = () => {
+    AsyncStorage.getItem('user')
       .then(res => {
         if (!res) {
           console.log('There is no cached user')
@@ -87,7 +87,8 @@ class UserStore extends EntitiesStore {
         }
 
         const {firstName, lastName, userInfo} = JSON.parse(res)
-        this.entities = {...this.entities, firstName, lastName, userInfo}
+        this.entities = {firstName, lastName, userInfo}
+        this.loaded = true
       })
       .catch(err => console.log('AsyncStorage error'))
   }

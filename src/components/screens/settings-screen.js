@@ -2,9 +2,11 @@ import React, {Component} from 'react'
 import Settings from '../settings'
 
 import {observer, inject} from 'mobx-react'
-import {AUTH_STORE} from "../../constants/index";
+import {AUTH_STORE, USER_STORE} from '../../constants'
+import Loader from '../common/loader'
 
 @inject(AUTH_STORE)
+@inject(USER_STORE)
 @observer
 class SettingsScreen extends Component {
 
@@ -16,13 +18,13 @@ class SettingsScreen extends Component {
     },
     headerStyle: {
       backgroundColor: '#E67',
-      borderBottomWidth: 0,
+      borderBottomWidth: 0
     },
-    headerTintColor: '#FFF',
+    headerTintColor: '#FFF'
   })
 
   render() {
-    return <Settings /*onPress = {this.handlePress}*//>
+    return this.props.user.loaded ? <Settings /*onPress = {this.handlePress}*//> : <Loader/>
   }
 
   // handlePress = () => {
