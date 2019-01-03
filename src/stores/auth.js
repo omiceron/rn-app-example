@@ -84,6 +84,16 @@ class AuthStore extends BasicStore {
     return validator.isAlpha(this.firstName)
   }
 
+  @action
+  clear() {
+    this.email = ''
+    this.password = ''
+
+    this.signUpEmail = ''
+    this.signUpPassword = ''
+    this.firstName = ''
+  }
+
   signIn = async () => {
     await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
     this.getStore(NAVIGATION_STORE).navigate('app')
@@ -95,6 +105,7 @@ class AuthStore extends BasicStore {
   }
 
   signOut = async () => {
+    this.clear()
     await AsyncStorage.removeItem('user')
     const stores = [MESSENGER_STORE, AVATAR_STORE, USER_STORE, FEED_STORE, PEOPLE_STORE]
     stores.forEach(store => this.getStore(store).off())
