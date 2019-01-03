@@ -72,12 +72,12 @@ const TabNavigator = createBottomTabNavigator({
       tabBarIcon: renderTabBarIcon('paper')
     }
   },
-  events: {
-    screen: EventList,
-    navigationOptions: {
-      tabBarIcon: renderTabBarIcon('calendar')
-    }
-  },
+  // events: {
+  //   screen: EventList,
+  //   navigationOptions: {
+  //     tabBarIcon: renderTabBarIcon('calendar')
+  //   }
+  // },
   settings: {
     screen: SettingsScreen,
     navigationOptions: {
@@ -121,9 +121,9 @@ const CoreNavigator = createStackNavigator({
       }
     }
   },
-  event: {
-    screen: EventMapScreen
-  }
+  // event: {
+  //   screen: EventMapScreen
+  // }
 }, {
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
