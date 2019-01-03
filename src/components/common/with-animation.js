@@ -1,4 +1,7 @@
-import React, {Component} from 'react'
+// @flow
+
+// import React, {Component} from 'react'
+import * as React from 'react'
 import {
   Animated, Keyboard
 } from 'react-native'
@@ -6,17 +9,15 @@ import {observable, action} from 'mobx'
 
 import {
   KEYBOARD_EASING,
-  KEYBOARD,
-} from "../../constants/index"
+  KEYBOARD
+} from '../../constants'
 
-export default (AnimatedComponent, props) => class WithAnimation extends Component {
-
+export default (AnimatedComponent: React.ComponentType<any>, props: { layoutNames: string[] }) =>
+  class WithAnimation extends React.Component<*> {
   constructor(...args) {
     super(...args)
 
-    if (!props || !props.layoutNames || typeof props.layoutNames !== 'object' || !props.layoutNames.length) {
-      console.error('layoutNames issue')
-    }
+    if (!props) console.error('layoutNames type error')
 
     props.layoutNames.forEach(name => this.layouts[name] = {height: 0, y: 0})
 
@@ -45,7 +46,7 @@ export default (AnimatedComponent, props) => class WithAnimation extends Compone
 
     return this.animation.interpolate({
       inputRange: [0, 1],
-      outputRange: getOutputRange(type),
+      outputRange: getOutputRange(type)
     })
   }
 
