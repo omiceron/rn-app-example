@@ -54,6 +54,12 @@ const PostFormNavigator = createStackNavigator({
 })
 
 const TabNavigator = createBottomTabNavigator({
+  feed: {
+    screen: FeedScreen,
+    navigationOptions: {
+      tabBarIcon: renderTabBarIcon('paper')
+    }
+  },
   messenger: {
     screen: MessengerScreen,
     navigationOptions: {
@@ -64,12 +70,6 @@ const TabNavigator = createBottomTabNavigator({
     screen: PeopleScreen,
     navigationOptions: {
       tabBarIcon: renderTabBarIcon('people')
-    }
-  },
-  feed: {
-    screen: FeedScreen,
-    navigationOptions: {
-      tabBarIcon: renderTabBarIcon('paper')
     }
   },
   // events: {
