@@ -8,9 +8,9 @@ import {FileSystem} from 'expo'
 import {USER_AVATAR_REFERENCE, LOCAL_AVATAR_URI, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE} from '../constants'
 import {entitiesFromFB} from './utils'
 
-// 1. Merge user and user-avatar
-// 2. Avatar hash-type like {uri, hash} instead of avatar and avatarHash
-// 3. New store class for user settings instead of entities-store
+// TODO 1. Merge user and user-avatar
+// TODO 2. Avatar hash-type like {uri, hash} instead of avatar and avatarHash
+// TODO 3. New store class for user settings instead of entities-store
 
 class UserAvatarStore extends EntitiesStore {
   constructor(...args) {
@@ -171,7 +171,6 @@ class UserAvatarStore extends EntitiesStore {
 
   @action downloadUserAvatar = async (uri, avatarHash) => {
     this.loading = true
-
     console.log('Downloading avatar...')
 
     // Firebase functional only
@@ -204,15 +203,22 @@ class UserAvatarStore extends EntitiesStore {
       .catch(err => console.log('Download avatar error'))
   }
 
-  @action retrieveCachedUserAvatar = async () => {
-    await AsyncStorage.getItem('user')
-      .then(res => {
+  @action retrieveCachedUserAvatar = () => {
+    AsyncStorage.getItem('user')
+      .then(async res => {
         if (!res) {
           console.log('There is no cached user')
           return
         }
 
         const {avatar, avatarHash} = JSON.parse(res)
+        const {exists} = await FileSystem.getInfoAsync(avatar)
+
+        if (!exists) {
+          console.log('User avatar file has not been found')
+          return
+        }
+
         this.entities = {avatar, avatarHash}
       })
       .catch(err => console.log('AsyncStorage error'))
