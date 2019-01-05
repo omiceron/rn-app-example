@@ -5,6 +5,7 @@ import TouchableAvatar from '../common/touchable-avatar'
 import {observable} from 'mobx'
 import {MESSENGER_STORE} from '../../constants'
 import PropTypes from 'prop-types'
+import Loader from '../common/loader'
 
 @inject(MESSENGER_STORE)
 @observer
@@ -57,7 +58,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    if (!this.chatId) return null
+    if (!this.chatId) return <Loader/>
 
     return <Chat chatId = {this.chatId}/>
   }
