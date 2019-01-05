@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 import {MapView} from 'expo'
 import {REGION_DELTAS} from '../../constants'
@@ -25,8 +25,8 @@ class AttachedMap extends Component {
       rotateEnabled = {false}
       pitchEnabled = {false}
       scrollEnabled = {false}
-      // cacheEnabled = {true}
-      // onMapReady = {e => console.log(title)}
+      cacheEnabled = {true}
+      // onMapReady = {e => console.log('ready')}
       region = {{...coords, ...REGION_DELTAS}}
     >
       <MapView.Marker coordinate = {{...coords}}/>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     height: 100,
     marginBottom: 8,
-    borderRadius: 10
+    borderRadius: 10,
   }
 })
 

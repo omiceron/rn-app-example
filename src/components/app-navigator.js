@@ -23,6 +23,7 @@ import FeedScreen from './screens/feed-screen'
 import PostFormScreen from './screens/post-form-screen'
 import LocationFormScreen from './screens/location-form-screen'
 import LikesListScreen from './screens/likes-list-screen'
+import PostScreen from './screens/post-screen'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
   <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
@@ -96,6 +97,9 @@ const CoreNavigator = createStackNavigator({
   root: {
     screen: TabNavigator,
     navigationOptions: ({navigation, screenProps}) => getActiveChildNavigationOptions(navigation, screenProps)
+  },
+  postScreen: {
+    screen: PostScreen
   },
   chatScreen: {
     screen: ChatScreen

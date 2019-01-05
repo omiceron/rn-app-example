@@ -32,6 +32,8 @@ class PostCard extends Component {
     const {likesNumber: newLikesNumber, isLiked: newIsLiked} = nextProps
     const {likesNumber, isLiked} = this.props
 
+    console.log(likesNumber, newLikesNumber)
+
     return likesNumber !== newLikesNumber || isLiked !== newIsLiked
   }
 
@@ -69,11 +71,11 @@ class PostCard extends Component {
   }
 
   render() {
-    const {title, text, coords} = this.props
+    const {title, text, coords, uid} = this.props
     console.log('render card', title)
 
     return <View style = {styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress = {() => this.props.navigation.navigate('postScreen', {postId: uid})}>
         <View style = {styles.titleView}>
           <Text numberOfLines = {1} style = {styles.title}>
             {title}

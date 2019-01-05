@@ -22,7 +22,7 @@ class Feed extends Component {
     const {fetchPosts, posts, loading, loaded, setLike, refreshFeed} = this.props.feed
     // const {onLikeNumberPress} = this.props
 
-    const renderItem = ({item: {title, text, comments, coords, uid, likesNumber, isLiked}}) =>
+    const renderItem = ({item, item: {title, text, comments, coords, uid, likesNumber, isLiked}}) =>
       <PostCard
         title = {title}
         text = {text}
@@ -32,6 +32,7 @@ class Feed extends Component {
         isLiked = {isLiked}
         comments = {comments}
         uid = {uid}
+        post = {item}
         // onLikeNumberPress = {onLikeNumberPress}
       />
 
