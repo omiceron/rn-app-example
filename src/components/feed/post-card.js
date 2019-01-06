@@ -32,8 +32,6 @@ class PostCard extends Component {
     const {likesNumber: newLikesNumber, isLiked: newIsLiked} = nextProps
     const {likesNumber, isLiked} = this.props
 
-    console.log(likesNumber, newLikesNumber)
-
     return likesNumber !== newLikesNumber || isLiked !== newIsLiked
   }
 
@@ -89,7 +87,7 @@ class PostCard extends Component {
         </View>
       </TouchableOpacity>
 
-      {coords && <AttachedMap onPress = {() => alert('map pressed')} coords = {coords}/>}
+      {/*{coords && <AttachedMap onPress = {() => alert('map pressed')} coords = {coords}/>}*/}
 
       <Separator/>
 

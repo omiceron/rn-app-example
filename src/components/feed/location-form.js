@@ -29,10 +29,10 @@ class LocationForm extends Component {
       setAddress: func.isRequired,
       getCoordsFromAddress: func.isRequired,
       clearLocationForm: func.isRequired
-    }).isRequired,
+    }),
     navigation: shape({
       goBack: func.isRequired,
-    }).isRequired
+    })
   }
 
   @observable permissionGranted = false
