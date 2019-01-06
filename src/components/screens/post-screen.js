@@ -1,16 +1,13 @@
 import React, {Component} from 'react'
-import {View, StyleSheet} from 'react-native'
-import PropTypes from 'prop-types'
 import {inject, observer} from 'mobx-react'
-import {observable} from 'mobx'
+import {FEED_STORE} from '../../constants'
+import Post from '../feed/post'
 
-@observer
+@inject(FEED_STORE)
 class PostScreen extends Component {
-  static propTypes = {}
-
   static navigationOptions = ({navigation}) => {
     return ({
-      title: 'firstName',
+      title: 'Post',
       headerStyle: {
         backgroundColor: '#67E',
         borderBottomWidth: 0
@@ -20,17 +17,9 @@ class PostScreen extends Component {
     })
   }
 
-  @observable post = null
-
   render() {
-    console.log(this.props.navigation.state.params.postId)
-    return <View>
-    </View>
+    return <Post post = {this.props.feed.getPost(this.props.navigation.state.params.postId)}/>
   }
 }
-
-const styles = StyleSheet.create({
-  container: {},
-})
 
 export default PostScreen

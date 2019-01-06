@@ -203,6 +203,10 @@ class FeedStore extends EntitiesStore {
 
   }
 
+  @action getPost = (postId) => {
+    return this.entities[postId]
+  }
+
   @action attachLocation = () => {
     const {latitude, longitude} = this.coords
     this.attachedCoords = {latitude, longitude}
