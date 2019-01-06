@@ -1,18 +1,20 @@
 import React, {Component} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ScrollView} from 'react-native'
 import PropTypes from 'prop-types'
 
 class TableView extends Component {
   static propTypes = {
     style: View.propTypes.style,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    scrollable: PropTypes.bool
   }
 
   render() {
-    const {style, children, ...rest} = this.props
+    const {style, children, scrollable, ...rest} = this.props
     const childrenArray = React.Children.toArray(children)
+    const ViewComponent = scrollable ? ScrollView : View
 
-    return <View {...rest} style = {[styles.container, style]}>
+    return <ViewComponent {...rest} style = {[styles.container, style]}>
       {childrenArray.map((child, index) => {
         // const {leadingItem, trailingItem} = child.props
         return React.cloneElement(child, {
@@ -22,7 +24,7 @@ class TableView extends Component {
           // trailingItem: trailingItem !== undefined ? trailingItem : index === childrenArray.length - 1
         })
       })}
-    </View>
+    </ViewComponent>
   }
 }
 
