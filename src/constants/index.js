@@ -11,6 +11,7 @@ export const BACK_BUTTON_HEIGHT = 36
 export const DIVIDER_MARGIN_TOP = 20
 export const ROW_HEIGHT = 76
 export const REGION_DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}
+export const DATE_FORMAT = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
 
 export const DEFAULT_BACKGROUND_COLOR = '#efeff4'
 export const NAVIGATION_TINT_COLOR = '#ffffff'
