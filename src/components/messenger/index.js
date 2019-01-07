@@ -20,10 +20,10 @@ class Messenger extends Component {
       user: shape({
         uid: string.isRequired
       }).isRequired
-    }).isRequired,
+    }),
     messenger: shape({
       orderedChats: array.isRequired
-    }).isRequired
+    })
   }
 
   renderChatCard = ({item}) => {

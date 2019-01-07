@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import BasicAvatar from './basic-avatar'
 import PropTypes from 'prop-types'
 
-// merge with BasicAvatar?
+// TODO: Merge with BasicAvatar?
 class TouchableAvatar extends Component {
   static propTypes = {
-    onPress: PropTypes.func.isRequired
+    onPress: PropTypes.func.isRequired,
+    style: View.propTypes.style,
+    uri: PropTypes.string,
+    size: PropTypes.number.isRequired
   }
 
   render() {
