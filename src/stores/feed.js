@@ -245,6 +245,7 @@ class FeedStore extends EntitiesStore {
       title: this.title,
       text: this.text,
       userId: this.user.uid,
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
       coords: this.attachedCoords && {
         latitude: this.attachedCoords.latitude,
         longitude: this.attachedCoords.longitude
@@ -295,21 +296,21 @@ class FeedStore extends EntitiesStore {
               : acc,
           [])
 
-      // let posts = []
-      //
-      // data.forEach(snapshot => {
-      //   const {likes, title} = snapshot.val()
-      //   const postId = snapshot.key
-      //   if (!likes) return
-      //
-      //   const isLiked = Object.values(likes).some(({userId}) => userId === uid)
-      //
-      //   if (!isLiked) return
-      //
-      //   posts.push({postId, title})
-      // })
-      //
-      // return posts
+    // let posts = []
+    //
+    // data.forEach(snapshot => {
+    //   const {likes, title} = snapshot.val()
+    //   const postId = snapshot.key
+    //   if (!likes) return
+    //
+    //   const isLiked = Object.values(likes).some(({userId}) => userId === uid)
+    //
+    //   if (!isLiked) return
+    //
+    //   posts.push({postId, title})
+    // })
+    //
+    // return posts
 
     return await this.reference
       .orderByChild(LIKES_REFERENCE)
@@ -378,9 +379,11 @@ class FeedStore extends EntitiesStore {
 
   postsToFb = () => {
     const feedFixtures = Array.from({length: 50}, (_, i) => ({
-      title: i + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, x => x.toUpperCase()),
-      text: loremIpsum({count: Math.random() * 10, units: 'sentences'}),
+      title: i + ' ' + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, x => x.toUpperCase()),
+      text: loremIpsum({count: Math.random() * 20, units: 'sentences'}),
       // comments: [],
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      userId: ['-LETnlt7Lq8E2RqqWlav','HdnEMKhEQ3UDY05T2wnYMhFzQWv2', 'Tmnd1fTWhUSNJA1UGtRhqsSevgA3'][Math.round(Math.random() * 2)],
       coords: Math.round(Math.random()) ? {
         latitude: Math.random() * 20 + 40,
         longitude: Math.random() * 20

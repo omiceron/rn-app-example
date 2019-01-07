@@ -216,7 +216,7 @@ class MessengerStore extends EntitiesStore {
     const message = {
       text: payload,
       user: this.user.uid,
-      timestamp: Date.now()
+      timestamp: firebase.database.ServerValue.TIMESTAMP
     }
     this.getChatReference(chatId).push(message)
   }
