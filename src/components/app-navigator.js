@@ -31,6 +31,29 @@ const renderTabBarIcon = (name) => ({tintColor, focused}) =>
         style = {{color: tintColor}}
   />
 
+const commonScreens = {
+  postScreen: {
+    screen: PostScreen
+  },
+  userScreen: {
+    screen: UserInfo
+  },
+  likesList: {
+    screen: LikesListScreen
+  },
+  chatScreen: {
+    screen: ChatScreen
+  }
+}
+
+const createCommonStack = (mainScreen) => createStackNavigator({
+  mainScreen,
+  ...commonScreens
+}, {
+  headerMode: 'float',
+  headerTransitionPreset: 'uikit'
+})
+
 const AuthNavigator = createStackNavigator({
   signIn: {
     screen: AuthScreen
@@ -42,7 +65,7 @@ const AuthNavigator = createStackNavigator({
   headerMode: 'none'
 })
 
-const PostFormNavigator = createStackNavigator({
+const PostFormStack = createStackNavigator({
   postForm: {
     screen: PostFormScreen
   },
@@ -54,25 +77,19 @@ const PostFormNavigator = createStackNavigator({
   headerTransitionPreset: 'uikit'
 })
 
+const createCommonTabRouteConfig = (mainScreen, icon) => ({
+  screen: createCommonStack(mainScreen),
+  navigationOptions: ({navigation, screenProps}) => ({
+    ...getActiveChildNavigationOptions(navigation, screenProps),
+    header: null,
+    tabBarIcon: renderTabBarIcon(icon)
+  })
+})
+
 const TabNavigator = createBottomTabNavigator({
-  feed: {
-    screen: FeedScreen,
-    navigationOptions: {
-      tabBarIcon: renderTabBarIcon('paper')
-    }
-  },
-  messenger: {
-    screen: MessengerScreen,
-    navigationOptions: {
-      tabBarIcon: renderTabBarIcon('chatbubbles')
-    }
-  },
-  people: {
-    screen: PeopleScreen,
-    navigationOptions: {
-      tabBarIcon: renderTabBarIcon('people')
-    }
-  },
+  feed: createCommonTabRouteConfig(FeedScreen, 'paper'),
+  messenger: createCommonTabRouteConfig(MessengerScreen, 'chatbubbles'),
+  people: createCommonTabRouteConfig(PeopleScreen, 'people'),
   // events: {
   //   screen: EventList,
   //   navigationOptions: {
@@ -89,7 +106,6 @@ const TabNavigator = createBottomTabNavigator({
   tabBarOptions: {
     activeTintColor: '#67E',
     showLabel: false
-
   }
 })
 
@@ -98,23 +114,11 @@ const CoreNavigator = createStackNavigator({
     screen: TabNavigator,
     navigationOptions: ({navigation, screenProps}) => getActiveChildNavigationOptions(navigation, screenProps)
   },
-  postScreen: {
-    screen: PostScreen
-  },
-  chatScreen: {
-    screen: ChatScreen
-  },
-  userScreen: {
-    screen: UserInfo
-  },
   personPhoto: {
     screen: PersonPhotoScreen
   },
   userPhoto: {
-    screen: UserPhotoScreen,
-  },
-  likesList: {
-    screen: LikesListScreen
+    screen: UserPhotoScreen
   },
   userAvatars: {
     screen: UserAvatarsScreen,
@@ -124,7 +128,7 @@ const CoreNavigator = createStackNavigator({
         borderBottomWidth: 0
       }
     }
-  },
+  }
   // event: {
   //   screen: EventMapScreen
   // }
@@ -134,12 +138,8 @@ const CoreNavigator = createStackNavigator({
 })
 
 const ModalNavigator = createStackNavigator({
-  home: {
-    screen: CoreNavigator
-  },
-  feed: {
-    screen: PostFormNavigator
-  },
+  CoreNavigator,
+  PostFormStack
 }, {
   headerMode: 'none',
   mode: 'modal'

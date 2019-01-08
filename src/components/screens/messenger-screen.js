@@ -28,7 +28,7 @@ class MessengerScreen extends Component {
   }
 
   openUserInfoScreen = (user) => {
-    this.props.navigation.navigate('userScreen', {user})
+    this.props.navigation.push('userScreen', {user})
   }
 
   deleteChat = (chatId) => {
