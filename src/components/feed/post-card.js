@@ -3,14 +3,17 @@ import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Anim
 import PropTypes from 'prop-types'
 import Separator from '../common/separator'
 import Icon from 'react-native-vector-icons/Ionicons'
-import {inject} from 'mobx-react'
+import {inject, observer} from 'mobx-react'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
 import AttachedMap from './attached-map'
 import {NAVIGATION_STORE} from '../../constants'
 import {isPropsDiffer} from '../../stores/utils'
+import Like from './like'
+import LikesCounter from './likes-counter'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
+  // @observer
 class PostCard extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -21,13 +24,6 @@ class PostCard extends Component {
     coords: PropTypes.object
   }
 
-  animation = new Animated.Value(0)
-
-  interpolation = this.animation.interpolate({
-    inputRange: [0, 0.1, 0.9, 1],
-    outputRange: [1, 0.9, 1.1, 1]
-  })
-
   shouldComponentUpdate(nextProps) {
     const {likesNumber: newLikesNumber, isLiked: newIsLiked} = nextProps
     const {likesNumber, isLiked} = this.props
@@ -35,42 +31,13 @@ class PostCard extends Component {
     return likesNumber !== newLikesNumber || isLiked !== newIsLiked
   }
 
-  renderLike = () => {
-    const {isLiked} = this.props
-
-    const AnimatedIcon = Animated.createAnimatedComponent(Icon)
-
-    return <TouchableWithoutFeedback hitSlop = {HIT_SLOP} onPress = {this.likeHandler}>
-      <View>
-        <AnimatedIcon color = {isLiked ? '#FF0000' : 'rgba(127,127,127,1)'}
-                      size = {30}
-                      name = {`ios-heart${isLiked ? '' : '-outline'}`}
-                      style = {[styles.icon, {transform: [{scale: this.interpolation}]}]}/>
-      </View>
-    </TouchableWithoutFeedback>
-  }
-
-  renderLikesNumber = () => {
-    const {likesNumber, uid} = this.props
-    return <View style = {styles.likesNumberView}>
-      {likesNumber &&
-      <TouchableOpacity onPress = {() => this.props.navigation.navigate('likesList', {postId: uid})}>
-        <Text style = {styles.text}>
-          {likesNumber}
-        </Text>
-      </TouchableOpacity>}
-    </View>
-
-  }
-
   renderComments = () => {
     return <Icon color = 'rgba(127,127,127,1)' size = {30} name = 'ios-text-outline' style = {styles.icon}/>
-
   }
 
   render() {
-    const {title, text, coords, uid} = this.props
-    console.log('render card', title)
+    const {title, text, coords, uid, isLiked, likesNumber} = this.props
+    console.log('render card', title, isLiked)
 
     return <View style = {styles.container}>
       <TouchableOpacity onPress = {() => this.props.navigation.navigate('postScreen', {postId: uid})}>
@@ -92,28 +59,19 @@ class PostCard extends Component {
       <Separator/>
 
       <View style = {styles.buttonsView}>
-        {this.renderLike()}
-        {this.renderLikesNumber()}
+        <Like
+          style = {{marginRight: 4, marginVertical: 4}}
+          onPress = {() => this.props.feed.setLike(uid)}
+          activated = {isLiked}
+        />
+        <LikesCounter
+          style = {{marginRight: 4, marginVertical: 4}}
+          likesNumber = {likesNumber}
+          onPress = {() => this.props.navigation.navigate('likesList', {postId: uid})}/>
         {this.renderComments()}
       </View>
 
     </View>
-  }
-
-  likeHandler = () => {
-    this.props.feed.setLike(this.props.uid)
-
-    Animated.sequence([
-      Animated.timing(this.animation, {
-        toValue: 1,
-        duration: 200
-      }),
-      Animated.timing(this.animation, {
-        toValue: 0,
-        duration: 0
-      })
-    ]).start()
-
   }
 
 }
@@ -134,7 +92,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: '600'
   },
 
@@ -148,16 +106,8 @@ const styles = StyleSheet.create({
   buttonsView: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginVertical: 8
-  },
-  icon: {
-    marginRight: 8
-  },
-
-  likeView: {
-    flexDirection: 'row',
     alignItems: 'center'
+    // marginVertical: 8
   },
 
   likesNumberView: {
