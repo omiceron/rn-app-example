@@ -172,6 +172,8 @@ class FeedStore extends EntitiesStore {
       post.likesNumber--
       post.likePending = true
 
+      this.entities[postId] = {...this.entities[postId], ...post}
+
       // promise.all
       // const likesArr = Object.entries(likes).map(([key, value]) => ({...value, key}))
       // if (likesArr.some(like => like.userId === this.user.uid )) {}
@@ -195,10 +197,13 @@ class FeedStore extends EntitiesStore {
       post.likesNumber++
       post.likePending = true
 
+      this.entities[postId] = {...this.entities[postId], ...post}
+
       await ref.push({userId: this.user.uid})
     }
 
     post.likePending = false
+
     this.refreshPost(postId)
 
   }
