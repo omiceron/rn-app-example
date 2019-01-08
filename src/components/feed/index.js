@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {FlatList, View, StyleSheet, Text, ActivityIndicator, SafeAreaView} from 'react-native'
+import {FlatList, View, StyleSheet, ActivityIndicator, SafeAreaView} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import PostCard from './post-card'
@@ -14,7 +14,7 @@ class Feed extends Component {
       loading: PropTypes.bool.isRequired,
       loaded: PropTypes.bool.isRequired,
       setLike: PropTypes.func.isRequired,
-      refreshFeed: PropTypes.func.isRequired,
+      refreshFeed: PropTypes.func.isRequired
     })
   }
 

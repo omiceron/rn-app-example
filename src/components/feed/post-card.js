@@ -54,8 +54,6 @@ class PostCard extends Component {
         </View>
       </TouchableOpacity>
 
-      {/*{coords && <AttachedMap onPress = {() => alert('map pressed')} coords = {coords}/>}*/}
-
       <Separator/>
 
       <View style = {styles.buttonsView}>

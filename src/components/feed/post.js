@@ -7,17 +7,13 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native'
-import {MapView, Permissions, Location} from 'expo'
 import PropTypes from 'prop-types'
 import AttachedMap from './attached-map'
-import TableView from '../common/table-view'
-import TableRow from '../common/table-row'
 import {DATE_FORMAT, FEED_STORE, NAVIGATION_STORE, PEOPLE_STORE, REGION_DELTAS} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {observable} from 'mobx'
 import Loader from '../common/loader'
-import TouchableAvatar from '../common/touchable-avatar'
 import BasicAvatar from '../common/basic-avatar'
 import Like from './like'
 import LikesCounter from './likes-counter'
@@ -48,32 +44,19 @@ class Post extends Component {
     const {firstName, lastName} = this.user
     const date = new Date(timestamp).toLocaleDateString('en-GB', DATE_FORMAT)
 
-    const renderMap = () => {
-      if (!coords) return null
-
-      return <MapView
-        style = {styles.mapView}
-        initialRegion = {{...coords, ...REGION_DELTAS}}
-      >
-        <MapView.Marker
-          coordinate = {{...coords}}
-        />
-      </MapView>
-
-    }
-
     return <SafeAreaView style = {styles.container}>
-      <ScrollView>
+      <ScrollView style = {{paddingHorizontal: 15}}>
 
-        <TableRow>
+        <View style = {{marginVertical: 8}}>
           <Text style = {styles.title}>
             {title}
           </Text>
-        </TableRow>
+        </View>
+
+        <Separator style = {{marginHorizontal: 0}}/>
 
         <View style = {{
-          paddingHorizontal: 15,
-          paddingVertical: 8,
+          marginVertical: 4,
           flexDirection: 'row'
         }}>
 
@@ -106,21 +89,21 @@ class Post extends Component {
 
         </View>
 
-        <Separator/>
+        <Separator style = {{marginHorizontal: 0}}/>
 
-        <TableRow disableSeparator>
+        <View style = {{
+          marginVertical: 8
+        }}>
           <Text style = {styles.text}>
             {text}
           </Text>
-        </TableRow>
+        </View>
 
-        {renderMap()}
+        {coords && <AttachedMap coords = {coords}/>}
 
-        <Separator/>
+        <Separator style = {{marginHorizontal: 0}}/>
 
         <View style = {{
-          paddingHorizontal: 15,
-          paddingVertical: 8,
           flexDirection: 'row',
           justifyContent: 'flex-start',
           alignItems: 'center'
@@ -158,9 +141,6 @@ const styles = StyleSheet.create({
     fontWeight: '100',
     color: 'rgba(127,127,127,1)'
   },
-  mapView: {
-    height: 100
-  }
 })
 
 export default Post
