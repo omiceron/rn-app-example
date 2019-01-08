@@ -24,7 +24,7 @@ class UserInfo extends Component {
     }),
     openChatWithUser: PropTypes.func.isRequired,
     openUserAvatarsScreen: PropTypes.func.isRequired,
-    openPostLikesScreen: PropTypes.func.isRequired
+    openPostScreen: PropTypes.func.isRequired
   }
 
   @observable posts = null
@@ -36,7 +36,7 @@ class UserInfo extends Component {
   render() {
 
     const {lastName, firstName, userInfo, email, avatar, uid} = this.props.user
-    const {openChatWithUser, openUserAvatarsScreen, openPostLikesScreen} = this.props
+    const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
 
     const LeftComponent = () => <Avatar size = {60} onPress = {openUserAvatarsScreen}/>
     const renderLikedPosts = () =>
@@ -44,7 +44,7 @@ class UserInfo extends Component {
         {this.posts.length
           ? this.posts.map(({postId, title}) =>
             <TouchableOpacity key = {postId}
-                              onPress = {() => openPostLikesScreen(postId)}>
+                              onPress = {() => openPostScreen(postId)}>
               <TableRow title = {title}/>
             </TouchableOpacity>)
           : <TableRow title = 'No posts'/>}

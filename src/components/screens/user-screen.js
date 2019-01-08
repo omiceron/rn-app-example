@@ -20,13 +20,13 @@ class UserScreen extends Component {
     return <UserInfo
       openChatWithUser = {this.openChatWithUser}
       openUserAvatarsScreen = {this.openUserAvatarsScreen}
-      openPostLikesScreen = {this.openPostLikesScreen}
+      openPostScreen = {this.openPostScreen}
       user = {this.props.navigation.state.params.user}
     />
   }
 
-  openPostLikesScreen = (postId) => {
-    this.props.navigation.push('likesList', {postId})
+  openPostScreen = (postId) => {
+    this.props.navigation.push('postScreen', {postId})
   }
 
   openChatWithUser = () => {

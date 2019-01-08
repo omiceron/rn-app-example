@@ -4,6 +4,7 @@ import {FEED_STORE} from '../../constants'
 import Post from '../feed/post'
 
 @inject(FEED_STORE)
+@observer
 class PostScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
@@ -18,7 +19,7 @@ class PostScreen extends Component {
   }
 
   render() {
-    return <Post post = {this.props.feed.getPost(this.props.navigation.state.params.postId)}/>
+    return <Post post = {this.props.feed.entities[this.props.navigation.state.params.postId]}/>
   }
 }
 
