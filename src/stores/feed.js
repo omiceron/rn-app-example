@@ -382,13 +382,16 @@ class FeedStore extends EntitiesStore {
     post.isLiked = likes.some(like => like.userId === this.user.uid)
   }
 
-  postsToFb = () => {
+  postsToFb = async () => {
+    const users = await firebase.database().ref('people').once('value').then(snapshot => Object.keys(snapshot.val()))
+    console.log(users)
+
     const feedFixtures = Array.from({length: 50}, (_, i) => ({
       title: i + ' ' + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, x => x.toUpperCase()),
       text: loremIpsum({count: Math.random() * 20, units: 'sentences'}),
       // comments: [],
       timestamp: firebase.database.ServerValue.TIMESTAMP,
-      userId: ['-LETnlt7Lq8E2RqqWlav','HdnEMKhEQ3UDY05T2wnYMhFzQWv2', 'Tmnd1fTWhUSNJA1UGtRhqsSevgA3'][Math.round(Math.random() * 2)],
+      userId: users[Math.round(Math.random() * (users.length - 1))],
       coords: Math.round(Math.random()) ? {
         latitude: Math.random() * 20 + 40,
         longitude: Math.random() * 20
@@ -398,14 +401,8 @@ class FeedStore extends EntitiesStore {
 
     feedFixtures.forEach(post => {
       const ref = this.reference.push(post)
+      users.forEach(userId => Math.round(Math.random()) && this.getLikesReference(ref.key).push({userId}))
 
-      let random = Math.round(Math.random() * 200)
-
-      if (Math.round(Math.random())) {
-        while (random--) {
-          this.getLikesReference(ref.key).push({userId: loremIpsum({count: 1, units: 'words'})})
-        }
-      }
     })
 
   }
