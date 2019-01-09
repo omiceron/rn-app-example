@@ -7,41 +7,51 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native'
-import PropTypes from 'prop-types'
+import {string, object, number, bool, shape} from 'prop-types'
 import AttachedMap from './attached-map'
-import {DATE_FORMAT, FEED_STORE, NAVIGATION_STORE, PEOPLE_STORE, REGION_DELTAS} from '../../constants'
+import {DATE_FORMAT, FEED_STORE, NAVIGATION_STORE} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
-import {observable} from 'mobx'
-import Loader from '../common/loader'
 import BasicAvatar from '../common/basic-avatar'
 import Like from './like'
 import LikesCounter from './likes-counter'
 
 @inject(FEED_STORE)
 @inject(NAVIGATION_STORE)
-@inject(PEOPLE_STORE)
 @observer
 class Post extends Component {
   static propTypes = {
-    post: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      coords: PropTypes.object
+    title: string.isRequired,
+    text: string.isRequired,
+    coords: object,
+    timestamp: number.isRequired,
+    isLiked: bool.isRequired,
+    uid: string.isRequired,
+    likesNumber: number.isRequired,
+    user: shape({
+      firstName: string,
+      lastName: string
     }).isRequired
   }
 
-  @observable user = null
-
-  async componentWillMount() {
-    this.user = await this.props.people.fetchUserInfo(this.props.post.userId)
-  }
-
   render() {
-    if (!this.user) return <Loader/>
+    const {
+      title,
+      text,
+      coords,
+      timestamp,
+      isLiked,
+      uid,
+      likesNumber,
+      user,
+      user: {
+        firstName,
+        lastName
+      },
+      navigation,
+      feed
+    } = this.props
 
-    const {title, text, coords, timestamp, isLiked, uid, likesNumber} = this.props.post
-    const {firstName, lastName} = this.user
     const date = new Date(timestamp).toLocaleDateString('en-GB', DATE_FORMAT)
 
     return <SafeAreaView style = {styles.container}>
@@ -77,7 +87,7 @@ class Post extends Component {
               flexDirection: 'row',
               alignItems: 'center'
 
-            }} onPress = {() => this.props.navigation.push('userScreen', {user: this.user})}>
+            }} onPress = {() => navigation.push('userScreen', {user})}>
               <Text style = {styles.caption}>
                 by <Text style = {{fontWeight: '500'}}>{firstName} {lastName}</Text>
               </Text>
@@ -110,13 +120,13 @@ class Post extends Component {
         }}>
           <Like
             style = {{marginRight: 4, marginVertical: 4}}
-            onPress = {() => this.props.feed.setLike(uid)}
+            onPress = {() => feed.setLike(uid)}
             activated = {isLiked}
           />
           <LikesCounter
             style = {{marginRight: 4, marginVertical: 4}}
             likesNumber = {likesNumber}
-            onPress = {() => this.props.navigation.push('likesList', {postId: uid})}/>
+            onPress = {() => navigation.push('likesList', {postId: uid})}/>
         </View>
 
       </ScrollView>
@@ -140,7 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '100',
     color: 'rgba(127,127,127,1)'
-  },
+  }
 })
 
 export default Post
