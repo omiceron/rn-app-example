@@ -54,56 +54,43 @@ class Post extends Component {
 
     const date = new Date(timestamp).toLocaleDateString('en-GB', DATE_FORMAT)
 
-    return <SafeAreaView style = {styles.container}>
-      <ScrollView style = {{paddingHorizontal: 15}}>
+    const PostSeparator = () => <Separator style = {{marginHorizontal: 0}}/>
 
-        <View style = {{marginVertical: 8}}>
+    return <SafeAreaView style = {styles.container}>
+      <ScrollView style = {styles.scroll}>
+
+        <View style = {styles.row}>
           <Text style = {styles.title}>
             {title}
           </Text>
         </View>
 
-        <Separator style = {{marginHorizontal: 0}}/>
+        <PostSeparator/>
 
-        <View style = {{
-          marginVertical: 4,
-          flexDirection: 'row'
-        }}>
+        <View style = {styles.infoBar}>
 
-          <View style = {{
-            flex: 1,
-            justifyContent: 'center'
-          }}>
+          <View style = {styles.date}>
             <Text style = {styles.caption}>
               {date}
             </Text>
           </View>
 
-          <View style = {{
-            flex: 1,
-            alignItems: 'flex-end'
-          }}>
-            <TouchableOpacity style = {{
-              flexDirection: 'row',
-              alignItems: 'center'
-
-            }} onPress = {() => navigation.push('userScreen', {user})}>
+          <View style = {styles.author}>
+            <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user})}>
               <Text style = {styles.caption}>
-                by <Text style = {{fontWeight: '500'}}>{firstName} {lastName}</Text>
+                by <Text style = {styles.name}>{firstName} {lastName}</Text>
               </Text>
 
-              <BasicAvatar style = {{marginLeft: 3}} size = {20}/>
+              <BasicAvatar style = {styles.avatar} size = {20}/>
 
             </TouchableOpacity>
           </View>
 
         </View>
 
-        <Separator style = {{marginHorizontal: 0}}/>
+        <PostSeparator/>
 
-        <View style = {{
-          marginVertical: 8
-        }}>
+        <View style = {styles.row}>
           <Text style = {styles.text}>
             {text}
           </Text>
@@ -111,22 +98,19 @@ class Post extends Component {
 
         {coords && <AttachedMap coords = {coords}/>}
 
-        <Separator style = {{marginHorizontal: 0}}/>
+        <PostSeparator/>
 
-        <View style = {{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-        }}>
+        <View style = {styles.controlBar}>
           <Like
-            style = {{marginRight: 4, marginVertical: 4}}
+            style = {styles.button}
             onPress = {() => feed.setLike(uid)}
             activated = {isLiked}
           />
           <LikesCounter
-            style = {{marginRight: 4, marginVertical: 4}}
+            style = {styles.button}
             likesNumber = {likesNumber}
-            onPress = {() => navigation.push('likesList', {postId: uid})}/>
+            onPress = {() => navigation.push('likesList', {postId: uid})}
+          />
         </View>
 
       </ScrollView>
@@ -138,6 +122,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  scroll: {
+    paddingHorizontal: 15
+  },
+  row: {
+    marginVertical: 8
+  },
+  infoBar: {
+    marginVertical: 4,
+    flexDirection: 'row'
+  },
+  date: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  author: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  authorButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   title: {
     fontSize: 32,
     fontWeight: '300'
@@ -146,10 +152,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '200'
   },
+  name: {
+    fontWeight: '500'
+  },
   caption: {
     fontSize: 12,
     fontWeight: '100',
     color: 'rgba(127,127,127,1)'
+  },
+  avatar: {
+    marginLeft: 3
+  },
+  controlBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  button: {
+    marginRight: 4,
+    marginVertical: 4
   }
 })
 
