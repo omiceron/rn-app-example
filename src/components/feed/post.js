@@ -9,12 +9,13 @@ import {
 } from 'react-native'
 import {string, object, number, bool, shape} from 'prop-types'
 import AttachedMap from './attached-map'
-import {DATE_FORMAT, FEED_STORE, NAVIGATION_STORE} from '../../constants'
+import {FEED_STORE, NAVIGATION_STORE} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import BasicAvatar from '../common/basic-avatar'
 import Like from './like'
 import LikesCounter from './likes-counter'
+import {getDate} from '../../stores/utils'
 
 @inject(FEED_STORE)
 @inject(NAVIGATION_STORE)
@@ -52,9 +53,9 @@ class Post extends Component {
       feed
     } = this.props
 
-    const date = new Date(timestamp).toLocaleDateString('en-GB', DATE_FORMAT)
+    const date = getDate(timestamp)
 
-    const PostSeparator = () => <Separator style = {{marginHorizontal: 0}}/>
+    const PostSeparator = () => <Separator style = {styles.postSeparator}/>
 
     return <SafeAreaView style = {styles.container}>
       <ScrollView style = {styles.scroll}>
@@ -171,6 +172,9 @@ const styles = StyleSheet.create({
   button: {
     marginRight: 4,
     marginVertical: 4
+  },
+  postSeparator: {
+    marginHorizontal: 0
   }
 })
 

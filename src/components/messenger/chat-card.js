@@ -4,6 +4,7 @@ import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 import {ROW_HEIGHT} from '../../constants'
 import {array, string, func, shape, objectOf, number} from 'prop-types'
+import {getTime} from '../../stores/utils'
 
 class ChatCard extends Component {
   static propTypes = {
@@ -29,7 +30,7 @@ class ChatCard extends Component {
 
   renderDate = () => {
     const {chat: {messages: [{timestamp}]}} = this.props
-    const date = new Date(timestamp).toTimeString().slice(0, 5)
+    const date = getTime(timestamp)
 
     return <Text numberOfLines = {1} style = {styles.text}>
       {date}

@@ -1,4 +1,5 @@
 import {toJS} from 'mobx'
+import {DATE_FORMAT, LOCALE, TIME_FORMAT} from '../constants'
 
 export function entitiesFromFB(data) {
   Object.entries(data).forEach(([key, value]) => value.uid = key)
@@ -27,4 +28,12 @@ export function isPropsDiffer(props, nextProps) {
     }
   }
   return false
+}
+
+export function getDate(timestamp) {
+  return new Date(timestamp).toLocaleDateString(LOCALE, DATE_FORMAT)
+}
+
+export function getTime(timestamp) {
+  return new Date(timestamp).toLocaleTimeString(LOCALE, TIME_FORMAT)
 }
