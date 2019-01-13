@@ -208,7 +208,7 @@ class FeedStore extends EntitiesStore {
 
   }
 
-  @action getPost = (postId) => {
+  getPost = (postId) => {
     return this.entities[postId]
   }
 

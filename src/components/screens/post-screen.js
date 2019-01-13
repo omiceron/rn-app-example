@@ -41,7 +41,8 @@ class PostScreen extends Component {
       isLiked,
       uid,
       likesNumber
-    } = this.props.feed.entities[postId]
+    } = this.props.feed.getPost(postId)
+    // } = this.props.feed.entities[postId]
 
     return <Post
       title = {title}

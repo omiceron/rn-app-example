@@ -52,7 +52,8 @@ class MessengerStore extends EntitiesStore {
 
   getMessages = (chatId) => {
     if (!this.entities[chatId]) return
-    return [...this.entities[chatId].messages]
+    return this.entities[chatId].messages
+    // return [...this.entities[chatId].messages]
   }
 
   @action subscribeOnChats = () => {
