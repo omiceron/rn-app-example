@@ -5,7 +5,7 @@ import {
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
 import Separator from '../common/separator'
-import {AUTH_STORE, MESSENGER_STORE} from '../../constants'
+import {AUTH_STORE, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
 
 @inject(MESSENGER_STORE)
@@ -19,7 +19,7 @@ class Messenger extends Component {
     auth: shape({
       user: shape({
         uid: string.isRequired
-      }).isRequired
+      })
     }),
     messenger: shape({
       orderedChats: array.isRequired
@@ -60,7 +60,7 @@ class Messenger extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF'
+    backgroundColor: WHITE_BACKGROUND_COLOR
   }
 })
 

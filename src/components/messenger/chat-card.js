@@ -56,8 +56,8 @@ class ChatCard extends Component {
 
     if (!messages) return null
 
-    const [{text, user: lastMessageSender}] = messages
-    const isCurrentUser = currentUserId === lastMessageSender._id
+    const [{text, userId: lastMessageSenderId}] = messages
+    const isCurrentUser = currentUserId === lastMessageSenderId
 
     return <SwipeableCard onPress = {openChatScreen}
       LeftComponent = {this.renderAvatar}

@@ -6,10 +6,7 @@ import {WINDOW_WIDTH} from '../../constants'
 class Message extends PureComponent {
   static propTypes = {
     message: shape({
-      user: shape({
-        // name: string.isRequired,
-        _id: string.isRequired
-      }),
+      userId: string.isRequired,
       text: string.isRequired,
       timestamp: number.isRequired,
       key: string.isRequired
@@ -18,9 +15,9 @@ class Message extends PureComponent {
   }
 
   render() {
-    const {user: {name, _id}, text, timestamp, key} = this.props.message
+    const {userId, text, timestamp, key} = this.props.message
     const {currentUserId} = this.props
-    const isCurrentUser = currentUserId === _id
+    const isCurrentUser = currentUserId === userId
     // const date = new Date(timestamp).toTimeString().slice(0, 5)
 
 

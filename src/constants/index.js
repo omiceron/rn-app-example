@@ -16,6 +16,7 @@ export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
 export const DEFAULT_BACKGROUND_COLOR = '#efeff4'
+export const WHITE_BACKGROUND_COLOR = '#ffffff'
 export const NAVIGATION_TINT_COLOR = '#ffffff'
 
 export const FEED_CHUNK_LENGTH = 10

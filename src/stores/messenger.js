@@ -85,17 +85,16 @@ class MessengerStore extends EntitiesStore {
     const {chatId} = chatData
     const ref = this.getChatReference(chatId).limitToLast(20)
     const callback = (messageData) => {
+
+      // TODO: Rename 'user' to 'userId'
       const {text, timestamp, user} = messageData.val()
-      const {key: _id} = messageData
+      const {key} = messageData
 
       const message = {
-        _id,
-        key: _id,
+        key,
         timestamp,
         text,
-        user: {
-          _id: user
-        }
+        userId: user
       }
 
       this.appendChat(chatData)
@@ -123,7 +122,7 @@ class MessengerStore extends EntitiesStore {
     const ref = this.getChatReference(chatId)
       .orderByKey()
       .limitToLast(10)
-      .endAt(this.DANGER_getLastMessage(chatId).key)
+      .endAt(this.DEPRECATED_getLastMessage(chatId).key)
 
     const callback = action((data) => {
       const payload = messagesFromFirebase(data.val())
@@ -214,6 +213,7 @@ class MessengerStore extends EntitiesStore {
   sendMessage = (payload, chatId) => {
     if (!payload) return
 
+    // TODO: Rename 'user' to 'userId'
     const message = {
       text: payload,
       user: this.user.uid,
@@ -288,7 +288,7 @@ class MessengerStore extends EntitiesStore {
     return messages[messages.length - 1]
   }
 
-  DANGER_getLastMessage = (chatId) => {
+  DEPRECATED_getLastMessage = (chatId) => {
     const {messages} = this.entities[chatId]
     return messages[messages.length - 1]
   }
@@ -329,8 +329,6 @@ class MessengerStore extends EntitiesStore {
 
   DEPRECATED_sendMessage = (payload) => {
 
-    if (typeof payload === 'string') {
-
       if (!payload) return
 
       const message = {
@@ -355,20 +353,6 @@ class MessengerStore extends EntitiesStore {
                 .set(Date.now())*/
 
       this.DEPRECATED_currentChatReference.push(message)
-
-    } else {
-
-      // GiftedChat
-
-      payload.forEach(({text, user: {_id}}) => {
-        const message = {
-          text,
-          user: _id,
-          timestamp: Date.now()
-        }
-        this.DEPRECATED_currentChatReference.push(message)
-      })
-    }
   }
 
 }

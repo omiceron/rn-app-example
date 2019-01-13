@@ -6,10 +6,11 @@ export function entitiesFromFB(data) {
   return data
 }
 
+// TODO: Rename 'user' to 'userId'
 export function messagesFromFirebase(data) {
   return Object
     .entries(data)
-    .map(([key, value]) => ({...value, _id: key, key, user: {_id: value.user}}))
+    .map(([key, value]) => ({...value, key, userId: value.user}))
 }
 
 export function randomId() {
