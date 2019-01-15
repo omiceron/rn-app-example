@@ -48,7 +48,7 @@ class Chat extends Component {
   render() {
     // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
     // console.log('render chat')
-    const {messenger: {getMessages, fetchPreviousMessages}, chatId} = this.props
+    const {messenger: {getMessages, fetchPreviousMessages, DANGER_getMessages, DANGER_fetchPreviousMessages}, chatId} = this.props
     const {uid: currentUserId} = this.props.auth.user
 
     return <SafeAreaView style = {styles.container}>
@@ -56,11 +56,12 @@ class Chat extends Component {
 
       <FlatList
         enableEmptySections
-        onEndReached = {fetchPreviousMessages.bind(null, chatId)}
+        // onEndReached = {fetchPreviousMessages.bind(null, chatId)}
+        onEndReached = {DANGER_fetchPreviousMessages.bind(null, chatId)}
         inverted
-        initialNumToRender = {15}
-        onEndReachedThreshold = {0.1}
-        data = {getMessages(chatId)}
+        // initialNumToRender = {30}
+        onEndReachedThreshold = {0.5}
+        data = {DANGER_getMessages(chatId)}
         renderItem = {({item}) => <Message currentUserId = {currentUserId} message = {item}/>}
         // data = {messages}
         // onEndReached = {fetchPreviousMessages}

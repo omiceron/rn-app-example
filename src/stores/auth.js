@@ -30,7 +30,8 @@ class AuthStore extends BasicStore {
         await this.getStore(PEOPLE_STORE).createPerson(user.uid)
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
-        this.getStore(MESSENGER_STORE).subscribeOnChats()
+        // this.getStore(MESSENGER_STORE).subscribeOnChats()
+        this.getStore(MESSENGER_STORE).DANGER_subscribeOnChats()
         this.getStore(FEED_STORE).fetchPosts()
 
         // this.getStore(EVENTS_STORE).loadAll()

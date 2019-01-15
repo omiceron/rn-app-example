@@ -20,6 +20,7 @@ export const WHITE_BACKGROUND_COLOR = '#ffffff'
 export const NAVIGATION_TINT_COLOR = '#ffffff'
 
 export const FEED_CHUNK_LENGTH = 10
+export const MESSAGES_CHUNK_LENGTH = 30
 
 export const LOGO = 'logo'
 export const INPUT = 'input'

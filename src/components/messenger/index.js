@@ -22,7 +22,7 @@ class Messenger extends Component {
       })
     }),
     messenger: shape({
-      orderedChats: array.isRequired
+      // orderedChats: array.isRequired
     })
   }
 
@@ -46,11 +46,11 @@ class Messenger extends Component {
   }
 
   render() {
-    const {messenger: {orderedChats}} = this.props
+    const {messenger} = this.props
 
     return <SafeAreaView style = {styles.container}>
       <FlatList ItemSeparatorComponent = {() => <Separator leftIndent = {78}/>}
-                data = {orderedChats}
+                data = {messenger.DANGER_orderedChats}
                 renderItem = {this.renderChatCard}/>
     </SafeAreaView>
   }
