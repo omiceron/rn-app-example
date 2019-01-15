@@ -74,7 +74,7 @@ class FeedStore extends EntitiesStore {
     const chunkLength = FEED_CHUNK_LENGTH + chunkShift
 
     const callback = action((snapshot) => {
-      const payload = snapshot.val() || []
+      const payload = snapshot.val() || {}
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
