@@ -1,33 +1,30 @@
 import React, {Component, PureComponent} from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 import {string, shape, array, number} from 'prop-types'
-import {WINDOW_WIDTH} from '../../constants'
+import {AUTH_STORE, WINDOW_WIDTH} from '../../constants'
+import {observer, inject} from 'mobx-react'
 
+@inject(AUTH_STORE)
 class Message extends PureComponent {
   static propTypes = {
-    message: shape({
-      userId: string.isRequired,
-      text: string.isRequired,
-      timestamp: number.isRequired,
-      key: string.isRequired
-    }).isRequired,
-    currentUserId: string.isRequired
+    userId: string.isRequired,
+    text: string.isRequired,
+    timestamp: number.isRequired,
+    key: string
   }
 
   render() {
-    const {userId, text, timestamp, key} = this.props.message
-    const {currentUserId} = this.props
-    const isCurrentUser = currentUserId === userId
+    const {userId, text, timestamp} = this.props
+    const isCurrentUser = this.props.auth.user.uid === userId
     // const date = new Date(timestamp).toTimeString().slice(0, 5)
 
-
-/*
-    const renderDate = () => <View>
-      <Text selectable style = {[{color: isCurrentUser ? '#E9E9E9' : 'grey'}, styles.text]}>
-        {date}
-      </Text>
-    </View>
-*/
+    /*
+        const renderDate = () => <View>
+          <Text selectable style = {[{color: isCurrentUser ? '#E9E9E9' : 'grey'}, styles.text]}>
+            {date}
+          </Text>
+        </View>
+    */
 
     return <View
       // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}

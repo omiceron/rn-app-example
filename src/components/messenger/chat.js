@@ -59,13 +59,9 @@ class Chat extends Component {
         // onEndReached = {fetchPreviousMessages.bind(null, chatId)}
         onEndReached = {DANGER_fetchPreviousMessages.bind(null, chatId)}
         inverted
-        // initialNumToRender = {30}
         onEndReachedThreshold = {0.5}
         data = {DANGER_getMessages(chatId)}
-        renderItem = {({item}) => <Message currentUserId = {currentUserId} message = {item}/>}
-        // data = {messages}
-        // onEndReached = {fetchPreviousMessages}
-        // automaticallyAdjustContentInsets = {false}
+        renderItem = {({item}) => <Message {...item}/>}
       />
 
       <KeyboardAvoidingView behavior = 'padding'

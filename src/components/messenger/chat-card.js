@@ -2,39 +2,53 @@ import React, {Component, PureComponent} from 'react'
 import {Text, StyleSheet} from 'react-native'
 import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
-import {ROW_HEIGHT} from '../../constants'
+import {AUTH_STORE, MESSENGER_STORE, ROW_HEIGHT, USER_STORE} from '../../constants'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {getTime} from '../../stores/utils'
 import {inject, observer} from 'mobx-react'
 
+@inject(AUTH_STORE)
+@inject(MESSENGER_STORE)
 @observer
 class ChatCard extends Component {
   static propTypes = {
-    chat: shape({
-      user: shape({
-        avatar: string,
-        firstName: string,
-        lastName: string
-      }).isRequired,
-      chatId: string.isRequired,
-      messages: object
+    // chat: shape({
+    user: shape({
+      avatar: string,
+      firstName: string,
+      lastName: string
     }).isRequired,
-    currentUserId: string.isRequired,
+    chatId: string.isRequired,
+    lastMessage: object,
+    // messages: object
+    // }).isRequired,
     openChatScreen: func.isRequired,
     openUserInfoScreen: func.isRequired,
     deleteChat: func.isRequired
   }
 
   renderAvatar = () => {
-    const {chat: {user: {avatar}}} = this.props
+    // const {chat: {user: {avatar}}} = this.props
     return <Avatar size = {60} /*uri = {avatar}*//>
   }
 
   renderDate = () => {
 
-    const {chat: {messages}} = this.props
-    const arr = Object.values(messages).reverse()
-    const [{timestamp}] = arr
+    // const {DANGER_getLastMessage} = this.props.messenger
+    // const {chatId} = this.props.chat
+    // const {timestamp} = DANGER_getLastMessage(chatId)
+
+    let {lastMessage} = this.props
+
+    if (!lastMessage) lastMessage = {timestamp: 0}
+
+    const {timestamp} = lastMessage
+
+    // const {chat: {messages: [{timestamp}]}} = this.props
+
+    // const {chat: {messages}} = this.props
+    // const arr = Object.values(messages)
+    // const {timestamp} = arr[arr.length - 1]
     const date = getTime(timestamp)
 
     return <Text numberOfLines = {1} style = {styles.text}>
@@ -43,34 +57,43 @@ class ChatCard extends Component {
   }
 
   render() {
-    const {
+    let {
       currentUserId,
       openChatScreen,
       openUserInfoScreen,
       deleteChat,
-      chat: {
-        user,
-        chatId,
-        messages,
-        user: {
-          firstName,
-          lastName
-        }
+      lastMessage,
+      // chat: {
+      user,
+      chatId,
+      // messages,
+      user: {
+        firstName,
+        lastName
       }
+      // }
     } = this.props
 
-    if (!messages) return null
+    // if (!messages) return null
+    // if (!lastMessage) return null
+    if (!lastMessage) lastMessage = {text: 'a', user}
 
-    console.log('render chat', firstName)
+    // user = {firstName: 'a', lastName: 'b'}
+    // console.log('render chat', firstName)
 
-    const arr = Object.values(messages).reverse()
-    // console.log(arr[0])
-    const {text, userId: lastMessageSenderId} = arr[0]
-    // return null
+    // const {DANGER_getLastMessage} = this.props.messenger
+    // const {text, userId} = DANGER_getLastMessage(chatId)
 
-    const isCurrentUser = currentUserId === lastMessageSenderId
+    const {text, user: userId} = lastMessage
 
-    return <SwipeableCard onPress = {openChatScreen}
+    // const arr = Object.values(messages)
+    // const {text, userId: lastMessageSenderId} = arr[arr.length - 1]
+
+    // const [{text, userId: lastMessageSenderId}] = messages
+
+    const isCurrentUser = this.props.auth.user.uid === userId
+
+    return <SwipeableCard onPress = {openChatScreen.bind(null, user)}
                           LeftComponent = {this.renderAvatar}
                           RightComponent = {this.renderDate}
                           onSwipeableLeftOpen = {deleteChat.bind(null, chatId)}

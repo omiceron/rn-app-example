@@ -45,19 +45,16 @@ class MessengerStore extends EntitiesStore {
 
   @computed
   get DANGER_orderedChats() {
-    return this.list.sort(({messages: a, chatId: aC}, {messages: b, chatId: bC}) => {
+    return this.list.sort(({lastMessage: a}, {lastMessage: b}) => {
       console.log('sort', this.user.uid)
+
       if (!a || !b) return true
 
-      a = this.DANGER_getMessages(aC)
-      b = this.DANGER_getMessages(bC)
-      // a = Object.values(a).sort((a, b) => a.timestamp < b.timestamp)
-      // b = Object.values(b).sort((a, b) => a.timestamp < b.timestamp)
+      return a.timestamp < b.timestamp
 
-      return a[0].timestamp < b[0].timestamp
+      // return this.DANGER_getLastMessage(aC).timestamp < this.DANGER_getLastMessage(bC).timestamp
+
     })
-
-    // return this.list
   }
 
   isChatLoaded = (chatId) => {
@@ -76,9 +73,16 @@ class MessengerStore extends EntitiesStore {
     return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
   }
 
-  DANGER_getLastMessage = (chatId) => {
+  DANGER_getLastFetchedMessage = (chatId) => {
     const messages = this.DANGER_getMessages(chatId)
     return messages[messages.length - 1]
+  }
+
+  DANGER_getLastMessage = (chatId) => {
+    const messages = this.DANGER_getMessages(chatId)
+    return messages[0]
+
+    // return this.entities[chatId].lastMessage || {}
   }
 
   getMessages = (chatId) => {
@@ -110,25 +114,51 @@ class MessengerStore extends EntitiesStore {
   //   loading: bool
   // }
 
+  get latestTimestamp() {
+    return this.DANGER_orderedChats[0].lastMessage.timestamp
+  }
+
   @action DANGER_subscribeOnChats = () => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     const callback = async (snapshot) => {
-      const chat = snapshot.val()
-
-      this.DANGER_subscribeOnMessages({
-        ...chat,
-        // key: snapshot.key,
-        key: chat.chatId,
-        user: await fetchUserInfo(chat.userId),
+      const chat = {
+        ...snapshot.val(),
+        key: snapshot.key,
+        // key: chat.chatId,
+        user: await fetchUserInfo(snapshot.val().userId),
         loaded: false,
         loading: false
-      })
+      }
+
+      this.DANGER_subscribeOnMessages(chat)
+
 
     }
 
-    this.currentUserChatsReference.on('child_added', callback)
+    const callback2 = async (snapshot) => {
 
+      let [chat] = Object.entries(snapshot.val())
+        .map(([key, chat]) => ({...chat, key}))
+
+      chat.user = await fetchUserInfo(chat.userId)
+
+      this.appendChat(chat)
+
+    }
+
+    this.currentUserChatsReference.orderByChild('lastMessage/timestamp')
+      .limitToLast(1).on('value', callback2)
+
+    // this.currentUserChatsReference.on('child_added', callback)
+  }
+
+  @action fetchPreviousChats = () => {
+    this.currentUserChatsReference
+      .orderByChild('lastMessage/timestamp')
+      .limitToLast(10)
+      .endAt(this.latestTimestamp)
+      .once('value', console.log)
   }
 
   @action DANGER_subscribeOnMessages = (chat) => {
@@ -148,8 +178,8 @@ class MessengerStore extends EntitiesStore {
         text,
         userId: user
       }
-
       this.appendChat(chat)
+
       this.DANGER_appendMessage(chatId, message)
     }
 
@@ -247,7 +277,7 @@ class MessengerStore extends EntitiesStore {
 
     chat.loading = true
 
-    const lastMessage = this.DANGER_getLastMessage(chatId)
+    const lastMessage = this.DANGER_getLastFetchedMessage(chatId)
     const chunkShift = lastMessage ? 1 : 0
     const chunkLength = MESSAGES_CHUNK_LENGTH + chunkShift
 
@@ -366,7 +396,32 @@ class MessengerStore extends EntitiesStore {
       user: this.user.uid,
       timestamp: firebase.database.ServerValue.TIMESTAMP
     }
+
     this.getChatReference(chatId).push(message)
+
+    // Experimental functions. This concerns backend,
+    // but firebase has no functional like that
+    const chat = this.entities[chatId]
+
+    this.currentUserChatsReference
+      .child(chat.key)
+      .child('lastMessage')
+      .update(message)
+
+    const recipientRef = this.getUserChatsReference(chat.userId)
+
+    recipientRef
+      .orderByChild('chatId')
+      .equalTo(chatId)
+      .once('value')
+      .then(snapshot => {
+        const [key] = Object.keys(snapshot.val())
+
+        recipientRef
+          .child(key)
+          .child('lastMessage')
+          .update(message)
+      })
   }
 
   off() {

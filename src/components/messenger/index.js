@@ -30,19 +30,17 @@ class Messenger extends Component {
     const {
       openChatScreen,
       openUserInfoScreen,
-      deleteChat,
-      auth: {
-        user: {
-          uid: currentUserId
-        }
-      }
+      deleteChat
     } = this.props
 
-    return <ChatCard currentUserId = {currentUserId}
-                     openUserInfoScreen = {openUserInfoScreen}
-                     openChatScreen = {openChatScreen.bind(null, item.user)}
-                     deleteChat = {deleteChat}
-                     chat = {item}/>
+    return <ChatCard
+      openUserInfoScreen = {openUserInfoScreen}
+      openChatScreen = {openChatScreen}
+      deleteChat = {deleteChat}
+      chatId = {item.chatId}
+      lastMessage = {item.lastMessage}
+      user = {item.user}
+    />
   }
 
   render() {
