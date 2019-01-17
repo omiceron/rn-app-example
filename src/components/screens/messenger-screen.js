@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Messenger from '../messenger/index'
 import {inject, observer} from 'mobx-react'
 import {MESSENGER_STORE} from '../../constants'
+import Loader from '../common/loader'
 
 @inject(MESSENGER_STORE)
 @observer
@@ -15,7 +16,15 @@ class MessengerScreen extends Component {
     headerTintColor: '#FFF'
   })
 
+  // componentWillMount() {
+  //   this.props.messenger.DANGER_fetchChats()
+  // }
+
   render() {
+    const {loading, loaded, size} = this.props.messenger
+
+    if (size <= 1 && (!loaded || loading)) return <Loader/>
+
     return <Messenger
       openUserInfoScreen = {this.openUserInfoScreen}
       openChatScreen = {this.openChatScreen}
