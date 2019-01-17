@@ -46,7 +46,7 @@ class MessengerStore extends EntitiesStore {
   @computed
   get DANGER_orderedChats() {
     return this.list.sort(({lastMessage: a}, {lastMessage: b}) => {
-      console.log('sort', this.user.uid)
+      // console.log('sort', this.user.uid)
 
       if (!a || !b) return true
 
@@ -133,14 +133,13 @@ class MessengerStore extends EntitiesStore {
 
       this.DANGER_subscribeOnMessages(chat)
 
-
     }
 
     const callback2 = async (snapshot) => {
 
       let [chat] = Object.entries(snapshot.val())
         .map(([key, chat]) => ({...chat, key}))
-
+      // console.log(chat)
       chat.user = await fetchUserInfo(chat.userId)
 
       this.appendChat(chat)
@@ -153,19 +152,55 @@ class MessengerStore extends EntitiesStore {
     // this.currentUserChatsReference.on('child_added', callback)
   }
 
-  @action fetchPreviousChats = () => {
+  @action DANGER_fetchPreviousChats = () => {
+    if (this.loaded || this.loading) return
+
+    this.loading = true
+
+    const chunkShift = this.latestTimestamp ? 1 : 0
+    const chunkLength = 10 + chunkShift
+
+    const callback = action(async (snapshot) => {
+      const payload = snapshot.val() || {}
+      const currentChunkLength = Object.keys(payload).length
+      const isEmpty = currentChunkLength === chunkShift
+
+      !isEmpty && await this.appendFetchedChats(payload)
+      this.loaded = isEmpty || currentChunkLength < chunkLength
+      this.loading = false
+    })
+
     this.currentUserChatsReference
       .orderByChild('lastMessage/timestamp')
-      .limitToLast(10)
+      .limitToLast(chunkLength)
       .endAt(this.latestTimestamp)
-      .once('value', console.log)
+      .once('value', callback)
   }
 
-  @action DANGER_subscribeOnMessages = (chat) => {
-    const {chatId} = chat
+  @action appendFetchedChats = async (payload) => {
+    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+
+    const chats = await Promise.resolve(Object.entries(payload)
+      .reduce(async (accPromise, [key, chat]) => {
+          const acc = await accPromise
+
+          if (!this.entities[chat.chatId]) {
+            chat.user = await fetchUserInfo(chat.userId)
+            chat.key = key
+            acc[chat.chatId] = chat
+          }
+
+          return acc
+        }, {}
+      ))
+
+    this.entities = {...this.entities, ...chats}
+  }
+
+  @action DANGER_subscribeOnMessages = (chatId) => {
+    const chat = this.entities[chatId]
 
     const callback = (snapshot) => {
-
       // console.log(snapshot.val())
 
       // TODO: Rename 'user' to 'userId'
@@ -178,12 +213,14 @@ class MessengerStore extends EntitiesStore {
         text,
         userId: user
       }
-      this.appendChat(chat)
+      // this.appendChat(chat)
 
       this.DANGER_appendMessage(chatId, message)
     }
 
-    this.getChatReference(chatId).limitToLast(MESSAGES_CHUNK_LENGTH).on('child_added', callback)
+    this.getChatReference(chatId)
+      .limitToLast(1)
+      .on('child_added', callback)
   }
 
   @action subscribeOnChats = () => {
@@ -314,8 +351,9 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action appendChat = (chatData) => {
-    if (this.entities[chatData.chatId]) return
-    this.entities[chatData.chatId] = chatData
+    const chat = this.entities[chatData.chatId]
+
+    this.entities[chatData.chatId] = {...(chat || {}), ...chatData}
   }
 
   @action appendMessage = (chatId, message) => {

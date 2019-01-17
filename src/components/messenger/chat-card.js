@@ -6,6 +6,7 @@ import {AUTH_STORE, MESSENGER_STORE, ROW_HEIGHT, USER_STORE} from '../../constan
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {getTime} from '../../stores/utils'
 import {inject, observer} from 'mobx-react'
+import SegmentedCard from '../common/segmented-card'
 
 @inject(AUTH_STORE)
 @inject(MESSENGER_STORE)
@@ -93,7 +94,7 @@ class ChatCard extends Component {
 
     const isCurrentUser = this.props.auth.user.uid === userId
 
-    return <SwipeableCard onPress = {openChatScreen.bind(null, user)}
+    return <SegmentedCard onPress = {openChatScreen.bind(null, user)}
                           LeftComponent = {this.renderAvatar}
                           RightComponent = {this.renderDate}
                           onSwipeableLeftOpen = {deleteChat.bind(null, chatId)}
@@ -110,7 +111,7 @@ class ChatCard extends Component {
       <Text numberOfLines = {1} style = {styles.text}>
         {isCurrentUser && 'You: '}{text}
       </Text>
-    </SwipeableCard>
+    </SegmentedCard>
   }
 }
 
