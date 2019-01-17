@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-  StyleSheet, FlatList, SafeAreaView
+  StyleSheet, FlatList, SafeAreaView, ActivityIndicator
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
@@ -51,8 +51,10 @@ class Messenger extends Component {
         ItemSeparatorComponent = {() => <Separator leftIndent = {78}/>}
         data = {messenger.DANGER_orderedChats}
         renderItem = {this.renderChatCard}
-        onEndReached = {messenger.DANGER_fetchPreviousChats}
+        onEndReached = {messenger.DANGER_fetchChats}
+        onEndReachedThreshold = {0.1}
       />
+      {messenger.loading && <ActivityIndicator/>}
     </SafeAreaView>
   }
 
