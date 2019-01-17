@@ -16,10 +16,6 @@ class MessengerScreen extends Component {
     headerTintColor: '#FFF'
   })
 
-  // componentWillMount() {
-  //   this.props.messenger.DANGER_fetchChats()
-  // }
-
   render() {
     const {loading, loaded, size} = this.props.messenger
 
