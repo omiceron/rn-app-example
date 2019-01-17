@@ -33,9 +33,9 @@ class FeedScreen extends Component {
   // }
 
   render() {
-    const {feed: {posts, loading}} = this.props
+    const {size, loading, loaded} = this.props.feed
 
-    if (loading && !posts.length) return <Loader/>
+    if (!size && (!loaded || loading)) return <Loader/>
 
     return <Feed /*onLikeNumberPress = {this.handleOnLikeNumberPress}*//>
   }

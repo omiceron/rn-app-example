@@ -48,7 +48,7 @@ class Feed extends Component {
         renderItem = {renderItem}
         ItemSeparatorComponent = {ItemSeparatorComponent}
       />
-      {loaded || loading && <ActivityIndicator/>}
+      {loading && <ActivityIndicator/>}
     </SafeAreaView>
   }
 }
