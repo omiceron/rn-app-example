@@ -46,13 +46,10 @@ class MessengerStore extends EntitiesStore {
   @computed
   get DANGER_orderedChats() {
     return this.list.sort(({lastMessage: a}, {lastMessage: b}) => {
-      // console.log('sort', this.user.uid)
 
       if (!a || !b) return true
 
       return a.timestamp < b.timestamp
-
-      // return this.DANGER_getLastMessage(aC).timestamp < this.DANGER_getLastMessage(bC).timestamp
 
     })
   }
@@ -114,51 +111,43 @@ class MessengerStore extends EntitiesStore {
   //   loading: bool
   // }
 
-  get latestTimestamp() {
-    return this.DANGER_orderedChats[0].lastMessage.timestamp
+  @computed
+  get earliestFetchedChatTimestamp() {
+    const chat = this.DANGER_orderedChats[this.size - 1]
+
+    if (!chat) return
+
+    return chat.lastMessage.timestamp
   }
 
   @action DANGER_subscribeOnChats = () => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     const callback = async (snapshot) => {
-      const chat = {
-        ...snapshot.val(),
-        key: snapshot.key,
-        // key: chat.chatId,
-        user: await fetchUserInfo(snapshot.val().userId),
-        loaded: false,
-        loading: false
-      }
 
-      this.DANGER_subscribeOnMessages(chat)
-
-    }
-
-    const callback2 = async (snapshot) => {
-
-      let [chat] = Object.entries(snapshot.val())
+      const [chat] = Object.entries(snapshot.val())
         .map(([key, chat]) => ({...chat, key}))
-      // console.log(chat)
+
       chat.user = await fetchUserInfo(chat.userId)
 
       this.appendChat(chat)
 
     }
 
-    this.currentUserChatsReference.orderByChild('lastMessage/timestamp')
-      .limitToLast(1).on('value', callback2)
+    this.currentUserChatsReference
+      .orderByChild('lastMessage/timestamp')
+      .limitToLast(1)
+      .on('value', callback)
 
-    // this.currentUserChatsReference.on('child_added', callback)
   }
 
-  @action DANGER_fetchPreviousChats = () => {
+  @action DANGER_fetchChats = () => {
     if (this.loaded || this.loading) return
 
     this.loading = true
 
-    const chunkShift = this.latestTimestamp ? 1 : 0
-    const chunkLength = 10 + chunkShift
+    const chunkShift = this.earliestFetchedChatTimestamp ? 1 : 0
+    const chunkLength = 8 + chunkShift
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
@@ -170,11 +159,15 @@ class MessengerStore extends EntitiesStore {
       this.loading = false
     })
 
-    this.currentUserChatsReference
+    let ref = this.currentUserChatsReference
       .orderByChild('lastMessage/timestamp')
       .limitToLast(chunkLength)
-      .endAt(this.latestTimestamp)
-      .once('value', callback)
+
+    if (this.earliestFetchedChatTimestamp) {
+      ref = ref.endAt(this.earliestFetchedChatTimestamp)
+    }
+
+    ref.once('value', callback)
   }
 
   @action appendFetchedChats = async (payload) => {
