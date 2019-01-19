@@ -418,7 +418,16 @@ class MessengerStore extends EntitiesStore {
     delete this.entities[chatId]
   }
 
-  sendMessage = (payload, chatId) => {
+  sendMessage = (text, chatId) => {
+    if (!text) return
+
+    // https://github.com/omiceron/firebase-functions-example
+    const sendMessage = firebase.functions().httpsCallable('sendMessage')
+
+    sendMessage({text, chatId}).then(res => console.log('Message was sent'))
+  }
+
+  sendMessageBackend = (payload, chatId) => {
     if (!payload) return
 
     // TODO: Rename 'user' to 'userId'
