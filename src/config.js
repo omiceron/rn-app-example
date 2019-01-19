@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 import 'firebase/storage'
+import 'firebase/functions'
 
 export const appName = 'advancedreactcourse'
 export const facebookAppId = '1943342692364166'
