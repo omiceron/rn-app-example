@@ -40,16 +40,16 @@ class Chat extends Component {
   @action setMessage = message => this.message = message
 
   renderLoader = () => {
-    const {messenger: {isChatLoaded, isChatLoading}, chatId} = this.props
+    const {messenger, chatId} = this.props
 
-    return isChatLoaded(chatId) || isChatLoading(chatId) && <ActivityIndicator/>
+    return messenger.isChatLoaded(chatId) || messenger.isChatLoading(chatId) && <ActivityIndicator/>
   }
 
   render() {
     // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
     // console.log('render chat')
-    const {messenger: {getMessages, fetchPreviousMessages, DANGER_getMessages, DANGER_fetchPreviousMessages}, chatId} = this.props
-    const {uid: currentUserId} = this.props.auth.user
+    const {messenger, chatId} = this.props
+    // const {uid: currentUserId} = this.props.auth.user
 
     return <SafeAreaView style = {styles.container}>
       {this.renderLoader()}
@@ -57,10 +57,10 @@ class Chat extends Component {
       <FlatList
         enableEmptySections
         // onEndReached = {fetchPreviousMessages.bind(null, chatId)}
-        onEndReached = {DANGER_fetchPreviousMessages.bind(null, chatId)}
+        onEndReached = {messenger.DANGER_fetchMessages.bind(null, chatId)}
         inverted
         onEndReachedThreshold = {0.5}
-        data = {DANGER_getMessages(chatId)}
+        data = {messenger.DANGER_getMessages(chatId)}
         renderItem = {({item}) => <Message {...item}/>}
       />
 
@@ -70,14 +70,16 @@ class Chat extends Component {
                             style = {styles.chatContainer}>
 
         <View style = {styles.messageView}>
-          <TextInput ref = {ref => this.textInput = ref}
-                     style = {styles.messageText}
-                     value = {this.message}
-                     placeholder = 'Enter your message here'
-                     onChangeText = {this.setMessage}
-                     blurOnSubmit = {false}
-                     enablesReturnKeyAutomatically
-                     multiline/>
+          <TextInput
+            ref = {ref => this.textInput = ref}
+            style = {styles.messageText}
+            value = {this.message}
+            placeholder = 'Enter your message here'
+            onChangeText = {this.setMessage}
+            blurOnSubmit = {false}
+            enablesReturnKeyAutomatically
+            multiline
+          />
         </View>
 
         <TouchableOpacity onPress = {this.sendMessageHandler}>

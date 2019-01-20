@@ -9,7 +9,6 @@ import {CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFER
 // 2. Chats getter sorting issue
 // 3. Messages should be converted in utils
 // 4. Visibility issue
-// 5. Subscribe after fetching 20 messages
 
 class MessengerStore extends EntitiesStore {
 
@@ -300,7 +299,7 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action DANGER_fetchPreviousMessages = (chatId) => {
+  @action DANGER_fetchMessages = (chatId) => {
     const chat = this.entities[chatId]
 
     if (chat.loaded || chat.loading) return
