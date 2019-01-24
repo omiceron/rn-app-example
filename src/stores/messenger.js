@@ -4,12 +4,6 @@ import EntitiesStore from './entities-store'
 import {messagesFromFirebase} from './utils'
 import {CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE, PEOPLE_STORE} from '../constants'
 
-// 1. Asynchronous operations should work proper.
-//    No key duplicates, no setting chat ID delay
-// 2. Chats getter sorting issue
-// 3. Messages should be converted in utils
-// 4. Visibility issue
-
 class MessengerStore extends EntitiesStore {
 
   getChatReference = (chatId) => {
@@ -117,11 +111,12 @@ class MessengerStore extends EntitiesStore {
 
   @action DANGER_subscribeOnChats = () => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+    console.log('SUBSCRIBE ON CHATS:', 'start')
 
     const callback = async (snapshot) => {
       // this.loading = true
 
-      console.log('SUBSCRIBE ON CHATS:', 'get data')
+      console.log('SUBSCRIBE ON CHATS:', 'get data', snapshot.val())
 
       const [chat] = Object.entries(snapshot.val())
         .map(([key, chat]) => ({...chat, key}))
@@ -361,27 +356,13 @@ class MessengerStore extends EntitiesStore {
   @action DANGER_appendMessage = (chatId, message) => {
     console.log('APPEND MESSAGE:', 'start')
 
-    const chat = this.entities[chatId]
-
-    if (!chat) {
-
-      console.log('APPEND MESSAGE:', 'no chat')
-
-      this.entities[chatId] = {}
-
-      // setTimeout(() => this.DANGER_appendMessage(chatId, message), 1000)
-
-      // return
-
-    }
-
     if (!this.entities[chatId].messages) {
       console.log('APPEND MESSAGE:', 'no messages')
       this.entities[chatId].messages = {}
     }
 
-    console.log('APPEND MESSAGE:', 'set message')
     this.entities[chatId].messages[message.key] = message
+    console.log('APPEND MESSAGE:', 'message appended')
   }
 
   @action appendPreviousMessages = (chatId, messages) => {
@@ -389,15 +370,15 @@ class MessengerStore extends EntitiesStore {
   }
 
   getChatWith = async (userId) => {
-    console.log('Checking chat...')
+    console.log('GET CHAT:', 'checking chat')
 
     const callback = (snapshot) => {
       if (snapshot.exists()) {
         const {chatId} = Object.values(snapshot.val())[0]
-        console.log('Chat UID is', chatId)
+        console.log('GET CHAT:', 'chat UID is', chatId)
         return chatId
       } else {
-        console.log('There is no chat with user', userId, 'yet')
+        console.log('GET CHAT:', 'there is no chat with user', userId, 'yet')
         return null
       }
     }
@@ -409,42 +390,23 @@ class MessengerStore extends EntitiesStore {
       .then(callback)
   }
 
-  createChatWith = async (userId) =>
-    await
+  createChatWith = async (userId) => {
+    console.log('CREATE CHAT:', 'start')
+
+    const chatId = await
       firebase
         .functions()
         .httpsCallable('createChatWith')({userId})
-        .then(res => (console.log(res), res.data))
+        .then(res => res.data)
         .catch(console.error)
 
-  createChatWith_old = (userId) => {
+    console.log('CREATE CHAT:', 'chat created')
 
-    console.log('Creating new chat...')
+    this.appendChat({chatId, userId, messages: {}})
 
-    const {key: chatId} = firebase.database()
-      .ref(CHATS_REFERENCE)
-      .push({visibility: false})
-
-    this.currentUserChatsReference
-      .push({userId, chatId, visibility: false})
-
-    if (userId === this.user.uid) {
-      console.log('Self chat', chatId, 'was successfully created')
-      return chatId
-    }
-
-    this.getUserChatsReference(userId)
-      .push({userId: this.user.uid, chatId, visibility: false})
-
-    console.log('Chat', chatId, 'was successfully created')
+    console.log('CREATE CHAT:', 'chat appended')
 
     return chatId
-
-  }
-
-  @action deleteChat = (chatId) => {
-    if (!this.entities[chatId]) return
-    delete this.entities[chatId]
   }
 
   sendMessage = (text, chatId) => {
@@ -454,8 +416,13 @@ class MessengerStore extends EntitiesStore {
     const sendMessage = firebase.functions().httpsCallable('sendMessage')
 
     sendMessage({text, chatId})
-      .then(res => console.log('Message', res.data, 'was sent'))
+      .then(res => console.log('SEND MESSAGE:', 'got server respond', res.data))
       .catch(console.error)
+  }
+
+  @action deleteChat = (chatId) => {
+    if (!this.entities[chatId]) return
+    delete this.entities[chatId]
   }
 
   off() {
@@ -466,160 +433,6 @@ class MessengerStore extends EntitiesStore {
     })
 
     this.clear()
-  }
-
-  // DEPRECATED FUNCTIONS
-
-  sendMessageBackend = (payload, chatId) => {
-    if (!payload) return
-
-    // TODO: Rename 'user' to 'userId'
-    const message = {
-      text: payload,
-      user: this.user.uid,
-      timestamp: firebase.database.ServerValue.TIMESTAMP
-    }
-
-    this.getChatReference(chatId).push(message)
-
-    // Experimental functions. This concerns backend,
-    // but firebase has no functional like that
-    const chat = this.entities[chatId]
-
-    this.currentUserChatsReference
-      .child(chat.key)
-      .child('lastMessage')
-      .update(message)
-
-    const recipientRef = this.getUserChatsReference(chat.userId)
-
-    recipientRef
-      .orderByChild('chatId')
-      .equalTo(chatId)
-      .once('value')
-      .then(snapshot => {
-        const [key] = Object.keys(snapshot.val())
-
-        recipientRef
-          .child(key)
-          .child('lastMessage')
-          .update(message)
-      })
-  }
-
-  @observable DEPRECATED_chatId = null
-
-  @action DEPRECATED_fetchPreviousMessages = () => {
-    // console.log('Fetching started')
-    if (this.DEPRECATED_currentChatLoaded || this.DEPRECATED_currentChatLoading) return
-
-    if (this.DEPRECATED_messages.length < 20) {
-      this.DEPRECATED_setCurrentChatLoaded(true)
-      return
-    }
-
-    this.DEPRECATED_setCurrentChatLoading(true)
-
-    const ref = this.DEPRECATED_currentChatReference
-      .orderByKey()
-      .limitToLast(10)
-      .endAt(this.DEPRECATED_lastMessage.key)
-
-    const callback = action((data) => {
-      const payload = messagesFromFirebase(data.val())
-
-      if (payload.length <= 1) {
-        this.DEPRECATED_setCurrentChatLoading(false)
-        this.DEPRECATED_setCurrentChatLoaded(true)
-        return
-      }
-
-      payload.pop()
-
-      this.appendPreviousMessages(this.DEPRECATED_chatId, payload)
-      this.DEPRECATED_setCurrentChatLoading(false)
-
-    })
-
-    ref.once('value', callback)
-
-  }
-
-  @computed
-  get DEPRECATED_currentChatLoaded() {
-    if (!this.entities[this.DEPRECATED_chatId]) return
-    return this.entities[this.DEPRECATED_chatId].loaded
-  }
-
-  get DEPRECATED_currentChatReference() {
-    return this.getChatReference(this.DEPRECATED_chatId)
-  }
-
-  get DEPRECATED_lastMessage() {
-    const {messages} = this.entities[this.DEPRECATED_chatId]
-    return messages[messages.length - 1]
-  }
-
-  @computed
-  get DEPRECATED_messages() {
-    if (!this.entities[this.DEPRECATED_chatId]) return
-    return [...this.entities[this.DEPRECATED_chatId].messages]
-  }
-
-  @computed
-  get DEPRECATED_currentChatLoading() {
-    if (!this.entities[this.DEPRECATED_chatId]) return
-    return this.entities[this.DEPRECATED_chatId].loading
-  }
-
-  @action DEPRECATED_setCurrentChatLoaded = (isLoaded = true) => {
-    this.entities[this.DEPRECATED_chatId].loaded = isLoaded
-  }
-
-  @action DEPRECATED_setCurrentChatLoading = (isLoading = true) => {
-    this.entities[this.DEPRECATED_chatId].loading = isLoading
-  }
-
-  @action DEPRECATED_setChatId = chatId => {
-    // console.log('chat id has been set')
-    this.DEPRECATED_chatId = chatId
-  }
-
-  @computed
-  get DEPRECATED_currentChatVisibility() {
-    return this.entities[this.DEPRECATED_chatId].visibility
-  }
-
-  @action DEPRECATED_setCurrentChatVisibility = (isVisible = true) => {
-    this.entities[this.DEPRECATED_chatId].visibility = isVisible
-  }
-
-  DEPRECATED_sendMessage = (payload) => {
-
-    if (!payload) return
-
-    const message = {
-      text: payload,
-      user: this.user.uid,
-      timestamp: Date.now()
-    }
-
-    /*      // if (!this.currentChatVisibility) {
-            this.setCurrentChatVisibility(true)
-
-            // this.currentUserChatsReference.orderByChild('chatId').equalTo(this.chatId).update({visibility: true})
-
-            this.currentUserChatsReference
-              .child(this.entities[this.chatId].key)
-              .child('visibility')
-              .set(true)
-
-            this.currentUserChatsReference
-              .child(this.entities[this.chatId].key)
-              .child('timestamp')
-              .set(Date.now())*/
-
-    this.DEPRECATED_currentChatReference.push(message)
   }
 
 }
