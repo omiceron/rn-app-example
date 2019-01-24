@@ -44,13 +44,9 @@ class MessengerStore extends EntitiesStore {
 
   @computed
   get DANGER_orderedChats() {
-    return this.list.sort(({lastMessage: a}, {lastMessage: b}) => {
-
-      if (!a || !b) return true
-
-      return a.timestamp < b.timestamp
-
-    })
+    return this.list
+      .filter(({lastMessage}) => lastMessage)
+      .sort(({lastMessage: a}, {lastMessage: b}) => b.timestamp - a.timestamp)
   }
 
   isChatLoaded = (chatId) => {
@@ -65,7 +61,7 @@ class MessengerStore extends EntitiesStore {
 
   DANGER_getMessages = (chatId) => {
     const chat = this.entities[chatId]
-    if (!chat.messages) return []
+    if (!chat || !chat.messages) return []
     return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
   }
 
@@ -123,6 +119,9 @@ class MessengerStore extends EntitiesStore {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     const callback = async (snapshot) => {
+      // this.loading = true
+
+      console.log('SUBSCRIBE ON CHATS:', 'get data')
 
       const [chat] = Object.entries(snapshot.val())
         .map(([key, chat]) => ({...chat, key}))
@@ -130,6 +129,8 @@ class MessengerStore extends EntitiesStore {
       chat.user = await fetchUserInfo(chat.userId)
 
       this.appendChat(chat)
+
+      // this.loading = false
 
     }
 
@@ -191,9 +192,10 @@ class MessengerStore extends EntitiesStore {
 
   @action DANGER_subscribeOnMessages = (chatId) => {
     const chat = this.entities[chatId]
+    console.log('SUBSCRIBE ON MESSAGES:', 'start')
 
     const callback = (snapshot) => {
-      // console.log(snapshot.val())
+      console.log('SUBSCRIBE ON MESSAGES:', 'get data', snapshot.val())
 
       // TODO: Rename 'user' to 'userId'
       const {text, timestamp, user} = snapshot.val()
@@ -302,6 +304,8 @@ class MessengerStore extends EntitiesStore {
   @action DANGER_fetchMessages = (chatId) => {
     const chat = this.entities[chatId]
 
+    console.log('start fetching messages')
+
     if (chat.loaded || chat.loading) return
 
     chat.loading = true
@@ -355,10 +359,28 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action DANGER_appendMessage = (chatId, message) => {
+    console.log('APPEND MESSAGE:', 'start')
+
+    const chat = this.entities[chatId]
+
+    if (!chat) {
+
+      console.log('APPEND MESSAGE:', 'no chat')
+
+      this.entities[chatId] = {}
+
+      // setTimeout(() => this.DANGER_appendMessage(chatId, message), 1000)
+
+      // return
+
+    }
+
     if (!this.entities[chatId].messages) {
+      console.log('APPEND MESSAGE:', 'no messages')
       this.entities[chatId].messages = {}
     }
 
+    console.log('APPEND MESSAGE:', 'set message')
     this.entities[chatId].messages[message.key] = message
   }
 
@@ -369,13 +391,13 @@ class MessengerStore extends EntitiesStore {
   getChatWith = async (userId) => {
     console.log('Checking chat...')
 
-    const callback = (data) => {
-      if (data.exists()) {
-        const {chatId} = Object.values(data.val())[0]
+    const callback = (snapshot) => {
+      if (snapshot.exists()) {
+        const {chatId} = Object.values(snapshot.val())[0]
         console.log('Chat UID is', chatId)
         return chatId
       } else {
-        console.log('There is no chat with user', uid, 'yet')
+        console.log('There is no chat with user', userId, 'yet')
         return null
       }
     }
@@ -387,7 +409,15 @@ class MessengerStore extends EntitiesStore {
       .then(callback)
   }
 
-  createChatWith = (userId) => {
+  createChatWith = async (userId) =>
+    await
+      firebase
+        .functions()
+        .httpsCallable('createChatWith')({userId})
+        .then(res => (console.log(res), res.data))
+        .catch(console.error)
+
+  createChatWith_old = (userId) => {
 
     console.log('Creating new chat...')
 
@@ -423,8 +453,22 @@ class MessengerStore extends EntitiesStore {
     // https://github.com/omiceron/firebase-functions-example
     const sendMessage = firebase.functions().httpsCallable('sendMessage')
 
-    sendMessage({text, chatId}).then(res => console.log('Message was sent'))
+    sendMessage({text, chatId})
+      .then(res => console.log('Message', res.data, 'was sent'))
+      .catch(console.error)
   }
+
+  off() {
+    this.currentUserChatsReference.off()
+
+    Object.keys(this.entities).forEach(chatId => {
+      this.getChatReference(chatId).off()
+    })
+
+    this.clear()
+  }
+
+  // DEPRECATED FUNCTIONS
 
   sendMessageBackend = (payload, chatId) => {
     if (!payload) return
@@ -462,18 +506,6 @@ class MessengerStore extends EntitiesStore {
           .update(message)
       })
   }
-
-  off() {
-    this.currentUserChatsReference.off()
-
-    Object.keys(this.entities).forEach(chatId => {
-      this.getChatReference(chatId).off()
-    })
-
-    this.clear()
-  }
-
-  // DEPRECATED FUNCTIONS
 
   @observable DEPRECATED_chatId = null
 
