@@ -164,16 +164,16 @@ class MessengerStore extends EntitiesStore {
       console.log('SUBSCRIBE ON MESSAGES:', 'get data', snapshot.val())
 
       // TODO: Rename 'user' to 'userId'
-      const {text, timestamp, user} = snapshot.val()
+      const {text, timestamp, user, token} = snapshot.val()
       const {key} = snapshot
 
       const message = {
         key,
+        token,
         timestamp,
         text,
         userId: user
       }
-      // this.appendChat(chat)
 
       this.DANGER_appendMessage(chatId, message)
     }
@@ -248,7 +248,12 @@ class MessengerStore extends EntitiesStore {
       this.entities[chatId].messages = {}
     }
 
-    this.entities[chatId].messages[message.key] = message
+    if (this.entities[chatId].messages[message.token]) {
+      this.entities[chatId].messages[message.token] = message
+    } else {
+      this.entities[chatId].messages[message.key] = message
+    }
+
     console.log('APPEND MESSAGE:', 'message appended')
   }
 
@@ -276,16 +281,16 @@ class MessengerStore extends EntitiesStore {
   createChatWith = async (userId) => {
     console.log('CREATE CHAT:', 'start')
 
-    const chatId = await
+    const {chatId, key} = await
       firebase
         .functions()
         .httpsCallable('createChatWith')({userId})
         .then(res => res.data)
         .catch(console.error)
 
-    console.log('CREATE CHAT:', 'chat created')
+    console.log('CREATE CHAT:', 'chat created', chatId)
 
-    this.appendChat({chatId, userId, messages: {}, loaded: true})
+    this.appendChat({chatId, userId, key, messages: {}, loaded: true})
 
     console.log('CREATE CHAT:', 'chat appended')
 
@@ -298,9 +303,24 @@ class MessengerStore extends EntitiesStore {
     // https://github.com/omiceron/firebase-functions-example
     const sendMessage = firebase.functions().httpsCallable('sendMessage')
 
-    sendMessage({text, chatId})
-      .then(res => console.log('SEND MESSAGE:', 'got server respond', res.data))
+    const key = String(Date.now())
+
+    const tempMessage = {
+      text,
+      key,
+      timestamp: Date.now(),
+      userId: this.user.uid,
+      pending: true
+    }
+
+    this.DANGER_appendMessage(chatId, tempMessage)
+
+    sendMessage({text, chatId, token: key})
+      .then(res => {
+        console.log('SEND MESSAGE:', 'got server respond', res.data.key)
+      })
       .catch(console.error)
+
   }
 
   @action deleteChat = (chatId) => {
@@ -436,7 +456,6 @@ class MessengerStore extends EntitiesStore {
   @action appendPreviousMessages = (chatId, messages) => {
     this.entities[chatId].messages = [...this.entities[chatId].messages, ...messages.reverse()]
   }
-
 
 }
 

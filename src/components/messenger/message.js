@@ -1,6 +1,6 @@
 import React, {Component, PureComponent} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
-import {string, shape, array, number} from 'prop-types'
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
+import {string, bool, shape, array, number} from 'prop-types'
 import {AUTH_STORE, WINDOW_WIDTH} from '../../constants'
 import {observer, inject} from 'mobx-react'
 
@@ -10,11 +10,12 @@ class Message extends PureComponent {
     userId: string.isRequired,
     text: string.isRequired,
     timestamp: number.isRequired,
-    key: string
+    key: string,
+    pending: bool
   }
 
   render() {
-    const {userId, text, timestamp} = this.props
+    const {userId, text, timestamp, pending} = this.props
     const isCurrentUser = this.props.auth.user.uid === userId
     // const date = new Date(timestamp).toTimeString().slice(0, 5)
 
@@ -29,8 +30,8 @@ class Message extends PureComponent {
     return <View
       // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
       style = {[styles.container, {
-        backgroundColor: isCurrentUser ? '#89F' : '#EEE',
-        alignSelf: isCurrentUser ? 'flex-end' : 'flex-start'
+        alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
+        backgroundColor: isCurrentUser ? '#89F' : '#EEE'
       }]}>
       <Text selectable style = {[styles.text, {
         maxWidth: WINDOW_WIDTH - WINDOW_WIDTH / 5,
@@ -38,6 +39,7 @@ class Message extends PureComponent {
       }]}>
         {text}
       </Text>
+      {pending && <ActivityIndicator color = '#fff'/>}
     </View>
   }
 
