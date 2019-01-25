@@ -53,10 +53,10 @@ class ChatScreen extends Component {
 
   async componentWillMount() {
     const {uid} = this.props.navigation.state.params.user
-    const {getChatWith, createChatWith, DANGER_subscribeOnMessages} = this.props.messenger
-    this.chatId = await getChatWith(uid) || await createChatWith(uid)
+    const {messenger} = this.props
+    this.chatId = await messenger.getChatWith(uid) || await messenger.createChatWith(uid)
     // console.log('get chat', this.chatId)
-    DANGER_subscribeOnMessages(this.chatId)
+    messenger.DANGER_subscribeOnMessages(this.chatId)
   }
 
   render() {

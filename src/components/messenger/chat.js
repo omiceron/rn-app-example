@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -42,6 +42,8 @@ class Chat extends Component {
   renderLoader = () => {
     const {messenger, chatId} = this.props
 
+    console.log('CHAT COMPONENT:', 'loaded', messenger.isChatLoaded(chatId), 'loading', messenger.isChatLoading(chatId))
+
     return messenger.isChatLoaded(chatId) || messenger.isChatLoading(chatId) && <ActivityIndicator/>
   }
 
@@ -55,8 +57,8 @@ class Chat extends Component {
       {this.renderLoader()}
 
       <FlatList
+        // ListEmptyComponent = {() => <View><Text>empty</Text></View>}
         enableEmptySections
-        // onEndReached = {fetchPreviousMessages.bind(null, chatId)}
         onEndReached = {messenger.DANGER_fetchMessages.bind(null, chatId)}
         inverted
         onEndReachedThreshold = {0.5}
