@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 class BasicCard extends Component {
   static propTypes = {
     style: View.propTypes.style,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
   }
 
   render() {

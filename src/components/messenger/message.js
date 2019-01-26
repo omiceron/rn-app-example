@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
 import {string, bool, shape, array, number} from 'prop-types'
 import {AUTH_STORE, WINDOW_WIDTH} from '../../constants'
 import {observer, inject} from 'mobx-react'
+// import Icon from 'react-native-vector-icons/Ionicons'
 
 @inject(AUTH_STORE)
 class Message extends PureComponent {
@@ -27,19 +28,23 @@ class Message extends PureComponent {
         </View>
     */
 
-    return <View
-      // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
-      style = {[styles.container, {
-        alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
-        backgroundColor: isCurrentUser ? '#89F' : '#EEE'
-      }]}>
-      <Text selectable style = {[styles.text, {
-        maxWidth: WINDOW_WIDTH - WINDOW_WIDTH / 5,
-        color: isCurrentUser ? '#FFF' : '#000'
-      }]}>
-        {text}
-      </Text>
-      {pending && <ActivityIndicator color = '#fff'/>}
+    return <View style = {{
+      alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
+      flexDirection: 'row'
+    }}>
+      {pending && <ActivityIndicator/>}
+      <View
+        // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
+        style = {[styles.container, {
+          backgroundColor: isCurrentUser ? '#89F' : '#EEE'
+        }]}>
+        <Text selectable style = {[styles.text, {
+          maxWidth: WINDOW_WIDTH - WINDOW_WIDTH / 5,
+          color: isCurrentUser ? '#FFF' : '#000'
+        }]}>
+          {text}
+        </Text>
+      </View>
     </View>
   }
 
