@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
 import {string, bool, shape, array, number} from 'prop-types'
 import {AUTH_STORE, WINDOW_WIDTH} from '../../constants'
 import {observer, inject} from 'mobx-react'
-// import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 @inject(AUTH_STORE)
 class Message extends PureComponent {
@@ -32,7 +32,17 @@ class Message extends PureComponent {
       alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
       flexDirection: 'row'
     }}>
-      {pending && <ActivityIndicator/>}
+      {/*{pending && <ActivityIndicator/>}*/}
+      {isCurrentUser && <View style = {{
+        justifyContent: 'center',
+        marginLeft: 8,
+        marginTop: 2,
+      }}>
+        <Icon
+          name = {`ios-${pending ? 'checkmark' : 'done-all'}`}
+          color = '#CCCCCC'
+          size = {30}/>
+      </View>}
       <View
         // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
         style = {[styles.container, {
