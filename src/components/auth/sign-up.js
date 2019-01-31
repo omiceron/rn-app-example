@@ -39,7 +39,7 @@ class SignUp extends Component {
       firstName: string.isRequired,
       setFirstName: func.isRequired,
       isFirstNameValid: bool.isRequired
-    }).isRequired
+    })
 
   }
 

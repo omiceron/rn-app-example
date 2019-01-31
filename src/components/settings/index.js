@@ -27,8 +27,8 @@ class Settings extends Component {
     }),
     user: shape({
       firstName: string.isRequired,
-      lastName: string.isRequired,
-      userInfo: string.isRequired,
+      lastName: string,
+      userInfo: string,
       setLastName: func.isRequired,
       setFirstName: func.isRequired,
       setUserInfo: func.isRequired,

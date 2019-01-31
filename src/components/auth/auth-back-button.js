@@ -11,7 +11,7 @@ class AuthBackButton extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
-    }).isRequired
+    })
   }
 
   render() {
