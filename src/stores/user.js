@@ -57,14 +57,14 @@ class UserStore extends EntitiesStore {
     const callback = action(data => {
       this.loading = true
 
-      const {firstName = null, lastName = null, userInfo = null} = data.val()
+      const {firstName = null, lastName = null, userInfo = null} = data.val() || {}
 
       this.entities = {...this.entities, firstName, lastName, userInfo}
 
+      this.cacheUserData({uid, firstName, lastName, userInfo}).catch(console.error)
+
       this.loading = false
       this.loaded = true
-
-      this.cacheUserData({uid, firstName, lastName, userInfo}).catch(console.error)
 
       console.log('User data updated')
 
