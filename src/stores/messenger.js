@@ -88,6 +88,8 @@ class MessengerStore extends EntitiesStore {
 
       console.log('SUBSCRIBE ON CHATS:', 'get data', snapshot.val())
 
+      if (!snapshot.val()) return
+
       const [chat] = Object.entries(snapshot.val())
         .map(([key, chat]) => ({...chat, key}))
 
