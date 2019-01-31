@@ -2,7 +2,7 @@ import EntitiesStore from './entities-store'
 import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
-import {AUTH_STORE, AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, USER_STORE} from '../constants'
+import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, PEOPLE_STORE, USER_STORE} from '../constants'
 
 class PeopleStore extends EntitiesStore {
 
@@ -36,31 +36,6 @@ class PeopleStore extends EntitiesStore {
 
         const {avatar, email, firstName, lastName, userInfo} = userData
         return {avatar, email, firstName, lastName, userInfo, uid}
-      })
-  }
-
-  @action
-  async createPerson(uid) {
-    await this.reference
-      .child(uid)
-      .once('value', async snapshot => {
-        if (!snapshot.exists()) {
-          const {email, photoURL, displayName} = firebase.auth().currentUser
-
-          let firstName = null, lastName = null
-
-          if (displayName) {
-            [firstName, lastName] = displayName.split(' ')
-          } else {
-            const {firstName: newUserFirstName} = this.getStore(AUTH_STORE)
-            if (newUserFirstName) {
-              firstName = newUserFirstName
-              firebase.auth().currentUser.updateProfile({displayName: newUserFirstName})
-            }
-          }
-
-          this.reference.child(uid).update({firstName, lastName, email, avatar: photoURL})
-        }
       })
   }
 

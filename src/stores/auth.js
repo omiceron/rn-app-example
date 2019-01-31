@@ -27,7 +27,8 @@ class AuthStore extends BasicStore {
       this.setUser(user)
 
       if (user) {
-        await this.getStore(PEOPLE_STORE).createPerson(user.uid)
+        // this.signOut()
+        await this.createUser(user.uid)
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
         // this.getStore(MESSENGER_STORE).subscribeOnChats()
@@ -108,6 +109,38 @@ class AuthStore extends BasicStore {
     // alert('registered!')
     firebase.auth().createUserWithEmailAndPassword(this.signUpEmail, this.signUpPassword)
   }
+
+  async createUser() {
+    const {firstName} = this || this.getStore(USER_STORE)
+    return firebase.functions().httpsCallable('createUser')({firstName})
+
+    // const isCreated = await this.getStore(PEOPLE_STORE).reference
+    //   .child(uid)
+    //   .once('value')
+    //   .then(snapshot => snapshot.exists())
+    //
+    // if (isCreated) {
+    //   console.log('user already created', uid)
+    //   return
+    // }
+    //
+    // let firstName = null, lastName = null
+    //
+    // const {email = null, photoURL = null, displayName = ''} = firebase.auth().currentUser
+    //
+    // if (displayName) {
+    //   [firstName = null, lastName = null] = displayName.split(' ')
+    // } else {
+    //   firstName = this.getStore(AUTH_STORE).firstName || this.getStore(USER_STORE).firstName
+    //   firebase.auth().currentUser.updateProfile({displayName: firstName})
+    // }
+    //
+    // return this.getStore(PEOPLE_STORE)
+    // .reference.child(uid)
+    // .update({firstName, lastName, email, avatar: photoURL})
+
+  }
+
 
   signOut = async () => {
     this.clear()
