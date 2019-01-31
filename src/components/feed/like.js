@@ -5,7 +5,8 @@ import {
   Animated,
   TouchableWithoutFeedback
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+// import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 
 class Like extends PureComponent {
@@ -47,8 +48,10 @@ class Like extends PureComponent {
       <View style = {[styles.container, style]}>
         <AnimatedIcon color = {activated ? '#FF0000' : 'rgba(127,127,127,1)'}
                       size = {30}
-                      name = {`ios-heart${activated ? '' : '-outline'}`}
-                      style = {[{lineHeight: 34}, {transform: [{scale: this.interpolation}]}]}/>
+                      name = {`cat`}
+                      // name = {`ios-heart${activated ? '' : '-outline'}`}
+                      style = {[{lineHeight: 32}, {transform: [{scale: this.interpolation}]}]}/>
+                      {/*style = {[{lineHeight: 34}, {transform: [{scale: this.interpolation}]}]}/>*/}
       </View>
     </TouchableWithoutFeedback>
   }
