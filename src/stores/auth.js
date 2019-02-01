@@ -28,7 +28,7 @@ class AuthStore extends BasicStore {
 
       if (user) {
         // this.signOut()
-        await this.createUser(user.uid)
+        // await this.checkUser(user.uid)
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
         // this.getStore(MESSENGER_STORE).subscribeOnChats()
@@ -100,19 +100,30 @@ class AuthStore extends BasicStore {
     this.firstName = ''
   }
 
-  signIn = async () => {
-    await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+  signIn = async (email, password) => {
+    await firebase.auth().signInWithEmailAndPassword(email || this.email, password || this.password)
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
-  signUp = () => {
-    // alert('registered!')
-    firebase.auth().createUserWithEmailAndPassword(this.signUpEmail, this.signUpPassword)
+  signUp = async () => {
+    const email = this.signUpEmail
+    const password = this.signUpPassword
+    await firebase.functions().httpsCallable('createUser')({
+      email,
+      password,
+      displayName: this.firstName
+    }).catch(err => {
+      throw err
+    })
+
+    this.signIn(email, password)
+
+    // firebase.auth().createUserWithEmailAndPassword(this.signUpEmail, this.signUpPassword)
   }
 
-  async createUser() {
+  async checkUser() {
     const {firstName} = this || this.getStore(USER_STORE)
-    return firebase.functions().httpsCallable('createUser')({firstName})
+    return firebase.functions().httpsCallable('checkUser')({firstName})
 
     // const isCreated = await this.getStore(PEOPLE_STORE).reference
     //   .child(uid)
@@ -140,7 +151,6 @@ class AuthStore extends BasicStore {
     // .update({firstName, lastName, email, avatar: photoURL})
 
   }
-
 
   signOut = async () => {
     this.clear()
