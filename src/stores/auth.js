@@ -87,7 +87,7 @@ class AuthStore extends BasicStore {
 
   @computed
   get isFirstNameValid() {
-    return validator.isAlpha(this.firstName)
+    return validator.isAlpha(this.firstName) || validator.isAlpha(this.firstName, 'ru-RU')
   }
 
   @action
@@ -172,23 +172,63 @@ class AuthStore extends BasicStore {
     if (type === 'success') {
       const credential = firebase.auth.FacebookAuthProvider.credential(token)
 
-      console.log(credential)
+      const {
+        user: {
+          uid
+        },
+        additionalUserInfo: {
+          isNewUser,
+          profile: {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            picture: {
+              data: {
+                url: avatar
+              }
+            }
+          }
+        }
+      } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
-      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
-
+      if (isNewUser) {
+        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
+      }
     }
   }
 
   loginWithGoogle = async () => {
     const {type, idToken, accessToken} = await Google.logInAsync({
       iosClientId: googleClientId,
-      scopes: ['profile']
+      scopes: ['profile', 'email']
     })
 
     if (type === 'success') {
       const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
 
-      await firebase.auth().signInAndRetrieveDataWithCredential(credential).then(console.log, console.error)
+      const {
+        user: {
+          uid
+        },
+        additionalUserInfo: {
+          isNewUser,
+          profile: {
+            family_name: firstName,
+            given_name: lastName,
+            email,
+            picture: avatar
+          }
+        }
+      } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
+
+      console.log(isNewUser)
+
+
+      if (isNewUser) {
+
+        // TODO: Make avatar working
+        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
+      }
     }
   }
 
