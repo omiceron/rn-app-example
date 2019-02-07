@@ -27,16 +27,16 @@ class PeopleStore extends EntitiesStore {
   }
 
   fetchUserInfo = async (uid) => {
-    return await this.reference.child(uid)
-      .once('value')
-      .then(snapshot => {
-        const userData = snapshot.val()
+    const user = Object.values(this.entities).find(x => x.uid === uid) ||
+      await this.reference.child(uid)
+        .once('value')
+        .then(snapshot => snapshot.val())
 
-        if (!userData) return
+    if (!user) return
 
-        const {avatar, email, firstName, lastName, userInfo} = userData
-        return {avatar, email, firstName, lastName, userInfo, uid}
-      })
+    const {avatar, email, firstName, lastName, userInfo} = user
+    return {avatar, email, firstName, lastName, userInfo, uid}
+
   }
 
   @action fetchPeople = () => {
