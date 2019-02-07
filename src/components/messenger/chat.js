@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
+  SafeAreaView
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -15,6 +15,7 @@ import Message from './message'
 import {observable, action} from 'mobx'
 import {AUTH_STORE, MESSENGER_STORE} from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
+import EmptyList from './empty-list'
 
 // redesign the chat
 
@@ -23,28 +24,37 @@ import {string, func, shape, object, any} from 'prop-types'
 @observer
 class Chat extends Component {
   static propTypes = {
-    messenger: shape({
-      sendMessage: func.isRequired,
-      isChatLoaded: func.isRequired,
-      isChatLoading: func.isRequired,
-      getMessages: func.isRequired,
-      fetchPreviousMessages: func.isRequired
-    }),
+    // messenger: shape({
+    //   sendMessage: func.isRequired,
+    //   isChatLoaded: func.isRequired,
+    //   isChatLoading: func.isRequired,
+    //   getMessages: func.isRequired,
+    //   fetchPreviousMessages: func.isRequired
+    // }),
     chatId: string.isRequired,
     auth: shape({
       user: object.isRequired
     })
   }
 
+  componentWillMount() {
+    this.props.messenger.DANGER_subscribeOnMessages(this.props.chatId)
+  }
+
   @observable message = ''
   @action setMessage = message => this.message = message
 
-  renderLoader = () => {
+  renderMessages = () => {
     const {messenger, chatId} = this.props
 
-    console.log('CHAT COMPONENT:', 'loaded', messenger.isChatLoaded(chatId), 'loading', messenger.isChatLoading(chatId))
-
-    return messenger.isChatLoaded(chatId) || messenger.isChatLoading(chatId) && <ActivityIndicator/>
+    return <FlatList
+      enableEmptySections
+      onEndReached = {messenger.DANGER_fetchMessages.bind(null, chatId)}
+      inverted
+      onEndReachedThreshold = {0.5}
+      data = {messenger.DANGER_getMessages(chatId)}
+      renderItem = {({item}) => <Message {...item}/>}
+    />
   }
 
   render() {
@@ -54,22 +64,16 @@ class Chat extends Component {
     // const {uid: currentUserId} = this.props.auth.user
 
     return <SafeAreaView style = {styles.container}>
-      {this.renderLoader()}
+      {messenger.isChatLoading(chatId) && <ActivityIndicator/>}
+      {!messenger.DANGER_getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
+        <EmptyList/> : this.renderMessages()}
 
-      <FlatList
-        // ListEmptyComponent = {() => <View><Text>empty</Text></View>}
-        enableEmptySections
-        onEndReached = {messenger.DANGER_fetchMessages.bind(null, chatId)}
-        inverted
-        onEndReachedThreshold = {0.5}
-        data = {messenger.DANGER_getMessages(chatId)}
-        renderItem = {({item}) => <Message {...item}/>}
-      />
-
-      <KeyboardAvoidingView behavior = 'padding'
-                            enabled
-                            keyboardVerticalOffset = {65}
-                            style = {styles.chatContainer}>
+      <KeyboardAvoidingView
+        behavior = 'padding'
+        enabled
+        keyboardVerticalOffset = {65}
+        style = {styles.chatContainer}
+      >
 
         <View style = {styles.messageView}>
           <TextInput

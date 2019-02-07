@@ -50,7 +50,10 @@ class MessengerStore extends EntitiesStore {
   }
 
   isChatLoaded = (chatId) => {
-    if (!this.entities[chatId]) return
+    if (!this.entities[chatId]) {
+      console.log('no chat', chatId)
+      return
+    }
     return this.entities[chatId].loaded
   }
 
@@ -80,21 +83,22 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action DANGER_subscribeOnChats = () => {
-    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+    // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
     console.log('SUBSCRIBE ON CHATS:', 'start')
 
     const callback = async (snapshot) => {
       // this.loading = true
 
-      console.log('SUBSCRIBE ON CHATS:', 'get data', snapshot.val())
+      console.log('SUBSCRIBE ON CHATS:', 'get data')
 
-      if (!snapshot.val()) return
+      // if (!snapshot.val()) return
+      //
+      // const [chat] = Object.entries(snapshot.val()).map(([key, chat]) => ({...chat, key}))
+      //
+      // chat.loaded = !chat.lastMessage
+      // chat.user = await fetchUserInfo(chat.userId)
 
-      const [chat] = Object.entries(snapshot.val())
-        .map(([key, chat]) => ({...chat, key}))
-
-      chat.user = await fetchUserInfo(chat.userId)
-
+      const chat = await this.retrieveChat(snapshot.val())
       this.appendChat(chat)
 
       // this.loading = false
@@ -118,6 +122,7 @@ class MessengerStore extends EntitiesStore {
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
+      // console.log(payload)
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
@@ -140,6 +145,14 @@ class MessengerStore extends EntitiesStore {
   @action appendFetchedChats = async (payload) => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
+    // Object.entries(payload).forEach(async ([key, chat]) => {
+    //   if (!this.entities[chat.chatId]) {
+    //     chat.user = await fetchUserInfo(chat.userId)
+    //     chat.key = key
+    //     this.appendChat(chat)
+    //   }
+    // })
+
     const chats = await Promise.resolve(Object.entries(payload)
       .reduce(async (accPromise, [key, chat]) => {
           const acc = await accPromise
@@ -154,12 +167,24 @@ class MessengerStore extends EntitiesStore {
         }, {}
       ))
 
-    // Mutates store
+    // let chats = await Promise.all(Object.entries(payload)
+    //   .map(async ([key, chat]) => {
+    //     chat.user = await fetchUserInfo(chat.userId)
+    //     chat.key = key
+    //
+    //     return chat
+    //   }))
+    //
+    // chats = chats.reduce((acc, chat) => {
+    //   if (!this.entities[chat.chatId]) acc[chat.chatId] = chat
+    //   return acc
+    // }, {})
+
     this.entities = {...this.entities, ...chats}
+
   }
 
   @action DANGER_subscribeOnMessages = (chatId) => {
-    const chat = this.entities[chatId]
     console.log('SUBSCRIBE ON MESSAGES:', 'start')
 
     const callback = (snapshot) => {
@@ -187,9 +212,9 @@ class MessengerStore extends EntitiesStore {
 
   @action DANGER_fetchMessages = (chatId) => {
 
-    console.log('FETCH MESSAGES:', 'start')
-    console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
-    console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
+    // console.log('FETCH MESSAGES:', 'start')
+    // console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
+    // console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
 
     if (this.entities[chatId].loaded || this.entities[chatId].loading) return
 
@@ -205,14 +230,14 @@ class MessengerStore extends EntitiesStore {
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
-      console.log('FETCH MESSAGES:', 'is empty?', isEmpty)
+      // console.log('FETCH MESSAGES:', 'is empty?', isEmpty)
 
       !isEmpty && this.DANGER_appendFetchedMessages(chatId, payload)
 
       this.entities[chatId].loaded = isEmpty || currentChunkLength < chunkLength
       this.entities[chatId].loading = false
-      console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
-      console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
+      // console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
+      // console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
 
     })
 
@@ -235,18 +260,30 @@ class MessengerStore extends EntitiesStore {
         this.DANGER_appendMessage(chatId, {...message, userId: message.user, key}))
   }
 
+  retrieveChat = async (payload) => {
+
+    // console.log(payload)
+    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+
+    const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
+
+    chat.loaded = !chat.lastMessage
+    chat.user = await fetchUserInfo(chat.userId)
+
+    return chat
+  }
+
   @action appendChat = (chatData) => {
     const chat = this.entities[chatData.chatId]
 
-    // Mutates store
     this.entities[chatData.chatId] = {...(chat || {}), ...chatData}
   }
 
   @action DANGER_appendMessage = (chatId, message) => {
-    console.log('APPEND MESSAGE:', 'start')
+    // console.log('APPEND MESSAGE:', 'start')
 
     if (!this.entities[chatId].messages) {
-      console.log('APPEND MESSAGE:', 'no messages')
+      // console.log('APPEND MESSAGE:', 'no messages')
       this.entities[chatId].messages = {}
     }
 
@@ -256,17 +293,28 @@ class MessengerStore extends EntitiesStore {
       this.entities[chatId].messages[message.key] = message
     }
 
-    console.log('APPEND MESSAGE:', 'message appended')
+    // console.log('APPEND MESSAGE:', 'message appended')
   }
 
-  getChatWith = async (userId) => {
+  getChatWith = async (userId, user) => {
     console.log('GET CHAT:', 'checking chat')
 
-    const callback = (snapshot) => {
+    const callback = async (snapshot) => {
       if (snapshot.exists()) {
-        const {chatId} = Object.values(snapshot.val())[0]
-        console.log('GET CHAT:', 'chat UID is', chatId)
-        return chatId
+        // const [chat] = Object.entries(snapshot.val()).map(([key, chat]) => ({...chat, key}))
+        //
+        // const {chatId, lastMessage} = chat
+        // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+        //
+        // chat.loaded = !lastMessage
+        // chat.user = await fetchUserInfo(chat.userId)
+
+        const chat = await this.retrieveChat(snapshot.val())
+        console.log('GET CHAT:', 'chat UID is', chat.chatId)
+
+        this.appendChat(chat)
+
+        return chat.chatId
       } else {
         console.log('GET CHAT:', 'there is no chat with user', userId, 'yet')
         return null
@@ -354,110 +402,111 @@ class MessengerStore extends EntitiesStore {
   //     })
   // }
 
-  @action subscribeOnChats = () => {
-
-    const callback = async (chatData) => {
-      const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
-      const {userId} = chatData.val()
-
-      this.subscribeOnMessages({
-        ...chatData.val(),
-        key: chatData.key,
-        user: await fetchUserInfo(userId),
-        loaded: false,
-        loading: false
-      })
-
-    }
-
-    this.currentUserChatsReference
-    // .orderByChild('timestamp')
-    // .orderByChild('visibility')
-    // .equalTo(true)
-    // .limitToLast(3)
-      .on('child_added', callback)
-
-  }
-
-  @action subscribeOnMessages = (chatData) => {
-    const {chatId} = chatData
-
-    const callback = (snapshot) => {
-
-      // TODO: Rename 'user' to 'userId'
-      const {text, timestamp, user} = snapshot.val()
-      const {key} = snapshot
-
-      const message = {
-        key,
-        timestamp,
-        text,
-        userId: user
-      }
-
-      this.appendChat(chatData)
-      this.appendMessage(chatId, message)
-    }
-
-    this.getChatReference(chatId).limitToLast(20).on('child_added', callback)
-  }
-
-  @action fetchPreviousMessages = (chatId) => {
-    const chat = this.entities[chatId]
-
-    if (chat.loaded || chat.loading) return
-
-    if (this.getMessages(chatId).length < 20) {
-      chat.loaded = true
-      return
-    }
-
-    chat.loading = true
-
-    const callback = action((data) => {
-      const payload = messagesFromFirebase(data.val())
-
-      if (payload.length <= 1) {
-        chat.loading = false
-        chat.loaded = true
-        return
-      }
-
-      payload.pop()
-
-      this.appendPreviousMessages(chatId, payload)
-      chat.loading = false
-
-    })
-
-    this.getChatReference(chatId)
-      .orderByKey()
-      .limitToLast(10)
-      .endAt(this.getLastMessage(chatId).key)
-      .once('value', callback)
-
-  }
-
-  @action appendMessage = (chatId, message) => {
-    // if (!this.entities[chatId].messages) this.entities[chatId].messages = [message]
-    // else
-    this.entities[chatId].messages = [message, ...(this.entities[chatId].messages || [])]
-  }
-
-  getLastMessage = (chatId) => {
-    const {messages} = this.entities[chatId]
-    return messages[messages.length - 1]
-  }
-
-  getMessages = (chatId) => {
-    if (!this.entities[chatId]) return
-    return this.entities[chatId].messages
-    // return [...this.entities[chatId].messages]
-  }
-
-  @action appendPreviousMessages = (chatId, messages) => {
-    this.entities[chatId].messages = [...this.entities[chatId].messages, ...messages.reverse()]
-  }
+  //
+  // @action subscribeOnChats = () => {
+  //
+  //   const callback = async (chatData) => {
+  //     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+  //     const {userId} = chatData.val()
+  //
+  //     this.subscribeOnMessages({
+  //       ...chatData.val(),
+  //       key: chatData.key,
+  //       user: await fetchUserInfo(userId),
+  //       loaded: false,
+  //       loading: false
+  //     })
+  //
+  //   }
+  //
+  //   this.currentUserChatsReference
+  //   // .orderByChild('timestamp')
+  //   // .orderByChild('visibility')
+  //   // .equalTo(true)
+  //   // .limitToLast(3)
+  //     .on('child_added', callback)
+  //
+  // }
+  //
+  // @action subscribeOnMessages = (chatData) => {
+  //   const {chatId} = chatData
+  //
+  //   const callback = (snapshot) => {
+  //
+  //     // TODO: Rename 'user' to 'userId'
+  //     const {text, timestamp, user} = snapshot.val()
+  //     const {key} = snapshot
+  //
+  //     const message = {
+  //       key,
+  //       timestamp,
+  //       text,
+  //       userId: user
+  //     }
+  //
+  //     this.appendChat(chatData)
+  //     this.appendMessage(chatId, message)
+  //   }
+  //
+  //   this.getChatReference(chatId).limitToLast(20).on('child_added', callback)
+  // }
+  //
+  // @action fetchPreviousMessages = (chatId) => {
+  //   const chat = this.entities[chatId]
+  //
+  //   if (chat.loaded || chat.loading) return
+  //
+  //   if (this.getMessages(chatId).length < 20) {
+  //     chat.loaded = true
+  //     return
+  //   }
+  //
+  //   chat.loading = true
+  //
+  //   const callback = action((data) => {
+  //     const payload = messagesFromFirebase(data.val())
+  //
+  //     if (payload.length <= 1) {
+  //       chat.loading = false
+  //       chat.loaded = true
+  //       return
+  //     }
+  //
+  //     payload.pop()
+  //
+  //     this.appendPreviousMessages(chatId, payload)
+  //     chat.loading = false
+  //
+  //   })
+  //
+  //   this.getChatReference(chatId)
+  //     .orderByKey()
+  //     .limitToLast(10)
+  //     .endAt(this.getLastMessage(chatId).key)
+  //     .once('value', callback)
+  //
+  // }
+  //
+  // @action appendMessage = (chatId, message) => {
+  //   // if (!this.entities[chatId].messages) this.entities[chatId].messages = [message]
+  //   // else
+  //   this.entities[chatId].messages = [message, ...(this.entities[chatId].messages || [])]
+  // }
+  //
+  // getLastMessage = (chatId) => {
+  //   const {messages} = this.entities[chatId]
+  //   return messages[messages.length - 1]
+  // }
+  //
+  // getMessages = (chatId) => {
+  //   if (!this.entities[chatId]) return
+  //   return this.entities[chatId].messages
+  //   // return [...this.entities[chatId].messages]
+  // }
+  //
+  // @action appendPreviousMessages = (chatId, messages) => {
+  //   this.entities[chatId].messages = [...this.entities[chatId].messages, ...messages.reverse()]
+  // }
 
 }
 

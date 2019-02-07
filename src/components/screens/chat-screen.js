@@ -14,7 +14,7 @@ class ChatScreen extends Component {
     messenger: PropTypes.shape({
       getChatWith: PropTypes.func.isRequired,
       createChatWith: PropTypes.func.isRequired
-    }).isRequired
+    })
   }
 
   @observable chatId = null
@@ -55,15 +55,10 @@ class ChatScreen extends Component {
     const {uid} = this.props.navigation.state.params.user
     const {messenger} = this.props
     this.chatId = await messenger.getChatWith(uid) || await messenger.createChatWith(uid)
-    // console.log('get chat', this.chatId)
-    messenger.DANGER_subscribeOnMessages(this.chatId)
   }
 
   render() {
-    if (!this.chatId) return <Loader/>
-
-    // console.log('render chat', this.chatId)
-
+    if (!this.chatId || this.props.messenger.loading) return <Loader/>
     return <Chat chatId = {this.chatId}/>
   }
 
