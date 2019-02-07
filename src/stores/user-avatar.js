@@ -62,7 +62,7 @@ class UserAvatarStore extends EntitiesStore {
 
       if (!this.entities.avatar) {
         console.log('User has no cached avatar')
-        this.downloadUserAvatar(avatar).catch(console.error)
+        this.downloadUserAvatar(avatar).catch(err => console.warn('AVATAR:', 'download error'))
         return
       }
 
@@ -74,11 +74,17 @@ class UserAvatarStore extends EntitiesStore {
             }
       */
 
+      if (!avatar.includes("https://firebasestorage.googleapis.com/")) {
+        console.log('Avatar from social network')
+        return
+      }
+
       const firebaseAvatarHash = await this.getHashFromUri(avatar)
 
       if (firebaseAvatarHash !== this.entities.avatarHash) {
         console.log('Cached avatar and server avatar are different')
-        this.downloadUserAvatar(avatar, firebaseAvatarHash).catch(console.error)
+        this.downloadUserAvatar(avatar, firebaseAvatarHash)
+          .catch(err => console.warn('AVATAR:', 'update avatar error'))
         return
       }
 
@@ -136,28 +142,28 @@ class UserAvatarStore extends EntitiesStore {
       }
   */
 
-  checkUserAvatarByHash = async (uri) => {
-
-    /*    const {avatarHash} = await AsyncStorage
-          .getItem('user')
-          .then(res => JSON.parse(res))
-          .catch(err => console.log('AvatarHash AsyncStorage error!'))*/
-
-    const storageAvatarHash = this.entities.avatarHash
-
-    // console.log('local avatar', storageAvatarHash)
-
-    const {md5Hash: firebaseAvatarHash} = await firebase
-      .storage()
-      .refFromURL(uri)
-      .getMetadata()
-      .catch(err => console.log('AvatarHash Firebase error!'))
-
-    // console.log('server avatar', firebaseAvatarHash)
-
-    return firebaseAvatarHash === storageAvatarHash
-
-  }
+  // checkUserAvatarByHash = async (uri) => {
+  //
+  //   /*    const {avatarHash} = await AsyncStorage
+  //         .getItem('user')
+  //         .then(res => JSON.parse(res))
+  //         .catch(err => console.log('AvatarHash AsyncStorage error!'))*/
+  //
+  //   const storageAvatarHash = this.entities.avatarHash
+  //
+  //   // console.log('local avatar', storageAvatarHash)
+  //
+  //   const {md5Hash: firebaseAvatarHash} = await firebase
+  //     .storage()
+  //     .refFromURL(uri)
+  //     .getMetadata()
+  //     .catch(err => console.log('AvatarHash Firebase error!'))
+  //
+  //   // console.log('server avatar', firebaseAvatarHash)
+  //
+  //   return firebaseAvatarHash === storageAvatarHash
+  //
+  // }
 
   getHashFromUri = async (uri) => {
     const {md5Hash} = await firebase
@@ -173,12 +179,20 @@ class UserAvatarStore extends EntitiesStore {
     this.loading = true
     console.log('Downloading avatar...')
 
-    // Firebase functional only
-    const name = uri.replace(/^.*token=/g, '')
+    let name = ''
+    if (uri.includes("https://firebasestorage.googleapis.com/")) {
 
-    // getting hash from server avatar
-    if (!avatarHash) {
-      avatarHash = await this.getHashFromUri(uri)
+      // Firebase functional only
+      name = uri.replace(/^.*token=/g, '')
+
+      // getting hash from server avatar
+      if (!avatarHash) {
+        avatarHash = await this.getHashFromUri(uri)
+      }
+
+    } else {
+      avatarHash = null
+      name = this.user.uid
     }
 
     // downloading the file from uri to device
@@ -206,13 +220,21 @@ class UserAvatarStore extends EntitiesStore {
   @action retrieveCachedUserAvatar = () => {
     AsyncStorage.getItem('user')
       .then(async res => {
+
+        console.log('AVATAR:', 'get item')
         if (!res) {
-          console.log('There is no cached user')
+          console.log('AVATAR:', 'There is no cached user')
           return
         }
 
         const {avatar, avatarHash} = JSON.parse(res)
-        const {exists} = await FileSystem.getInfoAsync(avatar)
+
+        if (!avatar) {
+          console.log('AVATAR:', 'No cached avatar')
+          return
+        }
+
+        const {exists} = await FileSystem.getInfoAsync(avatar).catch(err => console.log('AVATAR:', 'FS error'))
 
         if (!exists) {
           console.log('User avatar file has not been found')
@@ -221,7 +243,7 @@ class UserAvatarStore extends EntitiesStore {
 
         this.entities = {avatar, avatarHash}
       })
-      .catch(err => console.log('AsyncStorage error'))
+      .catch(err => console.log('AVATAR: AsyncStorage error'))
   }
 
   @action
