@@ -29,10 +29,9 @@ class AuthStore extends BasicStore {
       if (user) {
         // this.signOut()
         // await this.checkUser(user.uid)
+
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
-        // this.getStore(MESSENGER_STORE).subscribeOnChats()
-        // this.getStore(MESSENGER_STORE).DANGER_subscribeOnChats()
 
         this.getStore(MESSENGER_STORE).DANGER_fetchChats()
         this.getStore(MESSENGER_STORE).DANGER_subscribeOnChats()
@@ -213,20 +212,15 @@ class AuthStore extends BasicStore {
         additionalUserInfo: {
           isNewUser,
           profile: {
-            family_name: firstName,
-            given_name: lastName,
+            family_name: lastName,
+            given_name: firstName,
             email,
             picture: avatar
           }
         }
       } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
-      console.log(isNewUser)
-
-
       if (isNewUser) {
-
-        // TODO: Make avatar working
         await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
       }
     }
