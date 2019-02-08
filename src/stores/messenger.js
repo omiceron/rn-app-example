@@ -4,24 +4,6 @@ import EntitiesStore from './entities-store'
 import {messagesFromFirebase} from './utils'
 import {CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE, PEOPLE_STORE} from '../constants'
 
-// chat structure:
-//
-// [chatId]: {
-//   messages: {
-//     [messageId]: {
-//       key: [messageId]
-//       timestamp
-//       text
-//       userId ??? maybe better isCurrentUser
-//     }
-//   }
-//   chatId: [chatId]
-//   key: [refId]
-//   user: obj
-//   loaded: bool
-//   loading: bool
-// }
-
 class MessengerStore extends EntitiesStore {
 
   getChatReference = (chatId) => {
@@ -65,7 +47,7 @@ class MessengerStore extends EntitiesStore {
   DANGER_getMessages = (chatId) => {
     const chat = this.entities[chatId]
     if (!chat || !chat.messages) return []
-    return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
+    return chat.messages
   }
 
   DANGER_getLastFetchedMessage = (chatId) => {
@@ -254,10 +236,17 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action DANGER_appendFetchedMessages = (chatId, payload) => {
-    Object
-      .entries(payload)
-      .forEach(([key, message]) =>
-        this.DANGER_appendMessage(chatId, {...message, userId: message.user, key}))
+
+    const messages = Object.entries(payload)
+      .reduceRight((acc, [key, message]) => {
+        if (this.entities[chatId].messages.find(m => m.key !== key)) {
+          acc.push({...message, userId: message.user, key})
+        }
+        return acc
+      }, [])
+
+    this.entities[chatId].messages = [...(this.entities[chatId].messages||[]), ...messages]
+
   }
 
   retrieveChat = async (payload) => {
@@ -295,14 +284,16 @@ class MessengerStore extends EntitiesStore {
 
     if (!this.entities[chatId].messages) {
       // console.log('APPEND MESSAGE:', 'no messages')
-      this.entities[chatId].messages = {}
+      this.entities[chatId].messages = []
     }
 
-    if (this.entities[chatId].messages[message.token]) {
-      this.entities[chatId].messages[message.token] = message
-    } else {
-      this.entities[chatId].messages[message.key] = message
+    if (this.entities[chatId].messages.some(({key}) => key === message.key)) return
+    if (this.entities[chatId].messages.some(({key}) => key === message.token)) {
+      this.entities[chatId].messages.find(({key}) => key === message.token).pending = false
+      return
     }
+
+    this.entities[chatId].messages = [message, ...this.entities[chatId].messages]
 
     // console.log('APPEND MESSAGE:', 'message appended')
   }
@@ -351,7 +342,7 @@ class MessengerStore extends EntitiesStore {
 
     console.log('CREATE CHAT:', 'chat created', chatId)
 
-    this.appendChat({chatId, userId, key, messages: {}, loaded: true})
+    this.appendChat({chatId, userId, key, messages: [], loaded: true})
 
     console.log('CREATE CHAT:', 'chat appended')
 
@@ -398,126 +389,6 @@ class MessengerStore extends EntitiesStore {
 
     this.clear()
   }
-
-  // DEPRECATED
-
-  // @computed
-  // get orderedChats() {
-  //   return Object.values(this.entities)
-  //     .sort((firstChat, secondChat) => {
-  //
-  //       // TODO: messages existence check should be before calling this function
-  //       if (!firstChat.messages || !secondChat.messages) return true
-  //
-  //       return firstChat.messages[0].timestamp < secondChat.messages[0].timestamp
-  //     })
-  // }
-
-  //
-  // @action subscribeOnChats = () => {
-  //
-  //   const callback = async (chatData) => {
-  //     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
-  //     const {userId} = chatData.val()
-  //
-  //     this.subscribeOnMessages({
-  //       ...chatData.val(),
-  //       key: chatData.key,
-  //       user: await fetchUserInfo(userId),
-  //       loaded: false,
-  //       loading: false
-  //     })
-  //
-  //   }
-  //
-  //   this.currentUserChatsReference
-  //   // .orderByChild('timestamp')
-  //   // .orderByChild('visibility')
-  //   // .equalTo(true)
-  //   // .limitToLast(3)
-  //     .on('child_added', callback)
-  //
-  // }
-  //
-  // @action subscribeOnMessages = (chatData) => {
-  //   const {chatId} = chatData
-  //
-  //   const callback = (snapshot) => {
-  //
-  //     // TODO: Rename 'user' to 'userId'
-  //     const {text, timestamp, user} = snapshot.val()
-  //     const {key} = snapshot
-  //
-  //     const message = {
-  //       key,
-  //       timestamp,
-  //       text,
-  //       userId: user
-  //     }
-  //
-  //     this.appendChat(chatData)
-  //     this.appendMessage(chatId, message)
-  //   }
-  //
-  //   this.getChatReference(chatId).limitToLast(20).on('child_added', callback)
-  // }
-  //
-  // @action fetchPreviousMessages = (chatId) => {
-  //   const chat = this.entities[chatId]
-  //
-  //   if (chat.loaded || chat.loading) return
-  //
-  //   if (this.getMessages(chatId).length < 20) {
-  //     chat.loaded = true
-  //     return
-  //   }
-  //
-  //   chat.loading = true
-  //
-  //   const callback = action((data) => {
-  //     const payload = messagesFromFirebase(data.val())
-  //
-  //     if (payload.length <= 1) {
-  //       chat.loading = false
-  //       chat.loaded = true
-  //       return
-  //     }
-  //
-  //     payload.pop()
-  //
-  //     this.appendPreviousMessages(chatId, payload)
-  //     chat.loading = false
-  //
-  //   })
-  //
-  //   this.getChatReference(chatId)
-  //     .orderByKey()
-  //     .limitToLast(10)
-  //     .endAt(this.getLastMessage(chatId).key)
-  //     .once('value', callback)
-  //
-  // }
-  //
-  // @action appendMessage = (chatId, message) => {
-  //   // if (!this.entities[chatId].messages) this.entities[chatId].messages = [message]
-  //   // else
-  //   this.entities[chatId].messages = [message, ...(this.entities[chatId].messages || [])]
-  // }
-  //
-  // getLastMessage = (chatId) => {
-  //   const {messages} = this.entities[chatId]
-  //   return messages[messages.length - 1]
-  // }
-  //
-  // getMessages = (chatId) => {
-  //   if (!this.entities[chatId]) return
-  //   return this.entities[chatId].messages
-  //   // return [...this.entities[chatId].messages]
-  // }
-  //
-  // @action appendPreviousMessages = (chatId, messages) => {
-  //   this.entities[chatId].messages = [...this.entities[chatId].messages, ...messages.reverse()]
-  // }
 
 }
 
