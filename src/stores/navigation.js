@@ -1,13 +1,15 @@
 import {NavigationActions, StackActions} from 'react-navigation'
 import {autorun} from 'mobx'
-import BasicStore from "./basic-store";
+import BasicStore from './basic-store'
 import {AUTH_STORE} from '../constants'
+import {AsyncStorage} from 'react-native'
+
 
 export default class NavigationStore extends BasicStore {
   onInit() {
     autorun(() => {
       const {user} = this.getStore(AUTH_STORE)
-      this.navigate(user ? 'app' : 'signIn')
+      // this.navigate(user ? 'app' : 'signIn')
     })
   }
 

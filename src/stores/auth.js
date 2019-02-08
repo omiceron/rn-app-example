@@ -116,38 +116,11 @@ class AuthStore extends BasicStore {
     })
 
     this.signIn(email, password)
-
-    // firebase.auth().createUserWithEmailAndPassword(this.signUpEmail, this.signUpPassword)
   }
 
   async checkUser() {
     const {firstName} = this || this.getStore(USER_STORE)
     return firebase.functions().httpsCallable('checkUser')({firstName})
-
-    // const isCreated = await this.getStore(PEOPLE_STORE).reference
-    //   .child(uid)
-    //   .once('value')
-    //   .then(snapshot => snapshot.exists())
-    //
-    // if (isCreated) {
-    //   console.log('user already created', uid)
-    //   return
-    // }
-    //
-    // let firstName = null, lastName = null
-    //
-    // const {email = null, photoURL = null, displayName = ''} = firebase.auth().currentUser
-    //
-    // if (displayName) {
-    //   [firstName = null, lastName = null] = displayName.split(' ')
-    // } else {
-    //   firstName = this.getStore(AUTH_STORE).firstName || this.getStore(USER_STORE).firstName
-    //   firebase.auth().currentUser.updateProfile({displayName: firstName})
-    // }
-    //
-    // return this.getStore(PEOPLE_STORE)
-    // .reference.child(uid)
-    // .update({firstName, lastName, email, avatar: photoURL})
 
   }
 
@@ -193,6 +166,9 @@ class AuthStore extends BasicStore {
       if (isNewUser) {
         await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
       }
+
+      this.getStore(NAVIGATION_STORE).navigate('app')
+
     }
   }
 
@@ -223,47 +199,11 @@ class AuthStore extends BasicStore {
       if (isNewUser) {
         await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
       }
+
+      this.getStore(NAVIGATION_STORE).navigate('app')
+
     }
   }
-
-  /*
-    loginFacebook = () => {
-      console.log(LoginManager.logInWithReadPermissions)
-      // LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
-
-      /!*
-        .then(
-          (result) => {
-            if (result.isCancelled) {
-              alert('Whoops!')
-            } else {
-              AccessToken.getCurrentAccessToken()
-                .then((data) => {
-                  const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
-                  firebase.auth().signInWithCredential(credential)
-                    // .then(loginUserSuccess(dispatch))
-                    // .catch((error) => {
-                    //   loginSingUpFail(dispatch, error.message)
-                    // })
-                })
-            }
-          },
-          (error) => {
-            alert('Sign in error')
-          },
-        )*!/
-    }
-  */
-
-  /*
-    updateDisplayName = () => {
-      const user = firebase.auth().currentUser
-
-      user.updateProfile({
-        displayName: this.displayName
-      })
-    }
-  */
 
 }
 

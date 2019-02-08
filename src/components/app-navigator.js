@@ -24,6 +24,7 @@ import PostFormScreen from './screens/post-form-screen'
 import LocationFormScreen from './screens/location-form-screen'
 import LikesListScreen from './screens/likes-list-screen'
 import PostScreen from './screens/post-screen'
+import AuthLoadingScreen from './screens/loader-screen'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
   <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
@@ -146,6 +147,9 @@ const ModalNavigator = createStackNavigator({
 })
 
 const AppNavigator = createAppContainer(createSwitchNavigator({
+  loading: {
+    screen: AuthLoadingScreen
+  },
     auth: {
       screen: AuthNavigator
     },
