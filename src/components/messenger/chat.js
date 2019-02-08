@@ -38,7 +38,7 @@ class Chat extends Component {
   }
 
   componentWillMount() {
-    this.props.messenger.DANGER_subscribeOnMessages(this.props.chatId)
+    this.props.messenger.subscribeOnMessages(this.props.chatId)
   }
 
   @observable message = ''
@@ -49,10 +49,10 @@ class Chat extends Component {
 
     return <FlatList
       enableEmptySections
-      onEndReached = {messenger.DANGER_fetchMessages.bind(null, chatId)}
+      onEndReached = {messenger.fetchMessages.bind(null, chatId)}
       inverted
       onEndReachedThreshold = {0.5}
-      data = {messenger.DANGER_getMessages(chatId)}
+      data = {messenger.getMessages(chatId)}
       renderItem = {({item}) => <Message {...item}/>}
     />
   }
@@ -65,7 +65,7 @@ class Chat extends Component {
 
     return <SafeAreaView style = {styles.container}>
       {messenger.isChatLoading(chatId) && <ActivityIndicator/>}
-      {!messenger.DANGER_getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
+      {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
         <EmptyList/> : this.renderMessages()}
 
       <KeyboardAvoidingView

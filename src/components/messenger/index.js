@@ -46,7 +46,7 @@ class Messenger extends Component {
 
   render() {
     const {messenger} = this.props
-    const chats = messenger.DANGER_orderedChats
+    const chats = messenger.orderedChats
 
     if (!chats.length) return <EmptyList/>
     return <SafeAreaView style = {styles.container}>
@@ -54,7 +54,7 @@ class Messenger extends Component {
         ItemSeparatorComponent = {() => <Separator leftIndent = {78}/>}
         data = {chats}
         renderItem = {this.renderChatCard}
-        onEndReached = {messenger.DANGER_fetchChats}
+        onEndReached = {messenger.fetchChats}
         onEndReachedThreshold = {0.1}
       />
       {messenger.loading && <ActivityIndicator/>}

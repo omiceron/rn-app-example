@@ -1,7 +1,6 @@
-import {observable, action, computed} from 'mobx'
+import {action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
-import {messagesFromFirebase} from './utils'
 import {CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE, PEOPLE_STORE} from '../constants'
 
 // chat structure:
@@ -43,7 +42,7 @@ class MessengerStore extends EntitiesStore {
   }
 
   @computed
-  get DANGER_orderedChats() {
+  get orderedChats() {
     return this.list
       .filter(({lastMessage}) => lastMessage)
       .sort(({lastMessage: a}, {lastMessage: b}) => b.timestamp - a.timestamp)
@@ -62,47 +61,35 @@ class MessengerStore extends EntitiesStore {
     return this.entities[chatId].loading
   }
 
-  DANGER_getMessages = (chatId) => {
+  getMessages = (chatId) => {
     const chat = this.entities[chatId]
     if (!chat || !chat.messages) return []
     return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
   }
 
-  DANGER_getLastFetchedMessage = (chatId) => {
-    const messages = this.DANGER_getMessages(chatId)
+  getLastFetchedMessage = (chatId) => {
+    const messages = this.getMessages(chatId)
     return messages[messages.length - 1]
   }
 
   @computed
   get earliestFetchedChatTimestamp() {
-    const chat = this.DANGER_orderedChats[this.size - 1]
+    const chat = this.orderedChats[this.size - 1]
 
     if (!chat) return
 
     return chat.lastMessage.timestamp
   }
 
-  @action DANGER_subscribeOnChats = () => {
-    // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+  @action subscribeOnChats = () => {
     console.log('SUBSCRIBE ON CHATS:', 'start')
 
     const callback = async (snapshot) => {
-      // this.loading = true
 
       console.log('SUBSCRIBE ON CHATS:', 'get data')
 
-      // if (!snapshot.val()) return
-      //
-      // const [chat] = Object.entries(snapshot.val()).map(([key, chat]) => ({...chat, key}))
-      //
-      // chat.loaded = !chat.lastMessage
-      // chat.user = await fetchUserInfo(chat.userId)
-
-      const chat = await this.retrieveChat(snapshot.val())
-      this.appendChat(chat)
-
-      // this.loading = false
-
+      await this.convertChat(snapshot.val())
+        .then(this.appendChat)
     }
 
     this.currentUserChatsReference
@@ -112,7 +99,7 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action DANGER_fetchChats = () => {
+  @action fetchChats = () => {
     if (this.loaded || this.loading) return
 
     this.loading = true
@@ -122,7 +109,6 @@ class MessengerStore extends EntitiesStore {
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
-      // console.log(payload)
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
@@ -168,7 +154,7 @@ class MessengerStore extends EntitiesStore {
     //   ))
 
     const chats = await
-      this.retrieveChats(payload)
+      this.convertChats(payload)
         .then(chats => chats.reduce((acc, chat) => {
           if (!this.entities[chat.chatId]) {
             acc[chat.chatId] = chat
@@ -180,7 +166,7 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action DANGER_subscribeOnMessages = (chatId) => {
+  @action subscribeOnMessages = (chatId) => {
     console.log('SUBSCRIBE ON MESSAGES:', 'start')
 
     if (this.entities[chatId].subscribed) return
@@ -200,7 +186,7 @@ class MessengerStore extends EntitiesStore {
         userId: user
       }
 
-      this.DANGER_appendMessage(chatId, message)
+      this.appendMessage(chatId, message)
     }
 
     this.entities[chatId].subscribed = true
@@ -210,17 +196,13 @@ class MessengerStore extends EntitiesStore {
       .on('child_added', callback)
   }
 
-  @action DANGER_fetchMessages = (chatId) => {
-
-    // console.log('FETCH MESSAGES:', 'start')
-    // console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
-    // console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
-
+  @action fetchMessages = (chatId) => {
+    console.log('FETCH MESSAGES:', 'start')
     if (this.entities[chatId].loaded || this.entities[chatId].loading) return
 
     this.entities[chatId].loading = true
 
-    const lastMessage = this.DANGER_getLastFetchedMessage(chatId)
+    const lastMessage = this.getLastFetchedMessage(chatId)
     const chunkShift = lastMessage ? 1 : 0
     const chunkLength = MESSAGES_CHUNK_LENGTH + chunkShift
 
@@ -230,15 +212,10 @@ class MessengerStore extends EntitiesStore {
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
-      // console.log('FETCH MESSAGES:', 'is empty?', isEmpty)
-
-      !isEmpty && this.DANGER_appendFetchedMessages(chatId, payload)
+      !isEmpty && this.appendFetchedMessages(chatId, payload)
 
       this.entities[chatId].loaded = isEmpty || currentChunkLength < chunkLength
       this.entities[chatId].loading = false
-      // console.log('FETCH MESSAGES:', 'chat loading', this.entities[chatId].loading)
-      // console.log('FETCH MESSAGES:', 'chat loaded', this.entities[chatId].loaded)
-
     })
 
     let ref = this.getChatReference(chatId)
@@ -253,16 +230,14 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action DANGER_appendFetchedMessages = (chatId, payload) => {
+  @action appendFetchedMessages = (chatId, payload) => {
     Object
       .entries(payload)
       .forEach(([key, message]) =>
-        this.DANGER_appendMessage(chatId, {...message, userId: message.user, key}))
+        this.appendMessage(chatId, {...message, userId: message.user, key}))
   }
 
-  retrieveChat = async (payload) => {
-
-    // console.log(payload)
+  convertChat = async (payload) => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
@@ -273,7 +248,7 @@ class MessengerStore extends EntitiesStore {
     return chat
   }
 
-  retrieveChats = async (payload) => {
+  convertChats = async (payload) => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     return await Promise.all(Object.entries(payload).map(async ([key, chat]) => {
@@ -288,11 +263,12 @@ class MessengerStore extends EntitiesStore {
     const chat = this.entities[chatData.chatId]
 
     this.entities[chatData.chatId] = {...(chat || {}), ...chatData}
+
+    return chatData
   }
 
-  @action DANGER_appendMessage = (chatId, message) => {
+  @action appendMessage = (chatId, message) => {
     // console.log('APPEND MESSAGE:', 'start')
-
     if (!this.entities[chatId].messages) {
       // console.log('APPEND MESSAGE:', 'no messages')
       this.entities[chatId].messages = {}
@@ -312,15 +288,7 @@ class MessengerStore extends EntitiesStore {
 
     const callback = async (snapshot) => {
       if (snapshot.exists()) {
-        // const [chat] = Object.entries(snapshot.val()).map(([key, chat]) => ({...chat, key}))
-        //
-        // const {chatId, lastMessage} = chat
-        // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
-        //
-        // chat.loaded = !lastMessage
-        // chat.user = await fetchUserInfo(chat.userId)
-
-        const chat = await this.retrieveChat(snapshot.val())
+        const chat = await this.convertChat(snapshot.val())
         console.log('GET CHAT:', 'chat UID is', chat.chatId)
 
         this.appendChat(chat)
@@ -374,7 +342,7 @@ class MessengerStore extends EntitiesStore {
       pending: true
     }
 
-    this.DANGER_appendMessage(chatId, tempMessage)
+    this.appendMessage(chatId, tempMessage)
 
     sendMessage({text, chatId, token: key})
       .then(res => {
@@ -398,126 +366,6 @@ class MessengerStore extends EntitiesStore {
 
     this.clear()
   }
-
-  // DEPRECATED
-
-  // @computed
-  // get orderedChats() {
-  //   return Object.values(this.entities)
-  //     .sort((firstChat, secondChat) => {
-  //
-  //       // TODO: messages existence check should be before calling this function
-  //       if (!firstChat.messages || !secondChat.messages) return true
-  //
-  //       return firstChat.messages[0].timestamp < secondChat.messages[0].timestamp
-  //     })
-  // }
-
-  //
-  // @action subscribeOnChats = () => {
-  //
-  //   const callback = async (chatData) => {
-  //     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
-  //     const {userId} = chatData.val()
-  //
-  //     this.subscribeOnMessages({
-  //       ...chatData.val(),
-  //       key: chatData.key,
-  //       user: await fetchUserInfo(userId),
-  //       loaded: false,
-  //       loading: false
-  //     })
-  //
-  //   }
-  //
-  //   this.currentUserChatsReference
-  //   // .orderByChild('timestamp')
-  //   // .orderByChild('visibility')
-  //   // .equalTo(true)
-  //   // .limitToLast(3)
-  //     .on('child_added', callback)
-  //
-  // }
-  //
-  // @action subscribeOnMessages = (chatData) => {
-  //   const {chatId} = chatData
-  //
-  //   const callback = (snapshot) => {
-  //
-  //     // TODO: Rename 'user' to 'userId'
-  //     const {text, timestamp, user} = snapshot.val()
-  //     const {key} = snapshot
-  //
-  //     const message = {
-  //       key,
-  //       timestamp,
-  //       text,
-  //       userId: user
-  //     }
-  //
-  //     this.appendChat(chatData)
-  //     this.appendMessage(chatId, message)
-  //   }
-  //
-  //   this.getChatReference(chatId).limitToLast(20).on('child_added', callback)
-  // }
-  //
-  // @action fetchPreviousMessages = (chatId) => {
-  //   const chat = this.entities[chatId]
-  //
-  //   if (chat.loaded || chat.loading) return
-  //
-  //   if (this.getMessages(chatId).length < 20) {
-  //     chat.loaded = true
-  //     return
-  //   }
-  //
-  //   chat.loading = true
-  //
-  //   const callback = action((data) => {
-  //     const payload = messagesFromFirebase(data.val())
-  //
-  //     if (payload.length <= 1) {
-  //       chat.loading = false
-  //       chat.loaded = true
-  //       return
-  //     }
-  //
-  //     payload.pop()
-  //
-  //     this.appendPreviousMessages(chatId, payload)
-  //     chat.loading = false
-  //
-  //   })
-  //
-  //   this.getChatReference(chatId)
-  //     .orderByKey()
-  //     .limitToLast(10)
-  //     .endAt(this.getLastMessage(chatId).key)
-  //     .once('value', callback)
-  //
-  // }
-  //
-  // @action appendMessage = (chatId, message) => {
-  //   // if (!this.entities[chatId].messages) this.entities[chatId].messages = [message]
-  //   // else
-  //   this.entities[chatId].messages = [message, ...(this.entities[chatId].messages || [])]
-  // }
-  //
-  // getLastMessage = (chatId) => {
-  //   const {messages} = this.entities[chatId]
-  //   return messages[messages.length - 1]
-  // }
-  //
-  // getMessages = (chatId) => {
-  //   if (!this.entities[chatId]) return
-  //   return this.entities[chatId].messages
-  //   // return [...this.entities[chatId].messages]
-  // }
-  //
-  // @action appendPreviousMessages = (chatId, messages) => {
-  //   this.entities[chatId].messages = [...this.entities[chatId].messages, ...messages.reverse()]
-  // }
 
 }
 
