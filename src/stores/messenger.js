@@ -143,7 +143,7 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action appendFetchedChats = async (payload) => {
-    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+    // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
     // Object.entries(payload).forEach(async ([key, chat]) => {
     //   if (!this.entities[chat.chatId]) {
@@ -153,32 +153,28 @@ class MessengerStore extends EntitiesStore {
     //   }
     // })
 
-    const chats = await Promise.resolve(Object.entries(payload)
-      .reduce(async (accPromise, [key, chat]) => {
-          const acc = await accPromise
+    // const chats = await Promise.resolve(Object.entries(payload)
+    //   .reduce(async (accPromise, [key, chat]) => {
+    //       const acc = await accPromise
+    //
+    //       if (!this.entities[chat.chatId]) {
+    //         chat.user = await fetchUserInfo(chat.userId)
+    //         chat.key = key
+    //         acc[chat.chatId] = chat
+    //       }
+    //
+    //       return acc
+    //     }, {}
+    //   ))
 
+    const chats = await
+      this.retrieveChats(payload)
+        .then(chats => chats.reduce((acc, chat) => {
           if (!this.entities[chat.chatId]) {
-            chat.user = await fetchUserInfo(chat.userId)
-            chat.key = key
             acc[chat.chatId] = chat
           }
-
           return acc
-        }, {}
-      ))
-
-    // let chats = await Promise.all(Object.entries(payload)
-    //   .map(async ([key, chat]) => {
-    //     chat.user = await fetchUserInfo(chat.userId)
-    //     chat.key = key
-    //
-    //     return chat
-    //   }))
-    //
-    // chats = chats.reduce((acc, chat) => {
-    //   if (!this.entities[chat.chatId]) acc[chat.chatId] = chat
-    //   return acc
-    // }, {})
+        }), {})
 
     this.entities = {...this.entities, ...chats}
 
@@ -186,6 +182,8 @@ class MessengerStore extends EntitiesStore {
 
   @action DANGER_subscribeOnMessages = (chatId) => {
     console.log('SUBSCRIBE ON MESSAGES:', 'start')
+
+    if (this.entities[chatId].subscribed) return
 
     const callback = (snapshot) => {
       console.log('SUBSCRIBE ON MESSAGES:', 'get data', snapshot.val())
@@ -204,6 +202,8 @@ class MessengerStore extends EntitiesStore {
 
       this.DANGER_appendMessage(chatId, message)
     }
+
+    this.entities[chatId].subscribed = true
 
     this.getChatReference(chatId)
       .limitToLast(1)
@@ -271,6 +271,17 @@ class MessengerStore extends EntitiesStore {
     chat.user = await fetchUserInfo(chat.userId)
 
     return chat
+  }
+
+  retrieveChats = async (payload) => {
+    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+
+    return await Promise.all(Object.entries(payload).map(async ([key, chat]) => {
+      chat.user = await fetchUserInfo(chat.userId)
+      chat.loaded = !chat.lastMessage
+
+      return ({...chat, key})
+    }))
   }
 
   @action appendChat = (chatData) => {
