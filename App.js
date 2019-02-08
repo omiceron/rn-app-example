@@ -12,7 +12,7 @@ configure({enforceActions: 'never'})
 
 export default class App extends React.Component {
 
-  componentDidMount() {
+  componentWillMount() {
     StatusBar.setBarStyle('light-content', true)
     ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.PORTRAIT_UP)
   }
