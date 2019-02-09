@@ -162,7 +162,7 @@ class MessengerStore extends EntitiesStore {
             acc[chat.chatId] = chat
           }
           return acc
-        }), {})
+        }, {}))
 
     this.entities = {...this.entities, ...chats}
 
@@ -253,7 +253,7 @@ class MessengerStore extends EntitiesStore {
   convertChats = async (payload) => {
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
-    return await Promise.all(Object.entries(payload).map(async ([key, chat]) => {
+    return Promise.all(Object.entries(payload).map(async ([key, chat]) => {
       chat.user = await fetchUserInfo(chat.userId)
       chat.loaded = !chat.lastMessage
 
