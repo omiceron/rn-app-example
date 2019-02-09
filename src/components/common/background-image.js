@@ -8,18 +8,19 @@ class BackgroundImage extends Component {
     onPress: PropTypes.func,
     children: PropTypes.node,
     uri: PropTypes.string,
+    // source: PropTypes.string,
     overlayOpacity: PropTypes.number
   }
 
   render() {
-    const {onPress, uri, overlayOpacity, ...rest} = this.props
+    const {onPress, uri, overlayOpacity, source, style, ...rest} = this.props
 
     return <TouchableWithoutFeedback onPress = {onPress}>
       <View style = {styles.container}>
         <ImageBackground
           {...rest}
-          source = {{uri: uri || `https://picsum.photos/${WINDOW_WIDTH}/${WINDOW_HEIGHT}/?random`}}
-          style = {styles.container}
+          source = {source || {uri: uri || `https://picsum.photos/${WINDOW_WIDTH}/${WINDOW_HEIGHT}/?random`}}
+          style = {[styles.container, style]}
         >
           {overlayOpacity && <View style = {[styles.overlay, {opacity: overlayOpacity}]}/>}
           {this.props.children}

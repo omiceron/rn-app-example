@@ -102,6 +102,7 @@ class MessengerStore extends EntitiesStore {
   @action fetchChats = () => {
     if (this.loaded || this.loading) return
 
+    console.log('FETCH CHATS:', 'start')
     this.loading = true
 
     const chunkShift = this.earliestFetchedChatTimestamp ? 1 : 0
@@ -109,6 +110,7 @@ class MessengerStore extends EntitiesStore {
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
+      console.log(payload)
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 

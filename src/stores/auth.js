@@ -126,9 +126,9 @@ class AuthStore extends BasicStore {
 
   signOut = async () => {
     this.clear()
-    await AsyncStorage.removeItem('user')
     const stores = [MESSENGER_STORE, AVATAR_STORE, USER_STORE, FEED_STORE, PEOPLE_STORE]
     stores.forEach(store => this.getStore(store).off())
+    AsyncStorage.removeItem('user')
     firebase.auth().signOut()
     this.getStore(NAVIGATION_STORE).navigate('auth')
   }

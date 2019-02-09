@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import Loader from '../common/loader'
 import {AsyncStorage, ImageBackground, StyleSheet} from 'react-native'
 // import BackgroundImage from '../common/background-image'
-// import image from '../../../assets/images/splash.png'
+import image from '../../../assets/images/splash.png'
 
 class AuthLoadingScreen extends Component {
   componentWillMount() {
@@ -16,14 +15,14 @@ class AuthLoadingScreen extends Component {
   }
 
   render() {
-    return <Loader/>
     // return <BackgroundImage/>
     // return <View style = {{backgroundColor: 'black', flex: 1}}/>
-    // return <ImageBackground
-      // source = {image}
+    return <ImageBackground
+      source = {image}
+      resizeMode = 'contain'
       // source = {require('../../../assets/images/splash.png')}
-      // style = {styles.container}
-    // />
+      style = {styles.container}
+    />
   }
 
 }
@@ -31,7 +30,7 @@ class AuthLoadingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000'
+    backgroundColor: '#fff0c0'
   },
 })
 

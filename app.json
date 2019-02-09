@@ -6,7 +6,8 @@
     "facebookDisplayName": "React Native Auth",
     "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/reactjs.png"
+      "image": "./assets/images/splash.png",
+      "backgroundColor": "#fff0c0"
     }
   }
 }

@@ -225,6 +225,12 @@ class SignIn extends Component {
     return <BackgroundImage onPress = {this.props.keyboard.dismiss}
                             overlayOpacity = {0.2}
                             blurRadius = {5}
+                            source = {require('../../../assets/images/splash.png')}
+                            resizeMode = 'contain'
+                            style = {{
+                              backgroundColor: '#fff0c0'
+                            }}
+
       // onPress = {() => this.onFocus({duration: 2000, endCoordinates: {height: 0, screenY: 0}})}
     >
       <SafeAreaView style = {styles.container}>
