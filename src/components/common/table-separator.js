@@ -4,30 +4,43 @@ import PropTypes from 'prop-types'
 
 class RowSeparator extends PureComponent {
   static propTypes = {
-    hint: PropTypes.string
+    hint: PropTypes.string,
+    header: PropTypes.string
   }
 
   render() {
-    const {hint} = this.props
+    const {hint, header} = this.props
     return <View style = {styles.container}>
-      {hint && <Text style = {styles.hint}>{hint}</Text>}
+      {hint && <Text style = {[styles.text, styles.hint]}>{hint}</Text>}
+      <View style = {styles.separator}/>
+      {header && <Text style = {[styles.text, styles.header]}>{header}</Text>}
     </View>
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: 40,
-    alignItems: 'center'
+    flex: 1
+    // display: 'flex',
+    // justifyContent: 'flex-start',
+    // alignItems: 'center'
   },
-  hint: {
+  separator: {
+    display: 'flex',
+    height: 40,
+  },
+  text: {
     fontWeight: '100',
     color: 'grey',
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 8,
+    margin: 8
+  },
+  hint: {
+    alignSelf: 'center',
+    marginBottom: 0
+  },
+  header: {
+    alignSelf: 'flex-start',
+    marginTop: 0
   }
 })
 
