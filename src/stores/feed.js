@@ -130,6 +130,27 @@ class FeedStore extends EntitiesStore {
 
   }
 
+  @action fetchPost = async (postId) => {
+    const callback = (snapshot) => {
+      const post = snapshot.val()
+      const postId = snapshot.key
+
+      const likes = Object.values(post.likes || {})
+
+      post.uid = postId
+      post.key = postId
+      post.likesNumber = likes.length
+      post.isLiked = likes.some(like => like.userId === this.user.uid)
+
+      return post
+    }
+
+    return await this.reference
+      .child(postId)
+      .once('value').then(callback)
+
+  }
+
   @action refreshFeed = () => {
     console.log('refreshing...')
     if (this.loading || !this.size) return
@@ -273,23 +294,20 @@ class FeedStore extends EntitiesStore {
     const {likes} = this.entities[postId]
     const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
 
-    // return Promise.all(Object.entries(likes)
-    //   .map(async ([key, {userId}]) => {
-    //       const user = await fetchUserInfo(userId)
-    //       if (!user) return
-    //       return {userId, user, key}
-    //     },
-    //   ))
+    return Promise.all(Object.entries(likes)
+      .map(async ([key, {userId}]) =>
+        ({userId, user: await fetchUserInfo(userId), key})
+      ))
 
     // this make possible to ignore false uids
-    return Promise.resolve(Object.entries(likes)
-      .reduce(async (accPromise, [key, {userId}]) => {
-          const acc = await accPromise
-          const user = await fetchUserInfo(userId)
-          if (!user) return acc
-          return [...acc, {userId, user, key}]
-        }, []
-      ))
+    // return Promise.resolve(Object.entries(likes)
+    //   .reduce(async (accPromise, [key, {userId}]) => {
+    //       const acc = await accPromise
+    //       const user = await fetchUserInfo(userId)
+    //       if (!user) return acc
+    //       return [...acc, {userId, user, key}]
+    //     }, []
+    //   ))
   }
 
   getUserLikedPosts = async (uid) => {
@@ -319,6 +337,19 @@ class FeedStore extends EntitiesStore {
 
     return await this.reference
       .orderByChild(LIKES_REFERENCE)
+      .limitToLast(10)
+      .once('value')
+      .then(callback)
+  }
+
+  getUserPosts = async (uid) => {
+    const callback = (snapshot) =>
+      Object.entries(snapshot.val())
+        .map(([postId, {title}]) => ({postId, title}))
+
+    return await this.reference
+      .orderByChild('userId')
+      .equalTo(uid)
       .limitToLast(10)
       .once('value')
       .then(callback)
