@@ -23,7 +23,11 @@ class FeedStore extends EntitiesStore {
   @action setTitle = title => this.title = title
   @action setText = text => this.text = text
   @action setAddress = address => this.address = address
-  @action setCoords = (coords) => this.coords = coords
+  @action setCoords = async (coords) => {
+    this.coords = coords
+    // const [{city, country, street}] = await Location.reverseGeocodeAsync({...coords})
+    // this.setAddress(`${street}, ${city}, ${country}`)
+  }
 
   @action clearPostForm = () => {
     this.title = ''
@@ -57,7 +61,7 @@ class FeedStore extends EntitiesStore {
 
   @computed
   get posts() {
-    return this.list.sort((a, b) => a.uid < b.uid)
+    return this.list.sort((a, b) => b.timestamp - a.timestamp)
   }
 
   @computed
@@ -253,7 +257,11 @@ class FeedStore extends EntitiesStore {
       return
     }
 
+    const [{city, country, street}] = await Location.reverseGeocodeAsync({...coords})
+    this.setAddress(`${street}, ${city}, ${country}`)
     this.setCoords(coords)
+
+    return coords
   }
 
   @action sendPost = async () => {

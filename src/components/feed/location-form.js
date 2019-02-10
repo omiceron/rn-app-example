@@ -31,7 +31,7 @@ class LocationForm extends Component {
       clearLocationForm: func.isRequired
     }),
     navigation: shape({
-      goBack: func.isRequired,
+      goBack: func.isRequired
     })
   }
 
@@ -60,12 +60,18 @@ class LocationForm extends Component {
     this.props.feed.clearLocationForm()
   }
 
+  handleSubmit = async () => {
+    const coords = await this.props.feed.getCoordsFromAddress()
+    if (!coords) return
+    this.map.animateToRegion({...coords})
+  }
+
   render() {
     const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
     if (!coords) return <Loader/>
 
-    const renderIcon = () => <TouchableOpacity onPress = {getCoordsFromAddress} hitSlop = {HIT_SLOP}>
+    const renderIcon = () => <TouchableOpacity onPress = {this.handleSubmit} hitSlop = {HIT_SLOP}>
       <Icon color = '#67E' size = {16} name = 'ios-pin'/>
     </TouchableOpacity>
 
@@ -79,13 +85,16 @@ class LocationForm extends Component {
           value = {address}
           onChangeText = {setAddress}
           blurOnSubmit
-          onSubmitEditing = {getCoordsFromAddress}
+          onSubmitEditing = {this.handleSubmit}
+          // onSubmitEditing = {getCoordsFromAddress}
         />
       </TableRow>
 
       <MapView
+        ref = {ref => this.map = ref}
         style = {styles.container}
         initialRegion = {{...coords, ...REGION_DELTAS}}
+        // region = {{...coords, ...REGION_DELTAS}}
       >
         <MapView.Marker
           draggable
