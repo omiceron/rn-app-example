@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, PEOPLE_STORE} from '../../constants'
 import Post from '../feed/post'
-import {observable} from 'mobx'
+import {observable, action} from 'mobx'
 import Loader from '../common/loader'
 
 @inject(PEOPLE_STORE)
@@ -22,17 +22,18 @@ class PostScreen extends Component {
   }
 
   @observable user = null
+  @observable post = null
 
-  async componentWillMount() {
+  async componentDidMount() {
     const {postId} = this.props.navigation.state.params
-    const {userId} = this.props.feed.entities[postId]
+    this.post = this.props.feed.getPost(postId) || await this.props.feed.fetchPost(postId)
+    const {userId} = this.post
 
     this.user = await this.props.people.fetchUserInfo(userId)
   }
 
   render() {
-    if (!this.user) return <Loader/>
-    const {postId} = this.props.navigation.state.params
+    if (!this.user || !this.post) return <Loader/>
     const {
       title,
       text,
@@ -41,8 +42,7 @@ class PostScreen extends Component {
       isLiked,
       uid,
       likesNumber
-    } = this.props.feed.getPost(postId)
-    // } = this.props.feed.entities[postId]
+    } = this.post
 
     return <Post
       title = {title}
