@@ -36,12 +36,13 @@ class PersonCard extends Component {
     const Card = openUserInfoScreen && getPhoto ? SwipeableCard : SegmentedCard
 
     const swipeableProps = {
-      onSwipeableLeftOpen: () => alert('open'),
-      leftAction: () => alert('open'),
+      // onSwipeableLeftOpen: () => alert('open'),
+      // leftAction: () => alert('open'),
       rightActionWidth: ROW_HEIGHT,
       rightActions: [
-        {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen},
-        {title: 'Photo', color: '#FFAB00', callback: getPhoto}
+        // {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen},
+        {title: 'Info', color: '#FFAB00', callback: openUserInfoScreen},
+        // {title: 'Photo', color: '#FFAB00', callback: getPhoto}
       ]
     }
 

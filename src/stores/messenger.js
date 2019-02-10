@@ -110,7 +110,7 @@ class MessengerStore extends EntitiesStore {
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
-      console.log(payload)
+      // console.log(payload)
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
