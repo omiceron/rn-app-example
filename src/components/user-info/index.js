@@ -27,10 +27,13 @@ class UserInfo extends Component {
     openPostScreen: PropTypes.func.isRequired
   }
 
+  @observable likes = null
   @observable posts = null
 
-  async componentDidMount() {
-    this.posts = await this.props.feed.getUserLikedPosts(this.props.user.uid)
+  async componentWillMount() {
+    this.likes = await this.props.feed.getUserLikedPosts(this.props.user.uid)
+    this.posts = await this.props.feed.getUserPosts(this.props.user.uid)
+
   }
 
   render() {
@@ -39,7 +42,19 @@ class UserInfo extends Component {
     const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
 
     const LeftComponent = () => <Avatar size = {60} onPress = {openUserAvatarsScreen}/>
+
     const renderLikedPosts = () =>
+      <TableView>
+        {this.likes.length
+          ? this.likes.map(({postId, title}) =>
+            <TouchableOpacity key = {postId}
+                              onPress = {() => openPostScreen(postId)}>
+              <TableRow title = {title}/>
+            </TouchableOpacity>)
+          : <TableRow title = 'No liked posts'/>}
+      </TableView>
+
+    const renderPosts = () =>
       <TableView>
         {this.posts.length
           ? this.posts.map(({postId, title}) =>
@@ -84,9 +99,14 @@ class UserInfo extends Component {
           onPress = {openChatWithUser}/>
       </TableView>
 
-      <TableSeparator/>
 
-      {this.posts ? renderLikedPosts() : <Loader/>}
+      <TableSeparator header = 'Liked posts'/>
+
+      {this.likes ? renderLikedPosts() : <Loader/>}
+
+      <TableSeparator header = 'User posts'/>
+
+      {this.posts ? renderPosts() : <Loader/>}
 
     </ScrollView>
   }
