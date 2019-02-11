@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 
 class Like extends PureComponent {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     activated: PropTypes.bool.isRequired,
     onPress: PropTypes.func.isRequired
   }

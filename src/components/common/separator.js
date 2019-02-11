@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class Separator extends PureComponent {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     leftIndent: PropTypes.number,
     topIndent: PropTypes.number,
   }

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 class TouchableAvatar extends Component {
   static propTypes = {
     onPress: PropTypes.func.isRequired,
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     uri: PropTypes.string,
     size: PropTypes.number.isRequired
   }

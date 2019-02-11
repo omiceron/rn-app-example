@@ -73,7 +73,7 @@ class AuthInputRow extends Component {
         spellCheck = {false}
         autoCorrect = {false}
       />
-      {this.state.isFocused && visibilitySwitch && value && this.renderVisibilitySwitch()}
+      {this.state.isFocused && visibilitySwitch && !!value && this.renderVisibilitySwitch()}
     </AuthRow>
   }
 }

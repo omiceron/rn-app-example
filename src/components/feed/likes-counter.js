@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class LikesCounter extends PureComponent {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     likesNumber: PropTypes.number.isRequired,
     onPress: PropTypes.func
   }

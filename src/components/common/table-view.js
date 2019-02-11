@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class TableView extends Component {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     children: PropTypes.node.isRequired,
     scrollable: PropTypes.bool
   }

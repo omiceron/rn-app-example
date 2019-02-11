@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 
 class TableRow extends Component {
   static propTypes = {
-    style: View.propTypes.style,
-    titleStyle: Text.propTypes.style,
-    captionStyle: View.propTypes.style,
+    // style: View.propTypes.style,
+    // titleStyle: Text.propTypes.style,
+    // captionStyle: View.propTypes.style,
     children: PropTypes.node,
     title: PropTypes.string,
     caption: PropTypes.string,

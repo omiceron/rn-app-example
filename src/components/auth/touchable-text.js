@@ -8,7 +8,7 @@ class TouchableText extends Component {
     onPress: PropTypes.func,
     title: PropTypes.string.isRequired,
     caption: PropTypes.string,
-    style: View.propTypes.style
+    // style: View.propTypes.style
   }
 
   render() {

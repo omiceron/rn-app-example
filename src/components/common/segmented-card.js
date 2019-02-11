@@ -14,7 +14,7 @@ class SegmentedCard extends Component {
       PropTypes.element,
       PropTypes.func
     ]),
-    mainContainerStyle: View.propTypes.style
+    // mainContainerStyle: View.propTypes.style
   }
 
   render() {
