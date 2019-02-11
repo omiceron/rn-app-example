@@ -99,8 +99,8 @@ class AuthStore extends BasicStore {
     this.firstName = ''
   }
 
-  signIn = async (email, password) => {
-    await firebase.auth().signInWithEmailAndPassword(email || this.email, password || this.password)
+  signIn = async () => {
+    await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
@@ -115,7 +115,8 @@ class AuthStore extends BasicStore {
       throw err
     })
 
-    this.signIn(email, password)
+    await firebase.auth().signInWithEmailAndPassword(email, password)
+    this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
   async checkUser() {
