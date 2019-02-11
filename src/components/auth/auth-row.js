@@ -4,7 +4,7 @@ import BasicCard from '../common/basic-card'
 
 class AuthRow extends Component {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
   }
 
   render() {

@@ -25,8 +25,8 @@ class FeedStore extends EntitiesStore {
   @action setAddress = address => this.address = address
   @action setCoords = async (coords) => {
     this.coords = coords
-    // const [{city, country, street}] = await Location.reverseGeocodeAsync({...coords})
-    // this.setAddress(`${street}, ${city}, ${country}`)
+    const [{name, city, country}] = await Location.reverseGeocodeAsync({...coords})
+    this.setAddress(`${name}, ${city}, ${country}`)
   }
 
   @action clearPostForm = () => {
@@ -257,8 +257,8 @@ class FeedStore extends EntitiesStore {
       return
     }
 
-    const [{city, country, street}] = await Location.reverseGeocodeAsync({...coords})
-    this.setAddress(`${street}, ${city}, ${country}`)
+    const [{city, country, name}] = await Location.reverseGeocodeAsync({...coords})
+    this.setAddress(`${name}, ${city}, ${country}`)
     this.setCoords(coords)
 
     return coords

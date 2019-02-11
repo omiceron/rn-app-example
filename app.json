@@ -1,6 +1,6 @@
 {
   "expo": {
-    "sdkVersion": "30.0.0",
+    "sdkVersion": "32.0.0",
     "facebookScheme": "fb1943342692364166",
     "facebookAppId": "1943342692364166",
     "facebookDisplayName": "React Native Auth",

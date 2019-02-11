@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class BasicAvatar extends Component {
   static propTypes = {
-    style: View.propTypes.style,
+    // style: View.propTypes.style,
     uri: PropTypes.string,
     size: PropTypes.number
   }
