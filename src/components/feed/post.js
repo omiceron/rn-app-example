@@ -13,9 +13,9 @@ import {FEED_STORE, NAVIGATION_STORE} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import BasicAvatar from '../common/basic-avatar'
-import Like from './like'
-import LikesCounter from './likes-counter'
 import {getDate} from '../../stores/utils'
+import AttachedLocation from './attached-location'
+import PostControlRow from './post-control-row'
 
 @inject(FEED_STORE)
 @inject(NAVIGATION_STORE)
@@ -25,6 +25,7 @@ class Post extends Component {
     title: string.isRequired,
     text: string.isRequired,
     coords: object,
+    location: string,
     timestamp: number.isRequired,
     isLiked: bool.isRequired,
     uid: string.isRequired,
@@ -37,6 +38,7 @@ class Post extends Component {
 
   render() {
     const {
+      location,
       title,
       text,
       coords,
@@ -57,6 +59,32 @@ class Post extends Component {
 
     const PostSeparator = () => <Separator style = {styles.postSeparator}/>
 
+    const PostInfo = () => (
+      <View style = {styles.postInfoContainer}>
+
+        <View style = {styles.date}>
+          <Text style = {styles.caption}>
+            {date}
+          </Text>
+        </View>
+
+        <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user})}>
+          <View style = {styles.author}>
+
+            <View style = {styles.authorName}>
+              <Text style = {styles.caption} numberOfLines = {1}>
+                by <Text style = {styles.name}>{firstName} {lastName}</Text>
+              </Text>
+            </View>
+
+            <BasicAvatar style = {styles.avatar} size = {20}/>
+
+          </View>
+        </TouchableOpacity>
+
+      </View>
+    )
+
     return <SafeAreaView style = {styles.container}>
       <ScrollView style = {styles.scroll}>
 
@@ -68,26 +96,7 @@ class Post extends Component {
 
         <PostSeparator/>
 
-        <View style = {styles.infoBar}>
-
-          <View style = {styles.date}>
-            <Text style = {styles.caption}>
-              {date}
-            </Text>
-          </View>
-
-          <View style = {styles.author}>
-            <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user})}>
-              <Text style = {styles.caption}>
-                by <Text style = {styles.name}>{firstName} {lastName}</Text>
-              </Text>
-
-              <BasicAvatar style = {styles.avatar} size = {20}/>
-
-            </TouchableOpacity>
-          </View>
-
-        </View>
+        <PostInfo/>
 
         <PostSeparator/>
 
@@ -97,22 +106,17 @@ class Post extends Component {
           </Text>
         </View>
 
+        {location && <AttachedLocation location = {location}/>}
         {coords && <AttachedMap coords = {coords}/>}
 
         <PostSeparator/>
 
-        <View style = {styles.controlBar}>
-          <Like
-            style = {styles.button}
-            onPress = {() => feed.setLike(uid)}
-            activated = {isLiked}
-          />
-          <LikesCounter
-            style = {styles.button}
-            likesNumber = {likesNumber}
-            onPress = {() => navigation.push('likesList', {postId: uid})}
-          />
-        </View>
+        <PostControlRow
+          isLiked = {isLiked}
+          likesNumber = {likesNumber}
+          onLikePress = {() => feed.setLike(uid)}
+          onCounterPress = {() => navigation.push('likesList', {postId: uid})}
+        />
 
       </ScrollView>
     </SafeAreaView>
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
   row: {
     marginVertical: 8
   },
-  infoBar: {
+  postInfoContainer: {
     marginVertical: 4,
     flexDirection: 'row'
   },
@@ -139,11 +143,15 @@ const styles = StyleSheet.create({
   },
   author: {
     flex: 1,
-    alignItems: 'flex-end'
-  },
-  authorButton: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  authorButton: {
+    flex: 1
+  },
+  authorName: {
+    flex: 1,
+    alignItems: 'flex-end'
   },
   title: {
     fontSize: 32,
@@ -163,15 +171,6 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginLeft: 3
-  },
-  controlBar: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  button: {
-    marginRight: 4,
-    marginVertical: 4
   },
   postSeparator: {
     marginHorizontal: 0

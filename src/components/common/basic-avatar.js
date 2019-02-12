@@ -22,7 +22,7 @@ class BasicAvatar extends Component {
       <ImageBackground
         source = {{uri: uri || `https://loremflickr.com/200/200/cat?random=${Math.random()}`}}
         style = {styles.content}
-        imageStyle = {[container, style]}
+        imageStyle = {[container]}
       >
         {this.props.children}
       </ImageBackground>

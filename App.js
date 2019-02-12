@@ -1,6 +1,5 @@
 import {configure} from 'mobx'
 import {Provider} from 'mobx-react'
-import AuthLoadingScreen from './src/components/common/loader'
 import React from 'react'
 import {StatusBar} from 'react-native'
 import {ScreenOrientation} from 'expo'
