@@ -26,7 +26,7 @@ class FeedStore extends EntitiesStore {
   @action setCoords = async (coords) => {
     this.coords = coords
     const [{name, city, country}] = await Location.reverseGeocodeAsync({...coords})
-    this.setAddress(`${name}, ${city}, ${country}`)
+    this.setAddress(name + (city ? ', ' + city : '') + (country ? ', ' + country : ''))
   }
 
   @action clearPostForm = () => {
@@ -99,23 +99,52 @@ class FeedStore extends EntitiesStore {
 
   }
 
-  @action appendFetchedPosts = (payload) => {
-    // Object.values(entitiesFromFB(payload)).forEach(post => this.appendPost(post))
-    Object.entries(payload).forEach(([postId, post]) => this.appendPost(postId, post))
+  @action appendFetchedPosts = async (payload) => {
+    // Object.entries(payload).forEach(([postId, post]) => this.appendPost(postId, post))
+    const posts = await this.convertPosts(payload)
+      .then(posts => posts.reduce((acc, post) => {
+        if (!this.entities[post.uid]) {
+          acc[post.uid] = post
+        }
+        return acc
+      }, {}))
+
+    this.entities = {...this.entities, ...posts}
   }
 
-  @action appendPost = (postId, post) => {
+  convertPosts = async (payload) => {
+    return Promise.all(Object.entries(payload).map(async ([key, post]) => {
+      const likes = Object.values(post.likes || {})
+
+      post.uid = key
+      post.key = key
+      post.likesNumber = likes.length
+      post.isLiked = likes.some(like => like.userId === this.user.uid)
+
+      if (post.coords) {
+        const [{name, city, country}] = await Location.reverseGeocodeAsync({...post.coords})
+        post.location = name + (city ? ', ' + city : '') + (country ? ', ' + country : '')
+      }
+
+      return ({...post, key})
+    }))
+  }
+
+  @action appendPost = async (postId, post) => {
     const likes = Object.values(post.likes || {})
 
-    // this.entities[post.uid] = post
-    // this.entities[post.uid].likesNumber = likes.length
-    // this.entities[post.uid].isLiked = likes.some(like => like.userId === this.user.uid)
+    post.uid = postId
+    post.key = postId
+    post.likesNumber = likes.length
+    post.isLiked = likes.some(like => like.userId === this.user.uid)
+
+    if (post.coords) {
+      const [{name, city, country}] = await Location.reverseGeocodeAsync({...post.coords})
+      post.location = name + (city ? ', ' + city : '') + (country ? ', ' + country : '')
+    }
 
     this.entities[postId] = post
-    this.entities[postId].uid = postId
-    this.entities[postId].key = postId
-    this.entities[postId].likesNumber = likes.length
-    this.entities[postId].isLiked = likes.some(like => like.userId === this.user.uid)
+
   }
 
   @action refreshPost = (postId) => {
@@ -257,8 +286,6 @@ class FeedStore extends EntitiesStore {
       return
     }
 
-    const [{city, country, name}] = await Location.reverseGeocodeAsync({...coords})
-    this.setAddress(`${name}, ${city}, ${country}`)
     this.setCoords(coords)
 
     return coords
