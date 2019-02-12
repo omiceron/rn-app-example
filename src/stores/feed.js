@@ -77,12 +77,12 @@ class FeedStore extends EntitiesStore {
     const chunkShift = this.lastPost ? 1 : 0
     const chunkLength = FEED_CHUNK_LENGTH + chunkShift
 
-    const callback = action((snapshot) => {
+    const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
-      !isEmpty && this.appendFetchedPosts(payload)
+      !isEmpty && await this.appendFetchedPosts(payload)
       this.loaded = isEmpty || currentChunkLength < chunkLength
       this.loading = false
     })
@@ -186,10 +186,11 @@ class FeedStore extends EntitiesStore {
 
   @action refreshFeed = () => {
     console.log('refreshing...')
+    // TODO: this.size ?
     if (this.loading || !this.size) return
 
     this.loading = true
-    const callback = (snapshot) => {
+    const callback = async (snapshot) => {
       const payload = snapshot.val()
 
       if (!payload) {
@@ -197,7 +198,7 @@ class FeedStore extends EntitiesStore {
         return
       }
 
-      this.appendFetchedPosts(payload)
+      await this.appendFetchedPosts(payload)
       this.loading = false
     }
 
