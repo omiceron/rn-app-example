@@ -2,14 +2,11 @@ import React, {Component, PureComponent} from 'react'
 import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing} from 'react-native'
 import PropTypes from 'prop-types'
 import Separator from '../common/separator'
-import Icon from 'react-native-vector-icons/Ionicons'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
-import AttachedMap from './attached-map'
 import {NAVIGATION_STORE} from '../../constants'
-import {isPropsDiffer} from '../../stores/utils'
-import Like from './like'
-import LikesCounter from './likes-counter'
+import AttachedLocation from './attached-location'
+import PostControlRow from './post-control-row'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -31,44 +28,39 @@ class PostCard extends Component {
     return likesNumber !== newLikesNumber || isLiked !== newIsLiked
   }
 
-  renderComments = () => {
-    return <Icon color = 'rgba(127,127,127,1)' size = {30} name = 'ios-text-outline' style = {styles.icon}/>
-  }
-
   render() {
-    const {title, text, coords, uid, isLiked, likesNumber} = this.props
+    const {title, text, location, uid, isLiked, likesNumber, navigation, feed} = this.props
     console.log('render card', title, isLiked)
 
     return <View style = {styles.container}>
-      <TouchableOpacity onPress = {() => this.props.navigation.navigate('postScreen', {postId: uid})}>
-        <View style = {styles.titleView}>
+      <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
+
+        <View style = {styles.row}>
           <Text numberOfLines = {1} style = {styles.title}>
             {title}
           </Text>
         </View>
+
         <Separator/>
-        <View style = {styles.textView}>
+
+        <View style = {styles.row}>
           <Text numberOfLines = {10} style = {styles.text}>
             {text}
           </Text>
         </View>
+
       </TouchableOpacity>
+
+      {location && <AttachedLocation location = {location}/>}
 
       <Separator/>
 
-      <View style = {styles.buttonsView}>
-        <Like
-          style = {{marginRight: 4, marginVertical: 4}}
-          onPress = {() => this.props.feed.setLike(uid)}
-          activated = {isLiked}
-        />
-        <LikesCounter
-          style = {{marginRight: 4, marginVertical: 4}}
-          likesNumber = {likesNumber}
-          onPress = {() => this.props.navigation.navigate('likesList', {postId: uid})}/>
-        {this.renderComments()}
-      </View>
-
+      <PostControlRow
+        isLiked = {isLiked}
+        likesNumber = {likesNumber}
+        onLikePress = {() => feed.setLike(uid)}
+        onCounterPress = {() => navigation.push('likesList', {postId: uid})}
+      />
     </View>
   }
 
@@ -79,7 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 8,
-    // marginHorizontal: 8,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(192,192,192,0.5)'
   },
@@ -88,30 +79,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '100'
   },
-
   title: {
     fontSize: 16,
     fontWeight: '600'
   },
-
-  textView: {
-    // height: 100,
+  row: {
     marginVertical: 8
   },
-  titleView: {
-    marginVertical: 8
-  },
-  buttonsView: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-    // marginVertical: 8
-  },
-
-  likesNumberView: {
-    marginRight: 16,
-    width: 32
-  }
 })
 
 export default PostCard
