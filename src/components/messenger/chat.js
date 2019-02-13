@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
+  LayoutAnimation
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -16,6 +17,7 @@ import {observable, action} from 'mobx'
 import {AUTH_STORE, MESSENGER_STORE} from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from './empty-list'
+import {reaction} from 'mobx'
 
 // redesign the chat
 
@@ -23,6 +25,15 @@ import EmptyList from './empty-list'
 @inject(AUTH_STORE)
 @observer
 class Chat extends Component {
+  constructor(...args) {
+    super(...args)
+
+    reaction(
+      () => this.props.messenger.getMessages(this.props.chatId).length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+  }
+
   static propTypes = {
     // messenger: shape({
     //   sendMessage: func.isRequired,
@@ -99,6 +110,7 @@ class Chat extends Component {
   }
 
   sendMessageHandler = () => {
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     this.props.messenger.sendMessage(this.message, this.props.chatId)
     this.setMessage('')
   }

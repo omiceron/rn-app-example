@@ -356,7 +356,13 @@ class MessengerStore extends EntitiesStore {
 
   @action deleteChat = (chatId) => {
     if (!this.entities[chatId]) return
+
+    this.currentUserChatsReference
+      .child(this.entities[chatId].key)
+      .update({visibility: false})
+
     delete this.entities[chatId]
+
   }
 
   off() {

@@ -3,10 +3,21 @@ import Messenger from '../messenger/index'
 import {inject, observer} from 'mobx-react'
 import {MESSENGER_STORE} from '../../constants'
 import Loader from '../common/loader'
+import {LayoutAnimation, ActionSheetIOS} from 'react-native'
+import {reaction} from 'mobx'
 
 @inject(MESSENGER_STORE)
 @observer
 class MessengerScreen extends Component {
+  constructor(...args) {
+    super(...args)
+
+    reaction(
+      () => this.props.messenger.size,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+  }
+
   static navigationOptions = ({navigation}) => ({
     title: 'Chats',
     headerStyle: {
@@ -37,7 +48,19 @@ class MessengerScreen extends Component {
   }
 
   deleteChat = (chatId) => {
-    this.props.messenger.deleteChat(chatId)
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title: 'Are you sure you want to delete this chat?',
+        options: ['Cancel', 'Delete'],
+        destructiveButtonIndex: 1,
+        cancelButtonIndex: 0
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          this.props.messenger.deleteChat(chatId)
+        }
+      }
+    )
   }
 
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {TextInput, StyleSheet, ScrollView} from 'react-native'
+import {TextInput, StyleSheet, ScrollView, ActionSheetIOS} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import Separator from '../common/separator'
 import CurrentUserAvatar from './current-user-avatar'
@@ -23,7 +23,7 @@ class Settings extends Component {
       navigate: func.isRequired
     }),
     auth: shape({
-        signOut: func.isRequired
+      signOut: func.isRequired
     }),
     user: shape({
       firstName: string.isRequired,
@@ -36,14 +36,14 @@ class Settings extends Component {
     }),
     avatar: shape({
       avatar: string,
-      loading: bool.isRequired,
-    }),
+      loading: bool.isRequired
+    })
   }
 
   // async componentWillMount() {
-    // await this.props.auth.checkUserAvatar()
-    // await Expo.FileSystem.deleteAsync(localAvatar)
-    // console.log(await AsyncStorage.getItem(`user`).then(res => JSON.parse(res)))
+  // await this.props.auth.checkUserAvatar()
+  // await Expo.FileSystem.deleteAsync(localAvatar)
+  // console.log(await AsyncStorage.getItem(`user`).then(res => JSON.parse(res)))
   // }
 
   render() {
@@ -138,15 +138,30 @@ class Settings extends Component {
       <TableSeparator/>
 
       <TableView>
-        <TableRow title = 'Sign Out'
+        <TableRow title = 'Sign out'
                   titleStyle = {styles.redButton}
-                  onPress = {signOut}/>
+                  onPress = {this.handleSignOut}/>
       </TableView>
 
       <TableSeparator hint = 'Press button to log out'/>
 
     </ScrollView>
   }
+
+  handleSignOut = () => ActionSheetIOS.showActionSheetWithOptions(
+    {
+      title: 'Are you sure you want to sign out?',
+      options: ['Cancel', 'Sign out'],
+      destructiveButtonIndex: 1,
+      cancelButtonIndex: 0
+    },
+    (buttonIndex) => {
+      if (buttonIndex === 1) {
+        this.props.auth.signOut()
+      }
+    }
+  )
+
 }
 
 const styles = StyleSheet.create({
