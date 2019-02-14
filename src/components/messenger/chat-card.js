@@ -48,7 +48,7 @@ class ChatCard extends Component {
   onLeftOpen = () => {
     this.setArchived()
     // TODO: This is not good
-    setTimeout(() => this.props.messenger.deleteChat(this.props.chatId), 1)
+    setTimeout(() => this.props.messenger.archiveChat(this.props.chatId), 1)
   }
 
   render() {

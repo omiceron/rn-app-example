@@ -174,7 +174,7 @@ class MessengerStore extends EntitiesStore {
     if (this.entities[chatId].subscribed) return
 
     const callback = (snapshot) => {
-      console.log('SUBSCRIBE ON MESSAGES:', 'get data', snapshot.val())
+      console.log('SUBSCRIBE ON MESSAGES:', 'get data')
 
       // TODO: Rename 'user' to 'userId'
       const {text, timestamp, user, token} = snapshot.val()
@@ -359,7 +359,18 @@ class MessengerStore extends EntitiesStore {
 
     this.currentUserChatsReference
       .child(this.entities[chatId].key)
-      .update({visibility: false})
+      .update({deleted: true})
+
+    delete this.entities[chatId]
+
+  }
+
+  @action archiveChat = (chatId) => {
+    if (!this.entities[chatId]) return
+
+    this.currentUserChatsReference
+      .child(this.entities[chatId].key)
+      .update({archived: true})
 
     delete this.entities[chatId]
 
