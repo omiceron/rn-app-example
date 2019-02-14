@@ -18,6 +18,7 @@ import {AUTH_STORE, MESSENGER_STORE} from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from './empty-list'
 import {reaction} from 'mobx'
+import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 
 // redesign the chat
 
@@ -71,6 +72,7 @@ class Chat extends Component {
   render() {
     // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
     // console.log('render chat')
+    console.log(isIphoneX(), 'iphonex')
     const {messenger, chatId} = this.props
     // const {uid: currentUserId} = this.props.auth.user
 
@@ -82,7 +84,7 @@ class Chat extends Component {
       <KeyboardAvoidingView
         behavior = 'padding'
         enabled
-        keyboardVerticalOffset = {65}
+        keyboardVerticalOffset = {65 + (isIphoneX() && getBottomSpace())}
         style = {styles.chatContainer}
       >
 

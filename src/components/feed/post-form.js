@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TextInput, SafeAreaView} from 'react-native'
+import {View, StyleSheet, TextInput, SafeAreaView, LayoutAnimation} from 'react-native'
 import {bool, string, func, shape, objectOf, number} from 'prop-types'
 import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
@@ -9,6 +9,8 @@ import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {NAVIGATION_STORE} from '../../constants/index'
 import AttachedMap from './attached-map'
+import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
+import {reaction} from 'mobx'
 
 
 // navigation
@@ -17,6 +19,16 @@ import AttachedMap from './attached-map'
 @inject(FEED_STORE)
 @observer
 class PostForm extends Component {
+
+  constructor(...args) {
+    super(...args)
+
+    reaction(
+      () => this.props.layouts[KEYBOARD],
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+  }
+
   static propTypes = {
     layouts: objectOf(objectOf(number)).isRequired,
     feed: shape({
@@ -78,7 +90,7 @@ class PostForm extends Component {
           }
         </TableRow>
 
-        <View style = {{height}}/>
+        <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>
 
       </TableView>
     </SafeAreaView>
