@@ -37,6 +37,7 @@ class UserStore extends EntitiesStore {
   }
 
   off() {
+    this.currentUserReference.child('online').set(firebase.database.ServerValue.TIMESTAMP)
     this.clear()
     this.currentUserReference.off()
   }
@@ -76,6 +77,20 @@ class UserStore extends EntitiesStore {
 
   cacheUserData = async (data) => {
     await AsyncStorage.mergeItem('user', JSON.stringify(data)).catch(console.error)
+  }
+
+  startPresenceWatcher = () => {
+    const presenceRef = this.currentUserReference.child('online')
+
+    const callback = (snapshot) => {
+      if (snapshot.val()) {
+        presenceRef.set(true)
+        presenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP)
+      }
+    }
+
+    firebase.database().ref('.info/connected')
+      .on('value', callback)
   }
 
   @action retrieveCachedUserData = () => {

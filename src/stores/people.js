@@ -34,8 +34,8 @@ class PeopleStore extends EntitiesStore {
 
     if (!user) return
 
-    const {avatar, email, firstName, lastName, userInfo} = user
-    return {avatar, email, firstName, lastName, userInfo, uid}
+    const {avatar, email, firstName, lastName, userInfo, online} = user
+    return {avatar, email, firstName, lastName, userInfo, uid, online}
 
   }
 
