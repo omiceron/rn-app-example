@@ -25,6 +25,7 @@ import LocationFormScreen from './screens/location-form-screen'
 import LikesListScreen from './screens/likes-list-screen'
 import PostScreen from './screens/post-screen'
 import AuthLoadingScreen from './screens/loader-screen'
+import MapScreen from './screens/map-screen'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
   <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
@@ -44,6 +45,9 @@ const commonScreens = {
   },
   chatScreen: {
     screen: ChatScreen
+  },
+  mapScreen: {
+    screen: MapScreen
   }
 }
 
@@ -147,9 +151,9 @@ const ModalNavigator = createStackNavigator({
 })
 
 const AppNavigator = createAppContainer(createSwitchNavigator({
-  loading: {
-    screen: AuthLoadingScreen
-  },
+    loading: {
+      screen: AuthLoadingScreen
+    },
     auth: {
       screen: AuthNavigator
     },

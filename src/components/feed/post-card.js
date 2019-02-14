@@ -21,6 +21,7 @@ class PostCard extends Component {
     coords: PropTypes.object
   }
 
+  // TODO: do something with this mess
   shouldComponentUpdate(nextProps) {
     const {likesNumber: newLikesNumber, isLiked: newIsLiked} = nextProps
     const {likesNumber, isLiked} = this.props
@@ -29,7 +30,7 @@ class PostCard extends Component {
   }
 
   render() {
-    const {title, text, location, uid, isLiked, likesNumber, navigation, feed} = this.props
+    const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords} = this.props
     console.log('render card', title, isLiked)
 
     return <View style = {styles.container}>
@@ -51,7 +52,7 @@ class PostCard extends Component {
 
       </TouchableOpacity>
 
-      {location && <AttachedLocation location = {location}/>}
+      {location && <AttachedLocation location = {location} onPress = {() => navigation.navigate('mapScreen', {coords})}/>}
 
       <Separator/>
 
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   row: {
     marginVertical: 8
-  },
+  }
 })
 
 export default PostCard
