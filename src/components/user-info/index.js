@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native'
+import {Text, TouchableOpacity, StyleSheet, ScrollView, View} from 'react-native'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import Loader from '../common/loader'
@@ -10,6 +10,7 @@ import TableRow from '../common/table-row'
 import TableSeparator from '../common/table-separator'
 import TableView from '../common/table-view'
 import {DEFAULT_BACKGROUND_COLOR, FEED_STORE} from '../../constants'
+import {getDate, getTime} from '../../stores/utils'
 
 @inject(FEED_STORE)
 @observer
@@ -38,7 +39,7 @@ class UserInfo extends Component {
 
   render() {
 
-    const {lastName, firstName, userInfo, email, avatar, uid} = this.props.user
+    const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
 
     const LeftComponent = () => <Avatar size = {60} onPress = {openUserAvatarsScreen}/>
@@ -65,6 +66,25 @@ class UserInfo extends Component {
           : <TableRow title = 'No posts'/>}
       </TableView>
 
+    const Status = () => {
+      if (!online) return null
+
+      let status = ''
+      let style
+
+      if (typeof online === 'number') {
+        status = 'last seen ' + getDate(online, {short: true}) + ' at ' + getTime(online)
+        style = styles.offline
+      } else {
+        status = 'online'
+        style = styles.online
+      }
+
+      return <Text style = {[styles.text, style]}>
+        {status}
+      </Text>
+    }
+
     return <ScrollView style = {styles.container}>
 
       <TableView>
@@ -72,13 +92,15 @@ class UserInfo extends Component {
           mainContainerStyle = {styles.textView}
           LeftComponent = {LeftComponent}>
 
-          <Text style = {styles.text}>
-            {firstName} {lastName}
-          </Text>
+          <View>
+            <Text style = {styles.text}>
+              {firstName} {lastName}
+            </Text>
+          </View>
 
-          <Text style = {[styles.text, styles.status]}>
-            online
-          </Text>
+          <View>
+            <Status/>
+          </View>
 
         </SegmentedCard>
       </TableView>
@@ -98,7 +120,6 @@ class UserInfo extends Component {
           titleStyle = {styles.blueButton}
           onPress = {openChatWithUser}/>
       </TableView>
-
 
       <TableSeparator header = 'Liked posts'/>
 
@@ -128,10 +149,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 35
   },
-  status: {
+  online: {
     color: '#67E'
   },
-
+  offline: {
+    color: 'rgba(127,127,127,1)',
+  },
   avatar: {
     height: 70,
     width: 70,
