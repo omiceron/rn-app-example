@@ -348,7 +348,7 @@ class FeedStore extends EntitiesStore {
 
   getUserLikedPosts = async (uid) => {
     const callback = (snapshot) =>
-      Object.entries(snapshot.val())
+      Object.entries(snapshot.val() || {})
         .reduce((acc, [postId, {likes, title}]) =>
             likes && Object.values(likes).some(({userId}) => userId === uid)
               ? [...acc, {postId, title}]
@@ -380,7 +380,7 @@ class FeedStore extends EntitiesStore {
 
   getUserPosts = async (uid) => {
     const callback = (snapshot) =>
-      Object.entries(snapshot.val())
+      Object.entries(snapshot.val() || {})
         .map(([postId, {title}]) => ({postId, title}))
 
     return await this.reference
