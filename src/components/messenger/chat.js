@@ -56,6 +56,8 @@ class Chat extends Component {
   @observable message = ''
   @action setMessage = message => this.message = message
 
+
+  // TODO: Make chat computed property
   renderMessages = () => {
     const {messenger, chatId} = this.props
 
@@ -72,7 +74,6 @@ class Chat extends Component {
   render() {
     // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
     // console.log('render chat')
-    console.log(isIphoneX(), 'iphonex')
     const {messenger, chatId} = this.props
     // const {uid: currentUserId} = this.props.auth.user
 

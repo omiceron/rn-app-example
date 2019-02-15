@@ -52,9 +52,9 @@ class ChatScreen extends Component {
   }
 
   async componentWillMount() {
-    const {uid} = this.props.navigation.state.params.user
+    const userId = this.props.navigation.state.params.user.uid
     const {messenger} = this.props
-    this.chatId = await messenger.getChatWith(uid) || await messenger.createChatWith(uid)
+    this.chatId = await messenger.getChatWith(userId) || await messenger.createChatWith(userId)
   }
 
   render() {
