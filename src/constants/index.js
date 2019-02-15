@@ -12,6 +12,7 @@ export const DIVIDER_MARGIN_TOP = 20
 export const ROW_HEIGHT = 76
 export const REGION_DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}
 export const DATE_FORMAT = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-digit'}
 export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 

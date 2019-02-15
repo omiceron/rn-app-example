@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, PEOPLE_STORE} from '../../constants'
 import Post from '../feed/post'
-import {observable, action} from 'mobx'
+import {observable, action, computed, autorun, reaction} from 'mobx'
 import Loader from '../common/loader'
 
 @inject(PEOPLE_STORE)
@@ -24,11 +24,22 @@ class PostScreen extends Component {
   @observable user = null
   @observable post = null
 
+  // @computed get post() {
+  //   const {postId} = this.props.navigation.state.params
+  //   return this.props.feed.getPost(postId) /*|| this.props.feed.fetchPost(postId)*/
+  // }
+
+  // TODO: Deal with this imperative/declarative dilemma
+
   async componentDidMount() {
     const {postId} = this.props.navigation.state.params
+
+    reaction(
+      () => this.props.feed.getPost(postId),
+      async () => this.post = this.props.feed.getPost(postId) || await this.props.feed.fetchPost(postId)
+    )
     this.post = this.props.feed.getPost(postId) || await this.props.feed.fetchPost(postId)
     const {userId} = this.post
-
     this.user = await this.props.people.fetchUserInfo(userId)
   }
 

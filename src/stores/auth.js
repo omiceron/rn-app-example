@@ -27,9 +27,7 @@ class AuthStore extends BasicStore {
       this.setUser(user)
 
       if (user) {
-        // this.signOut()
-        // await this.checkUser(user.uid)
-
+        this.getStore(USER_STORE).startPresenceWatcher()
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
 
@@ -37,11 +35,6 @@ class AuthStore extends BasicStore {
         this.getStore(MESSENGER_STORE).subscribeOnChats()
 
         this.getStore(FEED_STORE).fetchPosts()
-
-        // this.getStore(EVENTS_STORE).loadAll()
-        // this.getStore(FEED_STORE).subscribeOnPosts()
-        // this.getStore(FEED_STORE).postsToFb()
-
       }
     })
 
@@ -116,6 +109,7 @@ class AuthStore extends BasicStore {
     })
 
     await firebase.auth().signInWithEmailAndPassword(email, password)
+    this.clear()
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 

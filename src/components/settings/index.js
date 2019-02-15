@@ -130,12 +130,12 @@ class Settings extends Component {
 
       <TableSeparator hint = 'Enter your additional information here, like your bio, age or something like that'/>
 
-      <TableView>
+      {/*<TableView>
         <TableRow title = 'Dark Theme' onValueChange = {() => alert('Not ready yet!')}/>
         <TableRow title = 'Notifications' onPress = {() => alert('Not ready yet!')}/>
       </TableView>
 
-      <TableSeparator/>
+      <TableSeparator/>*/}
 
       <TableView>
         <TableRow title = 'Sign out'

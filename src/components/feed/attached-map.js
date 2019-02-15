@@ -29,7 +29,7 @@ class AttachedMap extends Component {
       // onMapReady = {e => console.log('ready')}
       region = {{...coords, ...REGION_DELTAS}}
     >
-      <MapView.Marker coordinate = {{...coords}}/>
+      {/*<MapView.Marker coordinate = {{...coords}}/>*/}
     </MapView>
   }
 }

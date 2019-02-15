@@ -85,6 +85,7 @@ class Post extends Component {
       </View>
     )
 
+    // TODO: Attached location logic must be reordered
     return <SafeAreaView style = {styles.container}>
       <ScrollView style = {styles.scroll}>
 
@@ -106,8 +107,16 @@ class Post extends Component {
           </Text>
         </View>
 
-        {location && <AttachedLocation location = {location}/>}
-        {coords && <AttachedMap coords = {coords}/>}
+        {location && <AttachedLocation
+          location = {location}
+          onPress = {() => navigation.navigate('mapScreen', {coords})}
+        />}
+
+        {coords && <AttachedMap
+          coords = {coords}
+          onPress = {() => navigation.navigate('mapScreen', {coords})}
+
+        />}
 
         <PostSeparator/>
 
