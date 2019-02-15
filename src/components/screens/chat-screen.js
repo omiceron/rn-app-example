@@ -22,14 +22,16 @@ class ChatScreen extends Component {
   // Chat name must be same as username
   // flow
   static navigationOptions = ({navigation}) => {
+    // TODO: user object
     const {user, user: {firstName, avatar}} = navigation.state.params
+    const {userId} = navigation.state.params
 
     // const navigateToMessenger = () => {
     //   navigation.navigate('messenger')
     // }
 
     const navigateToUserScreen = () => {
-      navigation.push('userScreen', {user})
+      navigation.push('userScreen', {user, userId})
     }
 
     return ({
@@ -52,7 +54,8 @@ class ChatScreen extends Component {
   }
 
   async componentWillMount() {
-    const userId = this.props.navigation.state.params.user.uid
+    const {userId} = this.props.navigation.state.params
+    // const userId = this.props.navigation.state.params.user.uid
     const {messenger} = this.props
     this.chatId = await messenger.getChatWith(userId) || await messenger.createChatWith(userId)
   }

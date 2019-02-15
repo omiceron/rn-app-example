@@ -21,7 +21,8 @@ class UserScreen extends Component {
   @observable user = null
 
   async componentWillMount() {
-    const userId = this.props.navigation.state.params.user.uid
+    // const userId = this.props.navigation.state.params.user.uid
+    const {userId} = this.props.navigation.state.params
     await this.props.people.refreshUser(userId)
     this.user = this.props.people.getUser(userId)
   }
@@ -41,14 +42,17 @@ class UserScreen extends Component {
     this.props.navigation.push('postScreen', {postId})
   }
 
+  // TODO: remove user parameter
   openChatWithUser = () => {
     const {user} = this.props.navigation.state.params
-    this.props.navigation.push('chatScreen', {user})
+    const userId = this.props.navigation.state.params.user.uid
+    this.props.navigation.push('chatScreen', {user, userId})
   }
 
   openUserAvatarsScreen = () => {
     const {user} = this.props.navigation.state.params
-    this.props.navigation.navigate('userAvatars', {user})
+    const userId = this.props.navigation.state.params.user.uid
+    this.props.navigation.navigate('userAvatars', {user, userId})
   }
 
 }

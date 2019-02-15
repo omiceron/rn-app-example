@@ -59,7 +59,8 @@ class LikesListScreen extends Component {
   }
 
   openUserInfoScreen = (user) => {
-    this.props.navigation.push('userScreen', {user})
+    const userId = user.uid
+    this.props.navigation.push('userScreen', {user, userId})
   }
 }
 

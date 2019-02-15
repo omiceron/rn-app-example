@@ -20,7 +20,9 @@ class UserAvatarsScreen extends Component {
   }
 
   async componentWillMount() {
-    const userId = this.props.navigation.state.params.user.uid
+    // const userId = this.props.navigation.state.params.user.uid
+    const {userId} = this.props.navigation.state.params
+
     await this.props.people.refreshUser(userId)
     this.user = this.props.people.getUser(userId)
   }
