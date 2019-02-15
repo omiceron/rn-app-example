@@ -27,7 +27,7 @@ class PeopleStore extends EntitiesStore {
   }
 
   fetchUserInfo = async (uid) => {
-    const user = Object.values(this.entities).find(x => x.uid === uid) ||
+    const user = this.entities[uid] ||
       await this.reference.child(uid)
         .once('value')
         .then(snapshot => snapshot.val())
@@ -39,13 +39,46 @@ class PeopleStore extends EntitiesStore {
 
   }
 
+  getUser = (userId) => {
+    return this.entities[userId]
+  }
+
+  @action appendUser = (userId, {chats, ...user}) => {
+    user.uid = userId
+    // user.key = userId
+
+    this.entities[userId] = {...this.entities[userId], ...user}
+
+  }
+
+  @action refreshUser = async (userId) => {
+    const callback = (snapshot) => {
+      const user = snapshot.val()
+
+      this.appendUser(userId, user)
+    }
+
+    await this.reference
+      .child(userId)
+      .once('value')
+      .then(callback)
+  }
+
   @action fetchPeople = () => {
     if (this.loading) return
 
     this.loading = true
-    const callback = action(data => {
-      this.entities = Object.entries(data.val()).map(([key, {avatar, email, firstName, lastName, userInfo}]) =>
-        ({uid: key, avatar, email, firstName, lastName, userInfo}))
+
+    const callback = action(snapshot => {
+      const users = Object.entries(snapshot.val())
+        .reduce((acc, [userId, {chats, ...user}]) => {
+          user.uid = userId
+          acc[userId] = user
+          return acc
+        }, {})
+
+      this.entities = {...this.entities, ...users}
+
       this.loading = false
       this.loaded = true
     })
