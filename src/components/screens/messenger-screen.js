@@ -40,11 +40,14 @@ class MessengerScreen extends Component {
   }
 
   openChatScreen = (user) => {
-    this.props.navigation.navigate('chatScreen', {user})
+    // TODO: remove user parameter
+    const userId = user.uid
+    this.props.navigation.navigate('chatScreen', {user, userId})
   }
 
   openUserInfoScreen = (user) => {
-    this.props.navigation.push('userScreen', {user})
+    const userId = user.uid
+    this.props.navigation.push('userScreen', {user, userId})
   }
 
   deleteChat = (chatId) => {

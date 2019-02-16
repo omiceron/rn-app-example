@@ -21,30 +21,25 @@ class PostScreen extends Component {
     })
   }
 
-  @observable user = null
-  @observable post = null
-
-  // @computed get post() {
-  //   const {postId} = this.props.navigation.state.params
-  //   return this.props.feed.getPost(postId) /*|| this.props.feed.fetchPost(postId)*/
-  // }
-
-  // TODO: Deal with this imperative/declarative dilemma
-
-  async componentDidMount() {
+  @computed
+  get post() {
     const {postId} = this.props.navigation.state.params
+    const post = this.props.feed.getPost(postId)
+    if (!post) this.props.feed.refreshPost(postId)
+    return post
+  }
 
-    reaction(
-      () => this.props.feed.getPost(postId),
-      async () => this.post = this.props.feed.getPost(postId) || await this.props.feed.fetchPost(postId)
-    )
-    this.post = this.props.feed.getPost(postId) || await this.props.feed.fetchPost(postId)
+  @computed
+  get user() {
+    if (!this.post) return null
     const {userId} = this.post
-    this.user = await this.props.people.fetchUserInfo(userId)
+    const user = this.props.people.getUser(userId)
+    if (!user) this.props.people.refreshUser(userId)
+    return user
   }
 
   render() {
-    if (!this.user || !this.post) return <Loader/>
+    if (!this.post || !this.user) return <Loader/>
     const {
       title,
       text,

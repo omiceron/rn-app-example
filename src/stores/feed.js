@@ -69,16 +69,20 @@ class FeedStore extends EntitiesStore {
     return this.posts[this.size - 1]
   }
 
+  lastPostKey = null
+
   @action fetchPosts = () => {
     if (this.loaded || this.loading) return
 
     this.loading = true
 
-    const chunkShift = this.lastPost ? 1 : 0
+    const chunkShift = this.lastPostKey ? 1 : 0
     const chunkLength = FEED_CHUNK_LENGTH + chunkShift
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
+
+      this.lastPostKey = Object.keys(payload)[0]
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
@@ -91,8 +95,8 @@ class FeedStore extends EntitiesStore {
       .orderByKey()
       .limitToLast(chunkLength)
 
-    if (this.lastPost) {
-      ref = ref.endAt(this.lastPost.key)
+    if (this.lastPostKey) {
+      ref = ref.endAt(this.lastPostKey)
     }
 
     ref.once('value', callback)
@@ -112,6 +116,7 @@ class FeedStore extends EntitiesStore {
     this.entities = {...this.entities, ...posts}
   }
 
+  // TODO: maybe fetch user too?
   convertPosts = async (payload) => {
     return Promise.all(Object.entries(payload).map(async ([key, post]) => {
       const likes = Object.values(post.likes || {})
@@ -147,19 +152,20 @@ class FeedStore extends EntitiesStore {
 
   }
 
-  @action refreshPost = (postId) => {
-    const callback = (snapshot) => {
+  @action refreshPost = async (postId) => {
+    const callback = async (snapshot) => {
       const post = snapshot.val()
+      // TODO: postId?
       const postId = snapshot.key
       // post.uid = snapshot.key
 
       // this.appendPost(post)
-      this.appendPost(postId, post)
+      await this.appendPost(postId, post)
     }
 
-    return this.reference
+    await this.reference
       .child(postId)
-      .once('value', callback)
+      .once('value').then(callback)
 
   }
 
@@ -394,14 +400,14 @@ class FeedStore extends EntitiesStore {
   // DEPRECATED CODE
 
   // more flexible analogue of subscribing via on('child_added')
-  subscribeOnPosts = () => {
-    this.refreshFeed()
-    this.timer = setTimeout(this.subscribeOnPosts, 3000)
-  }
+  // subscribeOnPosts = () => {
+  //   this.refreshFeed()
+  //   this.timer = setTimeout(this.subscribeOnPosts, 3000)
+  // }
 
-  clearSubscribtionTimer = () => {
-    clearTimeout(this.timer)
-  }
+  // clearSubscribtionTimer = () => {
+  //   clearTimeout(this.timer)
+  // }
 
   @action setLikeBackend = (postId) => {
     const ref = this.getLikesReference(postId)

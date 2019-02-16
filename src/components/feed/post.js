@@ -58,7 +58,7 @@ class Post extends Component {
     const date = getDate(timestamp)
 
     const PostSeparator = () => <Separator style = {styles.postSeparator}/>
-
+    // TODO: user object
     const PostInfo = () => (
       <View style = {styles.postInfoContainer}>
 
@@ -68,7 +68,7 @@ class Post extends Component {
           </Text>
         </View>
 
-        <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user})}>
+        <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user, userId: user.uid})}>
           <View style = {styles.author}>
 
             <View style = {styles.authorName}>

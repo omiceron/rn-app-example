@@ -42,7 +42,6 @@ class Feed extends Component {
         data = {posts}
         refreshing = {loading}
         onRefresh = {refreshFeed}
-        // ListEmptyComponent = {() => <View><Text>empty</Text></View>}
         onEndReached = {fetchPosts}
         initialNumToRender = {Number.MAX_SAFE_INTEGER}
         onEndReachedThreshold = {0.5}

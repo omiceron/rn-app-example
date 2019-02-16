@@ -52,7 +52,8 @@ class PostCard extends Component {
 
       </TouchableOpacity>
 
-      {location && <AttachedLocation location = {location} onPress = {() => navigation.navigate('mapScreen', {coords})}/>}
+      {location &&
+      <AttachedLocation location = {location} onPress = {() => navigation.navigate('mapScreen', {coords})}/>}
 
       <Separator/>
 
