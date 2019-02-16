@@ -44,12 +44,12 @@ class Post extends Component {
       coords,
       timestamp,
       isLiked,
-      uid,
+      uid: postId,
       likesNumber,
-      user,
       user: {
         firstName,
-        lastName
+        lastName,
+        uid: userId
       },
       navigation,
       feed
@@ -68,7 +68,7 @@ class Post extends Component {
           </Text>
         </View>
 
-        <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {user, userId: user.uid})}>
+        <TouchableOpacity style = {styles.authorButton} onPress = {() => navigation.push('userScreen', {userId})}>
           <View style = {styles.author}>
 
             <View style = {styles.authorName}>
@@ -109,12 +109,12 @@ class Post extends Component {
 
         {location && <AttachedLocation
           location = {location}
-          onPress = {() => navigation.navigate('mapScreen', {coords})}
+          onPress = {this.props.openMap}
         />}
 
         {coords && <AttachedMap
           coords = {coords}
-          onPress = {() => navigation.navigate('mapScreen', {coords})}
+          onPress = {this.props.openMap}
 
         />}
 
@@ -123,8 +123,8 @@ class Post extends Component {
         <PostControlRow
           isLiked = {isLiked}
           likesNumber = {likesNumber}
-          onLikePress = {() => feed.setLike(uid)}
-          onCounterPress = {() => navigation.push('likesList', {postId: uid})}
+          onLikePress = {() => feed.setLike(postId)}
+          onCounterPress = {this.props.openLikedPosts}
         />
 
       </ScrollView>

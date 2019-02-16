@@ -41,9 +41,9 @@ class PeopleList extends Component {
 
     const renderItem = ({item: {person, key}}) =>
       <PersonCard
-        onPress = {openChatScreen.bind(null, person)}
+        onPress = {openChatScreen.bind(null, person.uid)}
         getPhoto = {getPhoto.bind(null, key)}
-        openUserInfoScreen = {openUserInfoScreen.bind(null, person)}
+        openUserInfoScreen = {openUserInfoScreen.bind(null, person.uid)}
         person = {person}
       />
 

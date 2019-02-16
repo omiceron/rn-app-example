@@ -35,14 +35,13 @@ class PeopleListScreen extends Component {
 
   // TODO: remove user parameter
   // TODO: chatId?
-  openChatScreen = (user) => {
-    const userId = user.uid
+  openChatScreen = (userId) => {
+    const user = this.props.people.getUser(userId)
     this.props.navigation.push('chatScreen', {user, userId})
   }
 
-  openUserInfoScreen = (user) => {
-    const userId = user.uid
-    this.props.navigation.push('userScreen', {user, userId})
+  openUserInfoScreen = (userId) => {
+    this.props.navigation.push('userScreen', {userId})
   }
 
   getPhoto = (userId) => {

@@ -3,10 +3,11 @@ import {inject, observer} from 'mobx-react'
 import Chat from '../messenger/chat'
 import TouchableAvatar from '../common/touchable-avatar'
 import {observable} from 'mobx'
-import {MESSENGER_STORE} from '../../constants'
+import {MESSENGER_STORE, PEOPLE_STORE} from '../../constants'
 import PropTypes from 'prop-types'
 import Loader from '../common/loader'
 
+@inject(PEOPLE_STORE)
 @inject(MESSENGER_STORE)
 @observer
 class ChatScreen extends Component {
@@ -23,18 +24,22 @@ class ChatScreen extends Component {
   // flow
   static navigationOptions = ({navigation}) => {
     // TODO: user object
-    const {user, user: {firstName, avatar}} = navigation.state.params
+    const {user: {firstName, avatar}} = navigation.state.params
     const {userId} = navigation.state.params
+
+    // const user = navigation.getParam('user')
 
     // const navigateToMessenger = () => {
     //   navigation.navigate('messenger')
     // }
 
     const navigateToUserScreen = () => {
-      navigation.push('userScreen', {user, userId})
+      navigation.push('userScreen', {userId})
     }
 
     return ({
+      // headerTitle: !user && <Loader/>,
+      // title: user && user.firstName,
       title: firstName,
       headerRight: <TouchableAvatar size = {40}
                                     style = {{marginRight: 10}}
@@ -55,7 +60,8 @@ class ChatScreen extends Component {
 
   async componentWillMount() {
     const {userId} = this.props.navigation.state.params
-    // const userId = this.props.navigation.state.params.user.uid
+    // const user = this.props.people.getUser(userId)
+    // this.props.navigation.setParams({user})
     const {messenger} = this.props
     this.chatId = await messenger.getChatWith(userId) || await messenger.createChatWith(userId)
   }
