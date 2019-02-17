@@ -29,17 +29,17 @@ class PostScreen extends Component {
     return post
   }
 
-  @computed
-  get user() {
-    if (!this.post) return null
-    const {userId} = this.post
-    const user = this.props.people.getUser(userId)
-    if (!user) this.props.people.refreshUser(userId)
-    return user
-  }
+  // @computed
+  // get user() {
+  //   if (!this.post) return null
+  //   const {userId} = this.post
+  //   const user = this.props.people.getUser(userId)
+  //   if (!user) this.props.people.refreshUser(userId)
+  //   return user
+  // }
 
   render() {
-    if (!this.post || !this.user) return <Loader/>
+    if (!this.post /*|| !this.user*/) return <Loader/>
     const {
       title,
       text,
@@ -60,8 +60,20 @@ class PostScreen extends Component {
       isLiked = {isLiked}
       uid = {uid}
       likesNumber = {likesNumber}
-      user = {this.user}
+      user = {this.post.user}
+      openLikedPosts = {this.openLikedPosts}
+      openMap = {this.openMap}
     />
+  }
+
+  openLikedPosts = () => {
+    const {postId} = this.props.navigation.state.params
+    this.props.navigation.push('likesList', {postId})
+  }
+
+  openMap = () => {
+    const {coords} = this.post
+    this.props.navigation.navigate('mapScreen', {coords})
   }
 }
 

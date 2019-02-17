@@ -14,10 +14,10 @@ class AuthScreen extends Component {
   // }
 
   render() {
-    return <SignIn signUp = {this.handleSignUp}/>
+    return <SignIn signUp = {this.openSignUp}/>
   }
 
-  handleSignUp = () => {
+  openSignUp = () => {
     this.props.navigation.navigate('signUp')
   }
 }

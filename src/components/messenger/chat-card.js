@@ -59,32 +59,32 @@ class ChatCard extends Component {
       deleteChat,
       lastMessage,
       // chat: {
-      user,
       chatId,
       // messages,
       user: {
         firstName,
-        lastName
+        lastName,
+        uid: userId
       }
       // }
     } = this.props
 
     console.log('render chat', firstName)
 
-    const {text, user: userId} = lastMessage
-    const isCurrentUser = this.props.auth.user.uid === userId
+    const {text, user: lastMessageUserId} = lastMessage
+    const isCurrentUser = userId === lastMessageUserId
 
     if (this.isArchived) return <View style = {{backgroundColor: '#497AFC', height: 76}}/>
 
     return <SwipeableCard
-      onPress = {openChatScreen.bind(null, user)}
+      onPress = {openChatScreen.bind(null, userId)}
       LeftComponent = {this.renderAvatar}
       RightComponent = {this.renderDate}
       onSwipeableLeftOpen = {this.onLeftOpen}
-      leftAction = {openChatScreen.bind(null, user)}
+      leftAction = {openChatScreen.bind(null, userId)}
       rightActionWidth = {ROW_HEIGHT}
       rightActions = {[
-        {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen.bind(null, user)},
+        {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen.bind(null, userId)},
         {title: 'Delete', color: '#E67', callback: deleteChat.bind(null, chatId)}
       ]}
     >

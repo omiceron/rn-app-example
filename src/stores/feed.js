@@ -131,6 +131,8 @@ class FeedStore extends EntitiesStore {
         post.location = name + (city ? ', ' + city : '') + (country ? ', ' + country : '')
       }
 
+      post.user = await this.getStore(PEOPLE_STORE).getUserLazily(post.userId)
+
       return ({...post, key})
     }))
   }
@@ -147,6 +149,8 @@ class FeedStore extends EntitiesStore {
       const [{name, city, country}] = await Location.reverseGeocodeAsync({...post.coords})
       post.location = name + (city ? ', ' + city : '') + (country ? ', ' + country : '')
     }
+
+    post.user = await this.getStore(PEOPLE_STORE).getUserLazily(post.userId)
 
     this.entities[postId] = post
 
@@ -334,11 +338,15 @@ class FeedStore extends EntitiesStore {
 
   getPostLikes = async (postId) => {
     const {likes} = this.entities[postId]
-    const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+    // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
+    const people = this.getStore(PEOPLE_STORE)
 
     return Promise.all(Object.entries(likes)
-      .map(async ([key, {userId}]) =>
-        ({userId, user: await fetchUserInfo(userId), key})
+      .map(async ([key, {userId}]) => {
+        await people.refreshUser(userId)
+        const user = people.getUser(userId)
+         return {userId, user, key}
+        }
       ))
 
     // this make possible to ignore false uids

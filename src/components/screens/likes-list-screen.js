@@ -35,32 +35,25 @@ class LikesListScreen extends Component {
   }
 
   @observable likes = null
-  // @observable error = false
 
   async componentWillMount() {
-    const {attachLocation, getPostLikes} = this.props.feed
-    const {state: {params: {postId}}, setParams} = this.props.navigation
+    const {navigation, feed} = this.props
+    this.likes = await feed.getPostLikes(navigation.state.params.postId)
 
-    this.likes = await getPostLikes(postId)
-    // .catch(action(e => {
-    //   this.error = true
-    //   return null
-    // }))
-
-    setParams({attachLocation})
+    // TODO: ?
+    // const {attachLocation} = feed
+    // navigation.state.setParams({attachLocation})
   }
 
   render() {
-    // if (this.error) return null
     if (!this.likes) return <Loader/>
 
     return <LikesList openUserInfoScreen = {this.openUserInfoScreen}
                       likes = {this.likes}/>
   }
 
-  openUserInfoScreen = (user) => {
-    const userId = user.uid
-    this.props.navigation.push('userScreen', {user, userId})
+  openUserInfoScreen = (userId) => {
+    this.props.navigation.push('userScreen', {userId})
   }
 }
 

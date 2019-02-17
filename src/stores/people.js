@@ -43,11 +43,26 @@ class PeopleStore extends EntitiesStore {
     return this.entities[userId]
   }
 
+  @action getUserLazily = async (userId) => {
+    if (!this.entities[userId]) {
+      await this.refreshUser(userId)
+    }
+
+    return this.entities[userId]
+  }
+
+  @action getUserGreedily = async (userId) => {
+    await this.refreshUser(userId)
+    return this.entities[userId]
+  }
+
   @action appendUser = (userId, {chats, ...user}) => {
     user.uid = userId
     // user.key = userId
 
     this.entities[userId] = {...this.entities[userId], ...user}
+
+    return this.entities[userId]
 
   }
 
@@ -55,10 +70,10 @@ class PeopleStore extends EntitiesStore {
     const callback = (snapshot) => {
       const user = snapshot.val()
 
-      this.appendUser(userId, user)
+      return this.appendUser(userId, user)
     }
 
-    await this.reference
+    return await this.reference
       .child(userId)
       .once('value')
       .then(callback)
