@@ -16,9 +16,16 @@ export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-dig
 export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
-export const DEFAULT_BACKGROUND_COLOR = '#efeff4'
-export const WHITE_BACKGROUND_COLOR = '#ffffff'
-export const NAVIGATION_TINT_COLOR = '#ffffff'
+export const DEFAULT_HEADER_COLOR = '#7a839e'
+export const ACTIVE_TINT_COLOR = '#423c6d'
+
+export const POST_CARD_BACKGROUND_COLOR = '#fffffd'
+export const POST_CARD_TEXT_COLOR = '#898990'
+export const POST_CARD_TITLE_COLOR = '#333333'
+export const DEFAULT_BACKGROUND_COLOR = '#ebebef'
+// export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
+export const WHITE_BACKGROUND_COLOR = '#fffffd'
+export const NAVIGATION_TINT_COLOR = '#fffffd'
 
 export const FEED_CHUNK_LENGTH = 10
 export const MESSAGES_CHUNK_LENGTH = 30
