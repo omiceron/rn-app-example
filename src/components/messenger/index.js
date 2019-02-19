@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {
-  StyleSheet, FlatList, SafeAreaView, ActivityIndicator,
+  StyleSheet, FlatList, SafeAreaView, ActivityIndicator,ScrollView
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
 import Separator from '../common/separator'
-import {AUTH_STORE, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {AUTH_STORE, DEFAULT_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
 import EmptyList from './empty-list'
 
@@ -51,6 +51,7 @@ class Messenger extends Component {
     if (!chats.length) return <EmptyList/>
     return <SafeAreaView style = {styles.container}>
       <FlatList
+        contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}
         ItemSeparatorComponent = {() => <Separator leftIndent = {78}/>}
         data = {chats}
         renderItem = {this.renderChatCard}
@@ -66,7 +67,7 @@ class Messenger extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: WHITE_BACKGROUND_COLOR
+    backgroundColor: DEFAULT_BACKGROUND_COLOR
   }
 })
 

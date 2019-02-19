@@ -9,7 +9,11 @@ import SegmentedCard from '../common/segmented-card'
 import TableRow from '../common/table-row'
 import TableSeparator from '../common/table-separator'
 import TableView from '../common/table-view'
-import {DEFAULT_BACKGROUND_COLOR, FEED_STORE} from '../../constants'
+import {
+  DEFAULT_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
+  POST_CARD_TITLE_COLOR,
+  WHITE_BACKGROUND_COLOR
+} from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
 
 @inject(FEED_STORE)
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
   simpleRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: 'white'
+    backgroundColor: WHITE_BACKGROUND_COLOR
   },
   separator: {
     display: 'flex',
@@ -150,10 +154,10 @@ const styles = StyleSheet.create({
     marginBottom: 35
   },
   online: {
-    color: '#67E'
+    color: HIGHLIGHTED_TEXT_COLOR
   },
   offline: {
-    color: 'rgba(127,127,127,1)',
+    color: OFFLINE_COLOR,
   },
   avatar: {
     height: 70,
@@ -164,7 +168,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: POST_CARD_TITLE_COLOR
   },
   imageView: {
     flex: 1,
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   blueButton: {
-    color: '#67E',
+    color: DEFAULT_HEADER_COLOR,
     textAlign: 'center'
   }
 })

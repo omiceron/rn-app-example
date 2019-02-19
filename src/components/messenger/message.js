@@ -1,7 +1,12 @@
 import React, {Component, PureComponent} from 'react'
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
 import {string, bool, shape, array, number} from 'prop-types'
-import {AUTH_STORE, WINDOW_WIDTH} from '../../constants'
+import {
+  ACTIVE_TINT_COLOR, AUTH_STORE, DEFAULT_HEADER_COLOR, MESSAGE_COLOR, POST_CARD_TEXT_COLOR, POST_CARD_TITLE_COLOR,
+  USER_MESSAGE_COLOR,
+  WHITE_BACKGROUND_COLOR,
+  WINDOW_WIDTH
+} from '../../constants'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -40,17 +45,17 @@ class Message extends PureComponent {
       }}>
         <Icon
           name = {`ios-${pending ? 'checkmark' : 'done-all'}`}
-          color = '#CCCCCC'
+          color = {POST_CARD_TEXT_COLOR}
           size = {30}/>
       </View>}
       <View
         // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
         style = {[styles.container, {
-          backgroundColor: isCurrentUser ? '#89F' : '#EEE'
+          backgroundColor: isCurrentUser ? USER_MESSAGE_COLOR : MESSAGE_COLOR
         }]}>
         <Text selectable style = {[styles.text, {
           maxWidth: WINDOW_WIDTH - WINDOW_WIDTH / 5,
-          color: isCurrentUser ? '#FFF' : '#000'
+          color: isCurrentUser ? WHITE_BACKGROUND_COLOR : POST_CARD_TITLE_COLOR
         }]}>
           {text}
         </Text>

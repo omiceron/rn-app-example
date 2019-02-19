@@ -3,6 +3,7 @@ import {View, Text, TextInput, TouchableOpacity, Platform, Switch, StyleSheet} f
 import SegmentedCard from './segmented-card'
 import Separator from './separator'
 import PropTypes from 'prop-types'
+import {INACTIVE_TEXT_COLOR, POST_CARD_TITLE_COLOR} from '../../constants'
 
 class TableRow extends Component {
   static propTypes = {
@@ -66,12 +67,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: POST_CARD_TITLE_COLOR
   },
   caption: {
     marginTop: 4,
     fontWeight: '100',
-    color: 'grey'
+    color: INACTIVE_TEXT_COLOR
   },
   textView: {
     flex: 1,

@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
-import {Text, SectionList, StyleSheet} from 'react-native'
+import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
 import PersonCard from './person-card'
 import Separator from '../common/separator'
 import Loader from '../common/loader'
-import {PEOPLE_STORE} from '../../constants'
+import {DEFAULT_BACKGROUND_COLOR, PEOPLE_STORE, POST_CARD_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {shape, bool, func, array} from 'prop-types'
 
 @inject(PEOPLE_STORE)
@@ -47,25 +47,28 @@ class PeopleList extends Component {
         person = {person}
       />
 
-    return <SectionList
-      sections = {sections}
-      ItemSeparatorComponent = {ItemSeparatorComponent}
-      SectionSeparatorComponent = {SectionSeparatorComponent}
-      renderSectionHeader = {renderSectionHeader}
-      renderItem = {renderItem}
-      // automaticallyAdjustContentInsets = {false}
-      style = {styles.container}
-    />
+    return <SafeAreaView style = {styles.container}>
+      <SectionList
+        sections = {sections}
+        contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}
+        ItemSeparatorComponent = {ItemSeparatorComponent}
+        SectionSeparatorComponent = {SectionSeparatorComponent}
+        renderSectionHeader = {renderSectionHeader}
+        renderItem = {renderItem}
+        // automaticallyAdjustContentInsets = {false}
+      />
+    </SafeAreaView>
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF'
+    flex: 1,
+    backgroundColor: DEFAULT_BACKGROUND_COLOR
   },
   header: {
-    backgroundColor: '#FFF',
-    color: '#999',
+    backgroundColor: WHITE_BACKGROUND_COLOR,
+    color: POST_CARD_TEXT_COLOR,
     padding: 8,
     fontSize: 16,
     fontWeight: '600'

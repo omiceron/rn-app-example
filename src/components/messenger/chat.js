@@ -14,7 +14,7 @@ import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Message from './message'
 import {observable, action} from 'mobx'
-import {AUTH_STORE, MESSENGER_STORE} from '../../constants'
+import {AUTH_STORE, MESSENGER_STORE, USER_MESSAGE_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from './empty-list'
 import {reaction} from 'mobx'
@@ -104,7 +104,7 @@ class Chat extends Component {
 
         <TouchableOpacity onPress = {this.sendMessageHandler}>
           <View style = {styles.sendButton}>
-            <Icon name = 'ios-send' size = {30} color = {'white'}/>
+            <Icon name = 'ios-send' size = {30} color = {WHITE_BACKGROUND_COLOR}/>
           </View>
         </TouchableOpacity>
 
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: 'white'
+    backgroundColor: WHITE_BACKGROUND_COLOR
   },
   chatContainer: {
     display: 'flex',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 5
   },
   messageText: {
-    backgroundColor: 'white',
+    backgroundColor: WHITE_BACKGROUND_COLOR,
     fontSize: 16,
     padding: 10,
     fontWeight: '100'
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#67E',
+    backgroundColor: USER_MESSAGE_COLOR,
     height: 36,
     borderRadius: 18,
     width: 36,

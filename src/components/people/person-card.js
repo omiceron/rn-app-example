@@ -4,7 +4,7 @@ import Card from '../common/basic-card'
 import Avatar from '../common/basic-avatar'
 import SwipeableCard from '../common/swipeable-card'
 import PropTypes from 'prop-types'
-import {ROW_HEIGHT} from '../../constants'
+import {POST_CARD_TITLE_COLOR, ROW_HEIGHT} from '../../constants'
 import SegmentedCard from '../common/segmented-card'
 import {isPropsDiffer} from '../../stores/utils'
 
@@ -41,7 +41,7 @@ class PersonCard extends Component {
       rightActionWidth: ROW_HEIGHT,
       rightActions: [
         // {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen},
-        {title: 'Info', color: '#FFAB00', callback: openUserInfoScreen},
+        {title: 'Info', color: '#eadcc1', callback: openUserInfoScreen},
         // {title: 'Photo', color: '#FFAB00', callback: getPhoto}
       ]
     }
@@ -69,6 +69,7 @@ class PersonCard extends Component {
 
 const styles = StyleSheet.create({
   text: {
+    color: POST_CARD_TITLE_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },

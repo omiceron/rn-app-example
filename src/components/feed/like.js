@@ -5,7 +5,7 @@ import {
   Animated,
   TouchableWithoutFeedback
 } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from '../common/meowchat-icon'
 // import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 
@@ -46,11 +46,11 @@ class Like extends PureComponent {
 
     return <TouchableWithoutFeedback onPress = {this.likeHandler}>
       <View style = {[styles.container, style]}>
-        <AnimatedIcon color = {activated ? '#FF0000' : 'rgba(127,127,127,1)'}
+        <AnimatedIcon color = {activated ? '#f40003': 'rgba(127,127,127,1)'}
                       size = {30}
-                      name = {`cat`}
                       // name = {`ios-heart${activated ? '' : '-outline'}`}
-                      style = {[{lineHeight: 32}, {transform: [{scale: this.interpolation}]}]}/>
+                      name = {`cat${activated ? '' : '-outline'}`}
+                      style = {{transform: [{scale: this.interpolation}]}}/>
                       {/*style = {[{lineHeight: 34}, {transform: [{scale: this.interpolation}]}]}/>*/}
       </View>
     </TouchableWithoutFeedback>
@@ -60,7 +60,7 @@ class Like extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     height: 34,
-    width: 34,
+    width: 26,
     alignItems: 'center',
     justifyContent: 'center'
   }

@@ -1,10 +1,13 @@
 import React, {Component, PureComponent} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing} from 'react-native'
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing, Image} from 'react-native'
 import PropTypes from 'prop-types'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
-import {NAVIGATION_STORE} from '../../constants'
+import {
+  NAVIGATION_STORE, POST_CARD_BACKGROUND_COLOR, POST_CARD_TEXT_COLOR,
+  POST_CARD_TITLE_COLOR
+} from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
 
@@ -63,6 +66,7 @@ class PostCard extends Component {
         onLikePress = {() => feed.setLike(uid)}
         onCounterPress = {() => navigation.push('likesList', {postId: uid})}
       />
+
     </View>
   }
 
@@ -71,17 +75,28 @@ class PostCard extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: POST_CARD_BACKGROUND_COLOR,
     paddingHorizontal: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(192,192,192,0.5)'
+    borderColor: 'rgba(192,192,192,0.5)',
+    // borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 6,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    marginHorizontal: 8,
+    marginTop: 8,
   },
   text: {
-    color: 'rgba(127,127,127,1)',
+    color: POST_CARD_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },
   title: {
+    color: POST_CARD_TITLE_COLOR,
     fontSize: 16,
     fontWeight: '600'
   },

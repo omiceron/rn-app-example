@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {View, StyleSheet, Text} from 'react-native'
 import PropTypes from 'prop-types'
+import {DEFAULT_BACKGROUND_COLOR} from '../../constants'
 
 class EmptyList extends Component {
   static propTypes = {}
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    color: 'rgba(127,127,127,1)',
+    color: DEFAULT_BACKGROUND_COLOR,
     fontSize: 20,
     fontWeight: '200'
   }
