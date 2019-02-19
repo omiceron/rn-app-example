@@ -25,12 +25,7 @@ class LikesListScreen extends Component {
 
   static navigationOptions = ({navigation}) => {
     return ({
-      title: 'Likes',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF'
+      title: 'Likes'
     })
   }
 

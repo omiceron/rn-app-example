@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Photo from '../common/photo'
 import {inject} from 'mobx-react'
-import {AVATAR_STORE} from '../../constants'
+import {AVATAR_STORE, WARNING_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(AVATAR_STORE)
@@ -15,7 +15,7 @@ class UserPhotoScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     header: null,
     headerStyle: {
-      backgroundColor: '#E67'
+      backgroundColor: WARNING_COLOR
     }
   })
 

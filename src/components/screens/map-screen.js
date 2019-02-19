@@ -7,12 +7,6 @@ class MapScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
       title: 'Location',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF'
-
     })
   }
 

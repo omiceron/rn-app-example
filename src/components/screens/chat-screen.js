@@ -46,11 +46,6 @@ class ChatScreen extends Component {
                                     onPress = {navigateToUserScreen}
         // uri = {avatar}
       />,
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF',
       tabBarVisible: false
       // headerLeft: <HeaderBackButton tintColor = 'white' onPress = {navigateToMessenger}/>,
       // headerLeft: <HeaderLeft onPress = {navigateToMessenger}/>,

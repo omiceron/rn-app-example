@@ -10,12 +10,6 @@ import Loader from '../common/loader'
 class UserScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Info',
-    headerStyle: {
-      backgroundColor: '#67E',
-      borderBottomWidth: 0
-
-    },
-    headerTintColor: '#FFF'
   })
 
   @observable user = null

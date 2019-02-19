@@ -9,12 +9,6 @@ import {PEOPLE_STORE} from '../../constants'
 class PeopleListScreen extends Component {
   static navigationOptions = {
     title: 'People',
-    headerStyle: {
-      backgroundColor: '#67E',
-      borderBottomWidth: 0
-
-    },
-    headerTintColor: '#FFF'
   }
 
   componentWillMount() {

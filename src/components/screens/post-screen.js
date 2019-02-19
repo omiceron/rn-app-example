@@ -12,12 +12,6 @@ class PostScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
       title: 'Post',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF'
-
     })
   }
 

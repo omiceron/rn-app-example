@@ -7,9 +7,7 @@ import {
 } from 'react-navigation'
 import AuthScreen from './screens/auth-screen'
 import SignUpScreen from './screens/sign-up-screen'
-import EventList from './screens/event-list'
 import PeopleScreen from './screens/people-screen'
-import EventMapScreen from './screens/event-map'
 import PersonPhotoScreen from './screens/person-photo-screen'
 import UserPhotoScreen from './screens/user-photo-screen'
 import MessengerScreen from './screens/messenger-screen'
@@ -26,6 +24,10 @@ import LikesListScreen from './screens/likes-list-screen'
 import PostScreen from './screens/post-screen'
 import AuthLoadingScreen from './screens/loader-screen'
 import MapScreen from './screens/map-screen'
+import {
+  ACTIVE_TINT_COLOR, DEFAULT_HEADER_COLOR, NAVIGATION_TINT_COLOR, POST_CARD_TEXT_COLOR,
+  WHITE_BACKGROUND_COLOR
+} from '../constants'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
   <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
@@ -55,6 +57,13 @@ const createCommonStack = (mainScreen) => createStackNavigator({
   mainScreen,
   ...commonScreens
 }, {
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: DEFAULT_HEADER_COLOR,
+      borderBottomWidth: 0
+    },
+    headerTintColor: NAVIGATION_TINT_COLOR
+  },
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
 })
@@ -78,6 +87,13 @@ const PostFormStack = createStackNavigator({
     screen: LocationFormScreen
   }
 }, {
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: DEFAULT_HEADER_COLOR,
+      borderBottomWidth: 0
+    },
+    headerTintColor: NAVIGATION_TINT_COLOR
+  },
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
 })
@@ -95,12 +111,6 @@ const TabNavigator = createBottomTabNavigator({
   feed: createCommonTabRouteConfig(FeedScreen, 'paper'),
   messenger: createCommonTabRouteConfig(MessengerScreen, 'chatbubbles'),
   people: createCommonTabRouteConfig(PeopleScreen, 'people'),
-  // events: {
-  //   screen: EventList,
-  //   navigationOptions: {
-  //     tabBarIcon: renderTabBarIcon('calendar')
-  //   }
-  // },
   settings: {
     screen: SettingsScreen,
     navigationOptions: {
@@ -109,7 +119,10 @@ const TabNavigator = createBottomTabNavigator({
   }
 }, {
   tabBarOptions: {
-    activeTintColor: '#67E',
+    activeBackgroundColor: WHITE_BACKGROUND_COLOR,
+    inactiveBackgroundColor: WHITE_BACKGROUND_COLOR,
+    activeTintColor: ACTIVE_TINT_COLOR,
+    inactiveTintColor: POST_CARD_TEXT_COLOR,
     showLabel: false
   }
 })
@@ -127,16 +140,7 @@ const CoreNavigator = createStackNavigator({
   },
   userAvatars: {
     screen: UserAvatarsScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      }
-    }
   }
-  // event: {
-  //   screen: EventMapScreen
-  // }
 }, {
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
