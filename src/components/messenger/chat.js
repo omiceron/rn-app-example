@@ -14,7 +14,10 @@ import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Message from './message'
 import {observable, action} from 'mobx'
-import {AUTH_STORE, MESSENGER_STORE, USER_MESSAGE_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {
+  AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, USER_MESSAGE_COLOR,
+  WHITE_BACKGROUND_COLOR, WHITE_TEXT_COLOR
+} from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from './empty-list'
 import {reaction} from 'mobx'
@@ -26,15 +29,6 @@ import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 @inject(AUTH_STORE)
 @observer
 class Chat extends Component {
-  constructor(...args) {
-    super(...args)
-
-    reaction(
-      () => this.props.messenger.getMessages(this.props.chatId).length,
-      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    )
-  }
-
   static propTypes = {
     // messenger: shape({
     //   sendMessage: func.isRequired,
@@ -49,6 +43,15 @@ class Chat extends Component {
     })
   }
 
+  constructor(...args) {
+    super(...args)
+
+    reaction(
+      () => this.props.messenger.getMessages(this.props.chatId).length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+  }
+
   componentWillMount() {
     this.props.messenger.subscribeOnMessages(this.props.chatId)
   }
@@ -56,9 +59,10 @@ class Chat extends Component {
   @observable message = ''
   @action setMessage = message => this.message = message
 
-
   // TODO: Make chat computed property
-  renderMessages = () => {
+  // TODO: LayoutAnimation onFocus in emptyList
+
+  renderMessagesList = () => {
     const {messenger, chatId} = this.props
 
     return <FlatList
@@ -71,6 +75,22 @@ class Chat extends Component {
     />
   }
 
+  renderSendButton = () => {
+    const InteractiveComponent = this.message ? TouchableOpacity : View
+
+    return <View style = {styles.sendButtonContainer}>
+      <InteractiveComponent onPress = {this.sendMessageHandler}>
+        <View
+          style = {[
+            styles.sendButton, {
+              backgroundColor: this.message ? USER_MESSAGE_COLOR : INACTIVE_BACKGROUND_COLOR
+            }]}>
+          <Icon name = 'ios-send' size = {30} color = {WHITE_TEXT_COLOR}/>
+        </View>
+      </InteractiveComponent>
+    </View>
+  }
+
   render() {
     // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
     // console.log('render chat')
@@ -80,40 +100,36 @@ class Chat extends Component {
     return <SafeAreaView style = {styles.container}>
       {messenger.isChatLoading(chatId) && <ActivityIndicator/>}
       {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
-        <EmptyList/> : this.renderMessages()}
+        <EmptyList/> : this.renderMessagesList()}
 
       <KeyboardAvoidingView
         behavior = 'padding'
         enabled
         keyboardVerticalOffset = {65 + (isIphoneX() && getBottomSpace())}
-        style = {styles.chatContainer}
       >
+        <View style = {styles.sendControlContainer}>
 
-        <View style = {styles.messageView}>
-          <TextInput
-            ref = {ref => this.textInput = ref}
-            style = {styles.messageText}
-            value = {this.message}
-            placeholder = 'Enter your message here'
-            onChangeText = {this.setMessage}
-            blurOnSubmit = {false}
-            enablesReturnKeyAutomatically
-            multiline
-          />
-        </View>
-
-        <TouchableOpacity onPress = {this.sendMessageHandler}>
-          <View style = {styles.sendButton}>
-            <Icon name = 'ios-send' size = {30} color = {WHITE_BACKGROUND_COLOR}/>
+          <View style = {styles.sendMessageContainer}>
+            <TextInput
+              ref = {ref => this.textInput = ref}
+              style = {styles.sendMessageInput}
+              value = {this.message}
+              placeholder = 'Enter your message here'
+              onChangeText = {this.setMessage}
+              blurOnSubmit = {false}
+              enablesReturnKeyAutomatically
+              multiline
+            />
           </View>
-        </TouchableOpacity>
 
+          {this.renderSendButton()}
+
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   }
 
   sendMessageHandler = () => {
-    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     this.props.messenger.sendMessage(this.message, this.props.chatId)
     this.setMessage('')
   }
@@ -123,34 +139,34 @@ class Chat extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     backgroundColor: WHITE_BACKGROUND_COLOR
   },
-  chatContainer: {
+  sendControlContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-end'
+    maxHeight: 150
   },
-  messageView: {
-    maxHeight: 200,
-    flex: 5
+  sendMessageContainer: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingLeft: 10,
+    justifyContent: 'center'
   },
-  messageText: {
-    backgroundColor: WHITE_BACKGROUND_COLOR,
+  sendMessageInput: {
+    paddingTop: 0, // multiline flag forcing 'paddingTop: 5'
     fontSize: 16,
-    padding: 10,
     fontWeight: '100'
   },
+  sendButtonContainer: {
+    justifyContent: 'flex-end',
+    padding: 8
+  },
   sendButton: {
-    // flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: USER_MESSAGE_COLOR,
     height: 36,
-    borderRadius: 18,
     width: 36,
-    margin: 8,
-    padding: 3
+    borderRadius: 18
   }
 })
 

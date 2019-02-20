@@ -2,7 +2,7 @@ import React, {Component, PureComponent} from 'react'
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
 import {string, bool, shape, array, number} from 'prop-types'
 import {
-  ACTIVE_TINT_COLOR, AUTH_STORE, DEFAULT_HEADER_COLOR, MESSAGE_COLOR, POST_CARD_TEXT_COLOR, POST_CARD_TITLE_COLOR,
+  ACTIVE_TINT_COLOR, AUTH_STORE, DEFAULT_HEADER_COLOR, MESSAGE_COLOR, INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR,
   USER_MESSAGE_COLOR,
   WHITE_BACKGROUND_COLOR,
   WINDOW_WIDTH
@@ -20,6 +20,17 @@ class Message extends PureComponent {
     pending: bool
   }
 
+  renderStatus = () => <View style = {{
+      justifyContent: 'center',
+      marginLeft: 8,
+      marginTop: 2,
+    }}>
+      <Icon
+        name = {`ios-${this.props.pending ? 'checkmark' : 'done-all'}`}
+        color = {INACTIVE_TEXT_COLOR}
+        size = {30}/>
+    </View>
+
   render() {
     const {userId, text, timestamp, pending} = this.props
     const isCurrentUser = this.props.auth.user.uid === userId
@@ -34,20 +45,12 @@ class Message extends PureComponent {
     */
 
     return <View style = {{
+      flex: 1,
       alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
       flexDirection: 'row'
     }}>
       {/*{pending && <ActivityIndicator/>}*/}
-      {isCurrentUser && <View style = {{
-        justifyContent: 'center',
-        marginLeft: 8,
-        marginTop: 2,
-      }}>
-        <Icon
-          name = {`ios-${pending ? 'checkmark' : 'done-all'}`}
-          color = {POST_CARD_TEXT_COLOR}
-          size = {30}/>
-      </View>}
+      {isCurrentUser && this.renderStatus()}
       <View
         // onLayout = {({nativeEvent: {layout: {height}}}) => this.props.message.height = height}
         style = {[styles.container, {
@@ -55,7 +58,7 @@ class Message extends PureComponent {
         }]}>
         <Text selectable style = {[styles.text, {
           maxWidth: WINDOW_WIDTH - WINDOW_WIDTH / 5,
-          color: isCurrentUser ? WHITE_BACKGROUND_COLOR : POST_CARD_TITLE_COLOR
+          color: isCurrentUser ? WHITE_BACKGROUND_COLOR : BLACK_TEXT_COLOR
         }]}>
           {text}
         </Text>
