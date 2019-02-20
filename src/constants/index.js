@@ -20,20 +20,23 @@ export const DEFAULT_HEADER_COLOR = '#7a839e'
 export const ACTIVE_TINT_COLOR = '#423c6d'
 export const USER_MESSAGE_COLOR = '#423c6d'
 export const MESSAGE_COLOR = '#eeeeee'
-export const HIGHLIGHTED_TEXT_COLOR = '#94b5c2'
 export const WARNING_COLOR = '#c7444a'
 export const INFO_COLOR = '#eadcc1'
-export const INACTIVE_TEXT_COLOR = '#898990'
 export const UNDERLAY_COLOR = '#F6F6F9'
 export const OFFLINE_COLOR = '#7f7f7f'
 
-export const POST_CARD_BACKGROUND_COLOR = '#fffffd'
-export const POST_CARD_TEXT_COLOR = '#898990'
-export const POST_CARD_TITLE_COLOR = '#333333'
-export const DEFAULT_BACKGROUND_COLOR = '#ebebef'
 // export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
+
+export const WHITE_TRANSPARENT_BACKGROUND_COLOR = 'rgba(255, 255, 253, 0.8)'
+
+
 export const WHITE_BACKGROUND_COLOR = '#fffffd'
-export const NAVIGATION_TINT_COLOR = '#fffffd'
+export const INACTIVE_BACKGROUND_COLOR = '#ebebef'
+
+export const BLACK_TEXT_COLOR = '#333333'
+export const WHITE_TEXT_COLOR = '#fffffd'
+export const INACTIVE_TEXT_COLOR = '#898990'
+export const HIGHLIGHTED_TEXT_COLOR = '#94b5c2'
 
 export const FEED_CHUNK_LENGTH = 10
 export const MESSAGES_CHUNK_LENGTH = 30

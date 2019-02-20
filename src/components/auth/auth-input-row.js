@@ -3,6 +3,7 @@ import {View, TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-nativ
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AuthRow from './auth-row'
+import {BLACK_TEXT_COLOR, HIT_SLOP, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR} from '../../constants'
 
 class AuthInputRow extends Component {
   static propTypes = {
@@ -41,7 +42,7 @@ class AuthInputRow extends Component {
   renderVisibilitySwitch() {
     return <TouchableWithoutFeedback
       onPress = {this.toggleVisibility}
-      hitSlop = {{top: 20, left: 20, bottom: 20, right: 20}}>
+      hitSlop = {HIT_SLOP}>
       <View style = {styles.icon}>
         <Icon size = {19}
               color = 'rgba(0, 0, 0, 0.2)'
@@ -80,7 +81,7 @@ class AuthInputRow extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    backgroundColor: WHITE_TRANSPARENT_BACKGROUND_COLOR,
   },
   text: {
     flex: 1,
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     fontSize: 18,
     fontFamily: 'HelveticaNeue-Thin',
+    color: BLACK_TEXT_COLOR
   },
   icon: {
     margin: 6,

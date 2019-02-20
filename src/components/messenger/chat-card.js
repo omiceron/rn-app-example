@@ -3,7 +3,7 @@ import {Text, StyleSheet, View} from 'react-native'
 import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 import {
-  AUTH_STORE, INFO_COLOR, MESSENGER_STORE, POST_CARD_TEXT_COLOR, POST_CARD_TITLE_COLOR, ROW_HEIGHT,
+  AUTH_STORE, INFO_COLOR, MESSENGER_STORE, INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR, ROW_HEIGHT,
   USER_STORE, WARNING_COLOR
 } from '../../constants'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
@@ -104,13 +104,13 @@ class ChatCard extends Component {
 
 const styles = StyleSheet.create({
   text: {
-    color: POST_CARD_TEXT_COLOR,
+    color: INACTIVE_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },
 
   title: {
-    color: POST_CARD_TITLE_COLOR,
+    color: BLACK_TEXT_COLOR,
     marginBottom: 6,
     fontSize: 16,
     fontWeight: '600'

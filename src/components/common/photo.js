@@ -4,7 +4,7 @@ import {Camera, Permissions} from 'expo'
 import {observable, action} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import {NAVIGATION_STORE} from '../../constants'
+import {NAVIGATION_STORE, WHITE_TEXT_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(NAVIGATION_STORE)
@@ -47,13 +47,13 @@ class Photo extends Component {
 
   renderCancelButton() {
     return <TouchableOpacity style = {styles.cameraButton} onPress = {this.goBack}>
-      <Icon name = 'ios-arrow-back' size = {40} color = '#FFF'/>
+      <Icon name = 'ios-arrow-back' size = {40} color = {WHITE_TEXT_COLOR}/>
     </TouchableOpacity>
   }
 
   renderFlipButton() {
     return <TouchableOpacity style = {styles.cameraButton} onPress = {this.flipCamera}>
-      <Icon name = 'ios-reverse-camera' size = {40} color = '#FFF'/>
+      <Icon name = 'ios-reverse-camera' size = {40} color = {WHITE_TEXT_COLOR}/>
     </TouchableOpacity>
   }
 

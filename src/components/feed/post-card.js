@@ -5,8 +5,8 @@ import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
 import {
-  NAVIGATION_STORE, POST_CARD_BACKGROUND_COLOR, POST_CARD_TEXT_COLOR,
-  POST_CARD_TITLE_COLOR
+  NAVIGATION_STORE, WHITE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR,
+  BLACK_TEXT_COLOR
 } from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
@@ -75,7 +75,7 @@ class PostCard extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: POST_CARD_BACKGROUND_COLOR,
+    backgroundColor: WHITE_BACKGROUND_COLOR,
     paddingHorizontal: 8,
     borderColor: 'rgba(192,192,192,0.5)',
     // borderWidth: StyleSheet.hairlineWidth,
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   text: {
-    color: POST_CARD_TEXT_COLOR,
+    color: INACTIVE_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },
   title: {
-    color: POST_CARD_TITLE_COLOR,
+    color: BLACK_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '600'
   },

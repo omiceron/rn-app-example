@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import {string, object, number, bool, shape} from 'prop-types'
 import AttachedMap from './attached-map'
-import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, POST_CARD_TITLE_COLOR} from '../../constants'
+import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import BasicAvatar from '../common/basic-avatar'
@@ -165,12 +165,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '300',
-    color: POST_CARD_TITLE_COLOR
+    color: BLACK_TEXT_COLOR
   },
   text: {
     fontSize: 20,
     fontWeight: '200',
-    color: POST_CARD_TITLE_COLOR
+    color: BLACK_TEXT_COLOR
 
   },
   name: {

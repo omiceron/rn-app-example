@@ -8,6 +8,7 @@ import {
 import Icon from '../common/meowchat-icon'
 // import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
+import {INACTIVE_TEXT_COLOR} from '../../constants'
 
 class Like extends PureComponent {
   static propTypes = {
@@ -46,7 +47,7 @@ class Like extends PureComponent {
 
     return <TouchableWithoutFeedback onPress = {this.likeHandler}>
       <View style = {[styles.container, style]}>
-        <AnimatedIcon color = {activated ? '#f40003': 'rgba(127,127,127,1)'}
+        <AnimatedIcon color = {activated ? '#f40003': INACTIVE_TEXT_COLOR}
                       size = {30}
                       // name = {`ios-heart${activated ? '' : '-outline'}`}
                       name = {`cat${activated ? '' : '-outline'}`}

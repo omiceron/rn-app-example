@@ -10,8 +10,8 @@ import TableRow from '../common/table-row'
 import TableSeparator from '../common/table-separator'
 import TableView from '../common/table-view'
 import {
-  DEFAULT_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
-  POST_CARD_TITLE_COLOR,
+  INACTIVE_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
+  BLACK_TEXT_COLOR,
   WHITE_BACKGROUND_COLOR
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
@@ -141,7 +141,7 @@ class UserInfo extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   simpleRow: {
     display: 'flex',
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: '100',
-    color: POST_CARD_TITLE_COLOR
+    color: BLACK_TEXT_COLOR
   },
   imageView: {
     flex: 1,

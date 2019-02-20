@@ -3,7 +3,7 @@ import {StyleSheet, FlatList, SafeAreaView} from 'react-native'
 import {array, string, func, shape, objectOf, number} from 'prop-types'
 import PersonCard from '../people/person-card'
 import Separator from '../common/separator'
-import {DEFAULT_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 class LikesList extends Component {
   static propTypes = {
@@ -33,7 +33,7 @@ class LikesList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR,
+    backgroundColor: INACTIVE_BACKGROUND_COLOR,
   },
 })
 

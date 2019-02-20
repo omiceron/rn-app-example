@@ -11,6 +11,7 @@ import {NAVIGATION_STORE} from '../../constants/index'
 import AttachedMap from './attached-map'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 import {reaction} from 'mobx'
+import {BLACK_TEXT_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 
 // navigation
@@ -52,7 +53,7 @@ class PostForm extends Component {
     this.props.feed.clearPostForm()
   }
 
-  renderIcon = () => <Icon color = '#67E' size = {16} name = 'ios-pin'/>
+  renderIcon = () => <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
 
   render() {
     const {text, title, setText, setTitle, attachedCoords} = this.props.feed
@@ -101,7 +102,7 @@ class PostForm extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF'
+    backgroundColor: WHITE_BACKGROUND_COLOR
   },
   textRow: {
     flex: 1,
@@ -109,7 +110,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: BLACK_TEXT_COLOR
   }
 })
 

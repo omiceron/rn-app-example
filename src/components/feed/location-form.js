@@ -6,7 +6,10 @@ import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {observer, inject} from 'mobx-react'
-import {FEED_STORE, HIT_SLOP, NAVIGATION_STORE, REGION_DELTAS} from '../../constants'
+import {
+  BLACK_TEXT_COLOR, FEED_STORE, HIT_SLOP, INACTIVE_TEXT_COLOR, NAVIGATION_STORE,
+  REGION_DELTAS
+} from '../../constants'
 import {observable, action} from 'mobx'
 import Loader from '../common/loader'
 
@@ -72,7 +75,7 @@ class LocationForm extends Component {
     if (!coords) return <Loader/>
 
     const renderIcon = () => <TouchableOpacity onPress = {this.handleSubmit} hitSlop = {HIT_SLOP}>
-      <Icon color = '#67E' size = {16} name = 'ios-pin'/>
+      <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
     </TouchableOpacity>
 
     return <TableView style = {styles.container}>
@@ -113,7 +116,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: BLACK_TEXT_COLOR
   }
 })
 

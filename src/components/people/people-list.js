@@ -4,7 +4,7 @@ import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
 import PersonCard from './person-card'
 import Separator from '../common/separator'
 import Loader from '../common/loader'
-import {DEFAULT_BACKGROUND_COLOR, PEOPLE_STORE, POST_CARD_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {shape, bool, func, array} from 'prop-types'
 
 @inject(PEOPLE_STORE)
@@ -64,11 +64,11 @@ class PeopleList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   header: {
     backgroundColor: WHITE_BACKGROUND_COLOR,
-    color: POST_CARD_TEXT_COLOR,
+    color: INACTIVE_TEXT_COLOR,
     padding: 8,
     fontSize: 16,
     fontWeight: '600'

@@ -8,7 +8,7 @@ import TableRow from '../common/table-row'
 import SegmentedCard from '../common/segmented-card'
 import TableView from '../common/table-view'
 import {
-  AUTH_STORE, AVATAR_STORE, DEFAULT_BACKGROUND_COLOR, NAVIGATION_STORE, POST_CARD_TITLE_COLOR, USER_STORE,
+  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, USER_STORE,
   WARNING_COLOR
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
@@ -163,12 +163,12 @@ class Settings extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   text: {
     fontSize: 16,
     fontWeight: '100',
-    color: POST_CARD_TITLE_COLOR
+    color: BLACK_TEXT_COLOR
 
   },
   textView: {

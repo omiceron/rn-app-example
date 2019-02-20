@@ -4,7 +4,7 @@ import Card from '../common/basic-card'
 import Avatar from '../common/basic-avatar'
 import SwipeableCard from '../common/swipeable-card'
 import PropTypes from 'prop-types'
-import {POST_CARD_TITLE_COLOR, ROW_HEIGHT} from '../../constants'
+import {BLACK_TEXT_COLOR, ROW_HEIGHT} from '../../constants'
 import SegmentedCard from '../common/segmented-card'
 import {isPropsDiffer} from '../../stores/utils'
 
@@ -69,7 +69,7 @@ class PersonCard extends Component {
 
 const styles = StyleSheet.create({
   text: {
-    color: POST_CARD_TITLE_COLOR,
+    color: BLACK_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },

@@ -25,7 +25,7 @@ import PostScreen from './screens/post-screen'
 import AuthLoadingScreen from './screens/loader-screen'
 import MapScreen from './screens/map-screen'
 import {
-  ACTIVE_TINT_COLOR, DEFAULT_HEADER_COLOR, NAVIGATION_TINT_COLOR, POST_CARD_TEXT_COLOR,
+  ACTIVE_TINT_COLOR, DEFAULT_HEADER_COLOR, WHITE_TEXT_COLOR, INACTIVE_TEXT_COLOR,
   WHITE_BACKGROUND_COLOR
 } from '../constants'
 
@@ -62,7 +62,7 @@ const createCommonStack = (mainScreen) => createStackNavigator({
       backgroundColor: DEFAULT_HEADER_COLOR,
       borderBottomWidth: 0
     },
-    headerTintColor: NAVIGATION_TINT_COLOR
+    headerTintColor: WHITE_TEXT_COLOR
   },
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
@@ -92,7 +92,7 @@ const PostFormStack = createStackNavigator({
       backgroundColor: DEFAULT_HEADER_COLOR,
       borderBottomWidth: 0
     },
-    headerTintColor: NAVIGATION_TINT_COLOR
+    headerTintColor: WHITE_TEXT_COLOR
   },
   headerMode: 'float',
   headerTransitionPreset: 'uikit'
@@ -122,7 +122,7 @@ const TabNavigator = createBottomTabNavigator({
     activeBackgroundColor: WHITE_BACKGROUND_COLOR,
     inactiveBackgroundColor: WHITE_BACKGROUND_COLOR,
     activeTintColor: ACTIVE_TINT_COLOR,
-    inactiveTintColor: POST_CARD_TEXT_COLOR,
+    inactiveTintColor: INACTIVE_TEXT_COLOR,
     showLabel: false
   }
 })

@@ -5,7 +5,7 @@ import {
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
 import Separator from '../common/separator'
-import {AUTH_STORE, DEFAULT_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
 import EmptyList from './empty-list'
 
@@ -67,7 +67,7 @@ class Messenger extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   }
 })
 
