@@ -9,10 +9,6 @@ class AuthScreen extends Component {
     })
   }
 
-  // componentDidMount() {
-  //   this.props.navigation.addListener('willBlur', console.log)
-  // }
-
   render() {
     return <SignIn signUp = {this.openSignUp}/>
   }

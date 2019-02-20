@@ -25,7 +25,7 @@ import {
   OPACITY,
   SCALE,
   AUTH_STORE,
-  KEYBOARD_STORE, HIT_SLOP
+  KEYBOARD_STORE, HIT_SLOP, WHITE_TEXT_COLOR, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR
 } from '../../constants'
 
 @inject(AUTH_STORE)
@@ -102,7 +102,7 @@ class SignIn extends Component {
       }]}>
       <Text style = {[styles.titleText]}>
         <Text style = {styles.boldText}>
-          Meow
+          Me<Text style = {{fontFamily: 'Meowchat'}}></Text>w
         </Text>
         chat
       </Text>
@@ -230,8 +230,6 @@ class SignIn extends Component {
                             style = {{
                               backgroundColor: '#fff0c0'
                             }}
-
-      // onPress = {() => this.onFocus({duration: 2000, endCoordinates: {height: 0, screenY: 0}})}
     >
       <SafeAreaView style = {styles.container}>
         {this.renderInput()}
@@ -239,8 +237,6 @@ class SignIn extends Component {
         <Animated.View
           onLayout = {this.props.setLayout(FOOTER)}
           style = {{
-            // flex: 3,
-            // minHeight: 168,
             opacity: this.getAnimation(FOOTER + OPACITY),
             transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
           }}>
@@ -259,16 +255,17 @@ class SignIn extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 8,
-    justifyContent: 'center'
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    backgroundColor: '#7a839e'
   },
   text: {
-    color: 'white',
+    color: WHITE_TEXT_COLOR,
     fontSize: 14,
     fontFamily: 'HelveticaNeue-Thin'
   },
   titleText: {
-    color: 'rgba(255,255,255,0.8)',
+    color: WHITE_TRANSPARENT_BACKGROUND_COLOR,
     fontSize: 50,
     fontFamily: 'HelveticaNeue-UltraLight'
   },
@@ -282,14 +279,14 @@ const styles = StyleSheet.create({
   divider: {
     flex: 3,
     height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(255,255,255, .8)'
+    backgroundColor: WHITE_TRANSPARENT_BACKGROUND_COLOR
   },
   dividerTextView: {
     flex: 5,
     alignItems: 'center'
   },
   dividerText: {
-    color: 'white',
+    color: WHITE_TEXT_COLOR,
     fontSize: 18,
     fontFamily: 'HelveticaNeue-Thin'
   },

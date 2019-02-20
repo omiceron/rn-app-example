@@ -1,7 +1,7 @@
 import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
-import {AsyncStorage} from 'react-native'
+import {AsyncStorage, Alert, AlertIOS} from 'react-native'
 import validator from 'validator'
 import {
   PEOPLE_STORE,
@@ -93,11 +93,20 @@ class AuthStore extends BasicStore {
   }
 
   signIn = async () => {
+    if (!this.isEmailValid || !this.isPasswordValid) {
+      Alert.alert('Password or E-mail are not valid!')
+      return
+    }
     await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
   signUp = async () => {
+
+    if (!this.isSignUpEmailValid || !this.isSignUpPasswordValid || !this.isFirstNameValid) {
+      Alert.alert('Password, E-mail or first name are not valid!')
+      return
+    }
     const email = this.signUpEmail
     const password = this.signUpPassword
     await firebase.functions().httpsCallable('createUser')({
