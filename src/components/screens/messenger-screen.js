@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Messenger from '../messenger/index'
 import {inject, observer} from 'mobx-react'
-import {DEFAULT_HEADER_COLOR, MESSENGER_STORE, NAVIGATION_TINT_COLOR, PEOPLE_STORE} from '../../constants'
+import {DEFAULT_HEADER_COLOR, MESSENGER_STORE, WHITE_TEXT_COLOR, PEOPLE_STORE} from '../../constants'
 import Loader from '../common/loader'
 import {LayoutAnimation, ActionSheetIOS} from 'react-native'
 import {reaction} from 'mobx'
