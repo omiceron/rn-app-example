@@ -139,7 +139,7 @@ const CoreNavigator = createStackNavigator({
     screen: UserPhotoScreen
   },
   userAvatars: {
-    screen: UserAvatarsScreen,
+    screen: UserAvatarsScreen
   }
 }, {
   headerMode: 'float',

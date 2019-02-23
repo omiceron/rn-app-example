@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 class Photo extends Component {
   static propTypes = {
     base64: PropTypes.bool,
-    photoHandler: PropTypes.func.isRequired,
+    photoHandler: PropTypes.func.isRequired
   }
 
   @observable permitted = false
@@ -64,7 +64,12 @@ class Photo extends Component {
     </SafeAreaView>
 
     if (!this.permitted) return null
-    return <Camera style = {styles.container} type = {this.type} ref = {ref => this.camera = ref}>
+    return <Camera
+      // pictureSize = {'352x288'}
+      style = {styles.container}
+      type = {this.type}
+      ref = {ref => this.camera = ref}
+    >
       <SafeAreaView style = {styles.overlay}>
         <View style = {styles.controls}>
           {this.renderCancelButton()}
@@ -84,8 +89,9 @@ class Photo extends Component {
 
   takePicture = async () => {
     const {base64, photoHandler} = this.props
+    // this.camera.getAvailablePictureSizesAsync().then(console.log)
     const photo = await this.camera.takePictureAsync({base64, quality: 0.1})
-
+    // console.log(photo)
     photoHandler && await photoHandler(photo)
 
     this.goBack()

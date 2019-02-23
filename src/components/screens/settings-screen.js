@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Settings from '../settings'
-
 import {observer, inject} from 'mobx-react'
 import {AUTH_STORE, WHITE_TEXT_COLOR, USER_STORE, WARNING_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import Loader from '../common/loader'
