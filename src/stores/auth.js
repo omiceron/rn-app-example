@@ -1,7 +1,7 @@
 import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
-import {AsyncStorage, Alert, AlertIOS} from 'react-native'
+import {AsyncStorage, Alert} from 'react-native'
 import validator from 'validator'
 import {
   PEOPLE_STORE,
@@ -17,7 +17,6 @@ import {facebookAppId, googleClientId} from '../config'
 // import EntitiesStore from './entities-store'
 // import {FileSystem} from 'expo'
 // import {entitiesFromFB} from './utils'
-// import {observer} from 'mobx-react'
 
 class AuthStore extends BasicStore {
   constructor(...args) {
@@ -27,13 +26,13 @@ class AuthStore extends BasicStore {
       this.setUser(user)
 
       if (user) {
+        AsyncStorage.getAllKeys().then(console.log)
         this.getStore(USER_STORE).startPresenceWatcher()
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
 
         this.getStore(MESSENGER_STORE).fetchChats()
         this.getStore(MESSENGER_STORE).subscribeOnChats()
-
         this.getStore(FEED_STORE).fetchPosts()
       }
     })
@@ -97,7 +96,15 @@ class AuthStore extends BasicStore {
       Alert.alert('Password or E-mail are not valid!')
       return
     }
-    await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+
+    try {
+      await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+    } catch (e) {
+      Alert.alert('Password or E-mail are not valid!')
+      this.clear()
+      return
+    }
+
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
@@ -117,7 +124,14 @@ class AuthStore extends BasicStore {
       throw err
     })
 
-    await firebase.auth().signInWithEmailAndPassword(email, password)
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password)
+    } catch (e) {
+      Alert.alert('Something went wrong...')
+      this.clear()
+      return
+    }
+
     this.clear()
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
@@ -132,8 +146,9 @@ class AuthStore extends BasicStore {
     this.clear()
     const stores = [MESSENGER_STORE, AVATAR_STORE, USER_STORE, FEED_STORE, PEOPLE_STORE]
     stores.forEach(store => this.getStore(store).off())
-    AsyncStorage.removeItem('user')
-    firebase.auth().signOut()
+    // AsyncStorage.removeItem('user')
+    await firebase.auth().signOut()
+    await AsyncStorage.clear()
     this.getStore(NAVIGATION_STORE).navigate('auth')
   }
 
