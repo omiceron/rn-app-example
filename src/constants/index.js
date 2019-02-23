@@ -1,7 +1,7 @@
 import {Dimensions, Easing} from 'react-native'
 import {FileSystem, Constants} from 'expo'
 
-export const LOCAL_AVATAR_URI = FileSystem.cacheDirectory
+export const CACHE_DIR = FileSystem.cacheDirectory
 export const KEYBOARD_EASING = Easing.bezier(0.17, 0.59, 0.4, 0.77)
 export const WINDOW_HEIGHT = Dimensions.get('window').height
 export const WINDOW_WIDTH = Dimensions.get('window').width

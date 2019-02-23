@@ -4,13 +4,14 @@ import BasicStore from './basic-store'
 import {LoginManager, AccessToken} from 'react-native-fbsdk'
 import EntitiesStore from './entities-store'
 import {AsyncStorage} from 'react-native'
-import {FileSystem} from 'expo'
-import {USER_AVATAR_REFERENCE, LOCAL_AVATAR_URI, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE} from '../constants'
-import {entitiesFromFB} from './utils'
+import {FileSystem, ImageManipulator} from 'expo'
+import {USER_AVATAR_REFERENCE, CACHE_DIR, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE} from '../constants'
+import {entitiesFromFB, urlToBlob} from './utils'
+import path from 'path'
 
 // TODO 1. Merge user and user-avatar
-// TODO 2. Avatar hash-type like {uri, hash} instead of avatar and avatarHash
 // TODO 3. New store class for user settings instead of entities-store
+// TODO 4. if !user return
 
 class UserAvatarStore extends EntitiesStore {
   constructor(...args) {
@@ -62,7 +63,7 @@ class UserAvatarStore extends EntitiesStore {
 
       if (!this.entities.avatar) {
         console.log('User has no cached avatar')
-        this.downloadUserAvatar(avatar).catch(err => console.warn('AVATAR:', 'download error'))
+        this.downloadCurrentUserAvatar(avatar).catch(err => console.warn('AVATAR:', 'download error'))
         return
       }
 
@@ -74,16 +75,20 @@ class UserAvatarStore extends EntitiesStore {
             }
       */
 
-      if (!avatar.includes("https://firebasestorage.googleapis.com/")) {
+      if (!avatar.includes('https://firebasestorage.googleapis.com/')) {
         console.log('Avatar from social network')
         return
       }
 
-      const firebaseAvatarHash = await this.getHashFromUri(avatar)
+      const firebaseAvatarHash = await this.fetchCacheControl(avatar)
 
-      if (firebaseAvatarHash !== this.entities.avatarHash) {
+      // const {md5} = await FileSystem.getInfoAsync(this.entities.avatar, {md5: true})
+      // console.log(firebaseAvatarHash, md5)
+
+      if (firebaseAvatarHash !== this.entities.avatarCacheControl) {
+        // if (firebaseAvatarHash !== md5) {
         console.log('Cached avatar and server avatar are different')
-        this.downloadUserAvatar(avatar, firebaseAvatarHash)
+        this.downloadCurrentUserAvatar(avatar)
           .catch(err => console.warn('AVATAR:', 'update avatar error'))
         return
       }
@@ -165,113 +170,110 @@ class UserAvatarStore extends EntitiesStore {
   //
   // }
 
-  getHashFromUri = async (uri) => {
-    const {md5Hash} = await firebase
+  fetchCacheControl = async (uri) => {
+    const {cacheControl} = await firebase
       .storage()
       .refFromURL(uri)
       .getMetadata()
       .catch(err => console.log('AvatarHash Firebase error!'))
 
-    return md5Hash
+    return cacheControl
   }
 
-  @action downloadUserAvatar = async (uri, avatarHash) => {
+  @action downloadCurrentUserAvatar = async (uri) => {
     this.loading = true
     console.log('Downloading avatar...')
 
     let name = ''
-    if (uri.includes("https://firebasestorage.googleapis.com/")) {
-
+    if (uri.includes('https://firebasestorage.googleapis.com/')) {
       // Firebase functional only
       name = uri.replace(/^.*token=/g, '')
-
-      // getting hash from server avatar
-      if (!avatarHash) {
-        avatarHash = await this.getHashFromUri(uri)
-      }
-
     } else {
-      avatarHash = null
       name = this.user.uid
     }
 
     // downloading the file from uri to device
-    await FileSystem.downloadAsync(uri, `${LOCAL_AVATAR_URI}/${name}.jpg`)
-      .then(action(({uri: avatar}) => {
+    const avatarPath = path.join(CACHE_DIR, name + '.jpg')
+    const {uri: avatar} = await FileSystem.downloadAsync(uri, avatarPath)
+    const avatarCacheControl = await this.fetchCacheControl(uri)
 
-        // cashing new path and hash
-        this.cacheUserData({avatar, avatarHash}).catch(console.error)
+    this.cacheUserData({avatar, avatarCacheControl}).catch(console.error)
 
-        // deleting previous avatar file if exists
-        if (this.entities.avatar) {
-          FileSystem.deleteAsync(this.entities.avatar, {idempotent: true})
-        }
+    if (this.entities.avatar && this.entities.avatar !== avatar) {
+      FileSystem.deleteAsync(this.entities.avatar, {idempotent: true})
+    }
 
-        this.entities = {avatar, avatarHash}
-        this.loading = false
-        this.loaded = true
+    this.entities.avatar = avatar
+    this.entities.avatarCacheControl = avatarCacheControl
+    this.loading = false
+    this.loaded = true
 
-        console.log('Avatar has been downloaded')
+    console.log('Avatar has been downloaded')
 
-      }))
-      .catch(err => console.log('Download avatar error'))
   }
 
-  @action retrieveCachedUserAvatar = () => {
-    AsyncStorage.getItem('user')
-      .then(async res => {
+  @action retrieveCachedUserAvatar = async () => {
+    const res = await AsyncStorage.getItem('user').catch(err => console.log('AVATAR: AsyncStorage error'))
 
-        console.log('AVATAR:', 'get item')
-        if (!res) {
-          console.log('AVATAR:', 'There is no cached user')
-          return
-        }
+    console.log('AVATAR:', 'get item')
+    if (!res) {
+      console.log('AVATAR:', 'There is no cached user')
+      return
+    }
 
-        const {avatar, avatarHash} = JSON.parse(res)
+    const {avatar, avatarCacheControl} = JSON.parse(res)
 
-        if (!avatar) {
-          console.log('AVATAR:', 'No cached avatar')
-          return
-        }
+    if (!avatar) {
+      console.log('AVATAR:', 'No cached avatar')
+      return
+    }
 
-        const {exists} = await FileSystem.getInfoAsync(avatar).catch(err => console.log('AVATAR:', 'FS error'))
+    const {exists} = await FileSystem.getInfoAsync(avatar).catch(err => console.log('AVATAR:', 'FS error'))
 
-        if (!exists) {
-          console.log('User avatar file has not been found')
-          return
-        }
+    if (!exists) {
+      console.log('User avatar file has not been found')
+      return
+    }
 
-        this.entities = {avatar, avatarHash}
-      })
-      .catch(err => console.log('AVATAR: AsyncStorage error'))
+    console.log('AVATAR:', 'avatar retrieved')
+
+    this.entities.avatar = avatar
+    this.entities.avatarCacheControl = avatarCacheControl
   }
 
   @action
-  takePhoto = async ({uri}) => {
+  takePhoto = async ({uri, base64}) => {
     const {uid} = this.user
 
     this.loading = true
 
     if (this.entities.avatar) {
-      FileSystem.deleteAsync(this.entities.avatar, {idempotent: true})
+      await FileSystem.deleteAsync(this.entities.avatar, {idempotent: true})
     }
 
-    this.entities.avatar = uri
+    // TODO: in rn 58 expo 32 fetch api returns zero-sized blob, so using polyfill
+    // const file = await fetch(uri).then(res => res.blob())
+    const {uri: manipulatedUri} = (await ImageManipulator.manipulateAsync(uri, [{resize: {width: 200}}]))
 
-    const file = await fetch(uri).then(res => res.blob())
+    this.entities.avatar = manipulatedUri
+    const file = await urlToBlob(manipulatedUri)
+    const {md5} = await FileSystem.getInfoAsync(manipulatedUri, {md5: true})
+    this.entities.avatarCacheControl = md5
+
     const ref = firebase.storage()
       .ref(AVATARS_STORAGE_REFERENCE)
       .child(`${uid}.jpg`)
 
-    console.log('Avatar uploading...')
+    console.log('AVATAR:', 'uploading...')
 
-    await ref.put(file).then(res => console.log('Avatar uploaded!'))
+    await ref.put(file).then(res => console.log('AVATAR:', 'uploaded!'))
     const avatar = await ref.getDownloadURL()
-    const {md5Hash} = await ref.getMetadata()
+    await ref.updateMetadata({cacheControl: md5})
 
-    this.entities.avatarHash = md5Hash
-
-    this.cacheUserData({avatar: uri, avatarHash: md5Hash}).catch(console.error)
+    // this.entities.avatarHash = md5
+    console.log(md5)
+    console.log(manipulatedUri)
+    this.cacheUserData({avatar: manipulatedUri, avatarCacheControl: md5}).catch(console.error)
 
     this.updateUserData({avatar})
       .then(action(res => {
@@ -282,7 +284,8 @@ class UserAvatarStore extends EntitiesStore {
   }
 
   async updateUserData(data) {
-    await this.currentUserReference.update(data)
+    await
+      this.currentUserReference.update(data)
   }
 
 }
