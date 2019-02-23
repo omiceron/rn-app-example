@@ -5,10 +5,7 @@ import firebase from 'firebase/app'
 import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
 import path from 'path'
 import {FileSystem} from 'expo'
-import {AsyncStorage} from 'react-native'
 import {alphabetic, urlToBlob} from './utils'
-import {Image} from 'react-native'
-import {toJS} from 'mobx'
 
 class PeopleStore extends EntitiesStore {
   @computed
@@ -50,9 +47,10 @@ class PeopleStore extends EntitiesStore {
     return this.entities[userId]
   }
 
-  @action appendUser = (user) => {
+  @action appendUser = async (user) => {
     const oldUser = this.entities[user.uid] || {}
     this.entities[user.uid] = {...oldUser, ...user}
+    await this.cacheEntities()
     return this.entities[user.uid]
   }
 
@@ -77,10 +75,9 @@ class PeopleStore extends EntitiesStore {
   @action convertUsers = async (payload) => {
     return Promise.all(Object.entries(payload).map(async ([key, {chats, ...user}]) => {
       user.uid = key
-      // const {uri, avatarCacheControl} = await this.downloadUserAvatar(user.avatar, key)
-      user.avatar = await this.downloadUserAvatar(user.avatar, key)
-      // user.avatar = uri
-      // user.avatarCacheControl = avatarCacheControl
+      const {uri, avatarCacheControl} = await this.downloadUserAvatar(user.avatar, key)
+      user.avatar = uri
+      user.avatarCacheControl = avatarCacheControl
       return {...user, key}
     }))
   }
@@ -102,10 +99,11 @@ class PeopleStore extends EntitiesStore {
       //   }, {}))
       //
       // this.entities = {...this.entities, ...users}
+      //     await this.cacheEntities()
+
 
       // TODO: render issue
       await this.appendFetchedUsers(payload)
-      await this.cacheEntities()
       this.loaded = true
       this.loading = false
     })
@@ -119,17 +117,9 @@ class PeopleStore extends EntitiesStore {
         .then(users => users.reduce((acc, user) => ({...acc, [user.uid]: user}), {}))
 
     this.entities = {...this.entities, ...users}
-  }
 
-  updateUserCache = async (userId, data) => {
-    return await AsyncStorage.mergeItem(`meowchat:store:users:${userId}`, JSON.stringify(data))
-      .catch(err => console.warn('PEOPLE:', 'AsyncStorage update cache error'))
-  }
+    await this.cacheEntities()
 
-  getUserCache = async (userId) => {
-    return await AsyncStorage.getItem(`meowchat:store:users:${userId}`)
-      .then(JSON.parse)
-      .catch(err => console.warn('PEOPLE:', 'AsyncStorage get cache error'))
   }
 
   fetchCacheControl = async (uri) => {
@@ -146,6 +136,10 @@ class PeopleStore extends EntitiesStore {
     if (!url) {
       // TODO handle undefined url
       // console.log('PEOPLE:', userId, 'has no avatar')
+      if (this.entities[userId] && this.entities[userId].avatar) {
+        this.entities[userId].avatarCacheControl = null
+        this.entities[userId].avatar = null
+      }
       return
     }
     const avatarsDirectory = path.join(CACHE_DIR, AVATARS_STORAGE_REFERENCE)
@@ -164,13 +158,10 @@ class PeopleStore extends EntitiesStore {
 
     if (exists) {
       // console.log('PEOPLE:', userId, 'avatar exists, checking cache...')
-      const userCache = await this.getUserCache(userId)
 
-      // if (this.entities[userId] && this.entities[userId].avatarCacheControl === avatarCacheControl) {
-      if (userCache && userCache.avatarCacheControl === avatarCacheControl) {
+      if (this.entities[userId] && this.entities[userId].avatarCacheControl === avatarCacheControl) {
         // console.log('PEOPLE:', userId, 'avatar is up-to-date')
-        return avatarPath
-        // return {uri: avatarPath, avatarCacheControl}
+        return {uri: avatarPath, avatarCacheControl}
       }
     }
 
@@ -179,13 +170,9 @@ class PeopleStore extends EntitiesStore {
     const {uri} = await FileSystem.downloadAsync(url, avatarPath)
       .catch(err => console.warn('PEOPLE:', 'FileSystem downloadAsync uri error'))
 
-    await this.updateUserCache(userId, {uri, avatarCacheControl})
-
     // console.log('PEOPLE:', userId,  'avatar has been downloaded')
 
-    // return {uri, avatarCacheControl}
-
-    return uri
+    return {uri, avatarCacheControl}
   }
 
   async takePhoto(userId, uri) {
