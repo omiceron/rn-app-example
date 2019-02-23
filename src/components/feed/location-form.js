@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {MapView, Permissions, Location} from 'expo'
 import TableView from '../common/table-view'
@@ -80,7 +80,7 @@ class LocationForm extends Component {
 
     return <TableView style = {styles.container}>
 
-      <TableRow RightComponent = {renderIcon}>
+      <TableRow>
         <TextInput
           style = {[styles.text]}
           placeholder = 'Type your address here'
@@ -93,18 +93,24 @@ class LocationForm extends Component {
         />
       </TableRow>
 
-      <MapView
-        ref = {ref => this.map = ref}
+      <KeyboardAvoidingView
         style = {styles.container}
-        initialRegion = {{...coords, ...REGION_DELTAS}}
-        // region = {{...coords, ...REGION_DELTAS}}
+        behavior = 'padding'
+        enabled
       >
-        <MapView.Marker
-          draggable
-          coordinate = {{...coords}}
-          onDragEnd = {(e) => setCoords(e.nativeEvent.coordinate)}
-        />
-      </MapView>
+        <MapView
+          ref = {ref => this.map = ref}
+          style = {styles.container}
+          initialRegion = {{...coords, ...REGION_DELTAS}}
+          // region = {{...coords, ...REGION_DELTAS}}
+        >
+          <MapView.Marker
+            draggable
+            coordinate = {{...coords}}
+            onDragEnd = {(e) => setCoords(e.nativeEvent.coordinate)}
+          />
+        </MapView>
+      </KeyboardAvoidingView>
 
     </TableView>
   }

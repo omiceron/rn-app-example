@@ -3,28 +3,40 @@ import {observer, inject} from 'mobx-react'
 import PeopleList from '../people/people-list'
 import Loader from '../common/loader'
 import {PEOPLE_STORE} from '../../constants'
+import {SafeAreaView, ActivityIndicator} from 'react-native'
 
 @inject(PEOPLE_STORE)
 @observer
 class PeopleListScreen extends Component {
   static navigationOptions = {
-    title: 'People',
+    title: 'People'
   }
 
   componentWillMount() {
     const {people} = this.props
-    if (!people.loaded && !people.loading) people.fetchPeople()
+    if (!people.loaded && !people.loading) people.fetchAllUsers()
   }
 
   render() {
-    const {loading} = this.props.people
-    if (loading) return <Loader/>
+    const {people} = this.props
+    if (!people.size) return <Loader/>
+    // if (people.loading) return <Loader/>
+
+    // if (people.loading) return <SafeAreaView style = {{flex: 1}}>
+    //   <ActivityIndicator/>
+    //   <PeopleList
+    //     openChatScreen = {this.openChatScreen}
+    //     getPhoto = {this.getPhoto}
+    //     openUserInfoScreen = {this.openUserInfoScreen}
+    //   />
+    // </SafeAreaView>
 
     return <PeopleList
       openChatScreen = {this.openChatScreen}
       getPhoto = {this.getPhoto}
       openUserInfoScreen = {this.openUserInfoScreen}
     />
+
   }
 
   // TODO: remove user parameter

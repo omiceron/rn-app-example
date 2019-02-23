@@ -41,12 +41,17 @@ class UserInfo extends Component {
 
   }
 
+  LeftComponent = () => <Avatar
+    size = {60}
+    onPress = {this.props.openUserAvatarsScreen}
+    uri = {this.props.user.avatar}
+  />
+
+
   render() {
 
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
-
-    const LeftComponent = () => <Avatar size = {60} onPress = {openUserAvatarsScreen}/>
 
     const renderLikedPosts = () =>
       <TableView>
@@ -94,7 +99,7 @@ class UserInfo extends Component {
       <TableView>
         <SegmentedCard
           mainContainerStyle = {styles.textView}
-          LeftComponent = {LeftComponent}>
+          LeftComponent = {this.LeftComponent}>
 
           <View>
             <Text style = {styles.text}>

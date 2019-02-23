@@ -36,8 +36,10 @@ class ChatCard extends Component {
   @action setArchived = () => this.isArchived = true
 
   renderAvatar = () => {
-    // const {chat: {user: {avatar}}} = this.props
-    return <Avatar size = {60} /*uri = {avatar}*//>
+    return <Avatar
+      size = {60}
+      uri = {this.props.user.avatar}
+    />
   }
 
   renderDate = () => {

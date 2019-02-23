@@ -35,6 +35,7 @@ class PostControlRow extends Component {
         style = {styles.button}
         likesNumber = {likesNumber}
         onPress = {onCounterPress}
+        isLiked = {isLiked}
       />
       {/*{this.renderComments()}*/}
     </View>

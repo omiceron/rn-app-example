@@ -21,7 +21,8 @@ class PostCard extends Component {
     likesNumber: PropTypes.number.isRequired,
     isLiked: PropTypes.bool.isRequired,
     uid: PropTypes.string.isRequired,
-    coords: PropTypes.object
+    coords: PropTypes.object,
+    // isFirstItem: PropTypes.bool.isRequired
   }
 
   // TODO: do something with this mess
@@ -34,9 +35,9 @@ class PostCard extends Component {
 
   render() {
     const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords} = this.props
-    console.log('render card', title, isLiked)
+    // console.log('render card', title, isLiked)
 
-    return <View style = {styles.container}>
+    return <View style = {[styles.container]}>
       <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
 
         <View style = {styles.row}>
@@ -87,8 +88,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    marginHorizontal: 8,
-    marginTop: 8,
+    margin: 8,
   },
   text: {
     color: INACTIVE_TEXT_COLOR,

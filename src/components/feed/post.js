@@ -36,6 +36,12 @@ class Post extends Component {
     }).isRequired
   }
 
+  renderAvatar = () => <BasicAvatar
+    style = {styles.avatar}
+    size = {20}
+    uri = {this.props.user.avatar}
+  />
+
   render() {
     const {
       location,
@@ -77,7 +83,7 @@ class Post extends Component {
               </Text>
             </View>
 
-            <BasicAvatar style = {styles.avatar} size = {20}/>
+            {this.renderAvatar()}
 
           </View>
         </TouchableOpacity>

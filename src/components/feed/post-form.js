@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TextInput, SafeAreaView, LayoutAnimation} from 'react-native'
+import {View, StyleSheet, TextInput, SafeAreaView, LayoutAnimation, Text} from 'react-native'
 import {bool, string, func, shape, objectOf, number} from 'prop-types'
 import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
@@ -12,7 +12,6 @@ import AttachedMap from './attached-map'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 import {reaction} from 'mobx'
 import {BLACK_TEXT_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
-
 
 // navigation
 
@@ -46,14 +45,14 @@ class PostForm extends Component {
       setTitle: func.isRequired,
       setText: func.isRequired,
       clearPostForm: func.isRequired
-    }).isRequired,
+    }).isRequired
   }
 
   componentWillUnmount() {
     this.props.feed.clearPostForm()
   }
 
-  renderIcon = () => <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
+  renderIcon = () => <Icon color = {'#C7C7CD'} size = {16} name = 'ios-pin'/>
 
   render() {
     const {text, title, setText, setTitle, attachedCoords} = this.props.feed
@@ -85,9 +84,12 @@ class PostForm extends Component {
           onPress = {() => this.props.navigation.navigate('locationForm')}
           disableSeparator
         >
-          {attachedCoords &&
-          <AttachedMap onPress = {() => this.props.navigation.navigate('locationForm')}
-                       coords = {attachedCoords}/>
+          {attachedCoords ? <AttachedMap onPress = {() => this.props.navigation.navigate('locationForm')}
+                                         coords = {attachedCoords}/> :
+            <Text style = {[styles.text, {color: '#C7C7CD'}]}>
+              Add location
+            </Text>
+
           }
         </TableRow>
 

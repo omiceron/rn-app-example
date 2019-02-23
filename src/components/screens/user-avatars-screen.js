@@ -23,8 +23,7 @@ class UserAvatarsScreen extends Component {
     // const userId = this.props.navigation.state.params.user.uid
     const {userId} = this.props.navigation.state.params
 
-    await this.props.people.refreshUser(userId)
-    this.user = this.props.people.getUser(userId)
+    this.user = await this.props.people.getUserGreedily(userId)
   }
 
   componentWillUnmount() {
@@ -36,7 +35,7 @@ class UserAvatarsScreen extends Component {
 
     return <SlideShow
       onPress = {this.handlePress}
-      // uri = {this.user.avatar}
+      uri = {this.user.avatar}
     />
   }
 
