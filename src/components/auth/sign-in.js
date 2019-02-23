@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-  View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated
+  View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, TouchableWithoutFeedback
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import SocialMedia from './social-media'
@@ -222,32 +222,38 @@ class SignIn extends Component {
   }
 
   render() {
-    return <BackgroundImage onPress = {this.props.keyboard.dismiss}
-                            overlayOpacity = {0.2}
-                            blurRadius = {5}
-                            source = {require('../../../assets/images/splash.png')}
-                            resizeMode = 'contain'
-                            style = {{
-                              backgroundColor: '#fff0c0'
-                            }}
+    // return <BackgroundImage onPress = {this.props.keyboard.dismiss}
+    //                         overlayOpacity = {0.2}
+    //                         blurRadius = {5}
+    //                         source = {require('../../../assets/images/splash.png')}
+    //                         resizeMode = 'contain'
+    //                         style = {{
+    //                           backgroundColor: '#fff0c0'
+    //                         }}>
+    return <TouchableWithoutFeedback
+      onPress = {this.props.keyboard.dismiss}
     >
-      <SafeAreaView style = {styles.container}>
-        {this.renderInput()}
+      <SafeAreaView style = {{flex: 1, backgroundColor: '#7a839e'}}>
+        <View style = {styles.container}>
+          {this.renderInput()}
 
-        <Animated.View
-          onLayout = {this.props.setLayout(FOOTER)}
-          style = {{
-            opacity: this.getAnimation(FOOTER + OPACITY),
-            transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
-          }}>
+          <Animated.View
+            onLayout = {this.props.setLayout(FOOTER)}
+            style = {{
+              opacity: this.getAnimation(FOOTER + OPACITY),
+              transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
+            }}>
 
-          {this.renderDivider()}
-          {this.renderSocial()}
-          {this.renderRegister()}
-        </Animated.View>
+            {this.renderDivider()}
+            {this.renderSocial()}
+            {this.renderRegister()}
+          </Animated.View>
+
+        </View>
 
       </SafeAreaView>
-    </BackgroundImage>
+    </TouchableWithoutFeedback>
+  // </BackgroundImage>
 
   }
 }
@@ -255,7 +261,7 @@ class SignIn extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 8,
+    marginHorizontal: 8,
     justifyContent: 'center',
     backgroundColor: '#7a839e'
   },

@@ -147,20 +147,27 @@ class SignUp extends Component {
   }
 
   render() {
-    return <BackgroundImage
+    // return <BackgroundImage
+    //   onPress = {this.props.keyboard.dismiss}
+    //   overlayOpacity = {0.2}
+    //   blurRadius = {5}
+    // >
+    return <TouchableWithoutFeedback
       onPress = {this.props.keyboard.dismiss}
-      overlayOpacity = {0.2}
-      blurRadius = {5}
     >
-      <SafeAreaView style = {styles.container}>
-        <BackButton/>
-        <View style = {styles.content}>
-          {this.renderTitle()}
-          {this.renderInput()}
+      <SafeAreaView style = {{flex: 1, backgroundColor: '#7a839e'}}>
+        <View style = {styles.container}>
+          <BackButton/>
+          <View style = {styles.content}>
+            {this.renderTitle()}
+            {this.renderInput()}
+          </View>
+          <View style = {styles.bottom}/>
         </View>
-        <View style = {styles.bottom}/>
       </SafeAreaView>
-    </BackgroundImage>
+    </TouchableWithoutFeedback>
+
+    // </BackgroundImage>
   }
 
 }
@@ -168,7 +175,8 @@ class SignUp extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 8
+    marginHorizontal: 8,
+    backgroundColor: '#7a839e'
   },
   content: {
     flex: 1,
