@@ -14,7 +14,7 @@ class LikesList extends Component {
   renderLike = ({item}) => {
     return <PersonCard
       onPress = {this.props.openUserInfoScreen.bind(null, item.user.uid)}
-      person = {item.user}
+      user = {item.user}
     />
   }
 

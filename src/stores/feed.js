@@ -19,6 +19,7 @@ class FeedStore extends EntitiesStore {
   @observable address = ''
   @observable attachedCoords = null
   @observable coords = null
+  @observable lastPostKey = null
 
   @action setTitle = title => this.title = title
   @action setText = text => this.text = text
@@ -42,9 +43,10 @@ class FeedStore extends EntitiesStore {
     this.address = ''
   }
 
-  off() {
+  @action off = () => {
     this.clearPostForm()
     this.clear()
+    this.lastPostKey = null
   }
 
   get reference() {
@@ -69,8 +71,6 @@ class FeedStore extends EntitiesStore {
     return this.posts[this.size - 1]
   }
 
-  lastPostKey = null
-
   @action fetchPosts = () => {
     if (this.loaded || this.loading) return
 
@@ -87,8 +87,12 @@ class FeedStore extends EntitiesStore {
       const isEmpty = currentChunkLength === chunkShift
 
       !isEmpty && await this.appendFetchedPosts(payload)
+
       this.loaded = isEmpty || currentChunkLength < chunkLength
+      // console.log('!!!', 'loading = false')
       this.loading = false
+
+      // TODO: wtf?
     })
 
     let ref = this.reference
@@ -104,6 +108,7 @@ class FeedStore extends EntitiesStore {
   }
 
   @action appendFetchedPosts = async (payload) => {
+    // console.log('!!!', 'start append')
     // Object.entries(payload).forEach(([postId, post]) => this.appendPost(postId, post))
     const posts = await this.convertPosts(payload)
       .then(posts => posts.reduce((acc, post) => {
@@ -111,9 +116,12 @@ class FeedStore extends EntitiesStore {
           acc[post.uid] = post
         }
         return acc
+        // return {...acc, [post.uid]: post}
       }, {}))
 
     this.entities = {...this.entities, ...posts}
+
+    // console.log('!!!', 'end append')
   }
 
   // TODO: maybe fetch user too?
@@ -195,12 +203,12 @@ class FeedStore extends EntitiesStore {
   }
 
   @action refreshFeed = () => {
-    console.log('refreshing...')
+    console.log('FEED:', 'refreshing')
     // TODO: this.size ?
     if (this.loading || !this.size) return
 
     this.loading = true
-    const callback = async (snapshot) => {
+    const callback = action(async (snapshot) => {
       const payload = snapshot.val()
 
       if (!payload) {
@@ -210,8 +218,9 @@ class FeedStore extends EntitiesStore {
 
       await this.appendFetchedPosts(payload)
       this.loading = false
-    }
+    })
 
+    // TODO: Something bad with this
     this.reference
       .orderByKey()
       .startAt(this.lastPost.key)
@@ -329,8 +338,9 @@ class FeedStore extends EntitiesStore {
       return
     }
 
-    await this.reference.push(newPost)
-    this.refreshFeed()
+    const {key} = await this.reference.push(newPost)
+    // this.refreshFeed()
+    this.refreshPost(key)
     this.getStore(NAVIGATION_STORE).goBack()
     this.clearPostForm()
     this.clearLocationForm()
@@ -343,9 +353,8 @@ class FeedStore extends EntitiesStore {
 
     return Promise.all(Object.entries(likes)
       .map(async ([key, {userId}]) => {
-        await people.refreshUser(userId)
-        const user = people.getUser(userId)
-         return {userId, user, key}
+          const user = await people.getUserGreedily(userId)
+          return {userId, user, key}
         }
       ))
 
