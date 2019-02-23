@@ -10,7 +10,7 @@ import {isPropsDiffer} from '../../stores/utils'
 
 class PersonCard extends Component {
   static propTypes = {
-    person: PropTypes.shape({
+    user: PropTypes.shape({
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string,
       avatar: PropTypes.string,
@@ -21,16 +21,19 @@ class PersonCard extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return isPropsDiffer(this.props.person, nextProps.person)
+    return isPropsDiffer(this.props.user, nextProps.user)
   }
 
   renderAvatar = () => {
-    const {person: {avatar}} = this.props
-    return <Avatar size = {30} /*uri = {avatar}*//>
+    return <Avatar
+      size = {30}
+      uri = {this.props.user.avatar}
+    />
   }
 
   render() {
-    const {person: {firstName, lastName, email}, getPhoto, openUserInfoScreen, ...rest} = this.props
+    const {firstName, lastName, email} = this.props.user
+    const {getPhoto, openUserInfoScreen, ...rest} = this.props
     // console.log('render', firstName)
 
     const Card = openUserInfoScreen && getPhoto ? SwipeableCard : SegmentedCard
@@ -42,10 +45,9 @@ class PersonCard extends Component {
       rightActions: [
         // {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen},
         {title: 'Info', color: '#eadcc1', callback: openUserInfoScreen},
-        // {title: 'Photo', color: '#FFAB00', callback: getPhoto}
+        {title: 'Photo', color: '#FFAB00', callback: getPhoto}
       ]
     }
-
 
     return <Card
       mainContainerStyle = {styles.textContainer}
@@ -61,7 +63,7 @@ class PersonCard extends Component {
       // ]}
     >
       <Text numberOfLines = {1} style = {styles.text}>
-        {firstName || email} {lastName}
+        {firstName} {lastName}
       </Text>
     </Card>
   }

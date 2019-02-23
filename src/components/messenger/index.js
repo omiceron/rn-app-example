@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-  StyleSheet, FlatList, SafeAreaView, ActivityIndicator,ScrollView
+  StyleSheet, FlatList, SafeAreaView, ActivityIndicator, View
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
@@ -8,6 +8,7 @@ import Separator from '../common/separator'
 import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
 import EmptyList from './empty-list'
+import ListLoader from '../common/list-loader'
 
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)
@@ -57,8 +58,8 @@ class Messenger extends Component {
         renderItem = {this.renderChatCard}
         onEndReached = {messenger.fetchChats}
         onEndReachedThreshold = {0.1}
+        ListFooterComponent = {messenger.loading && ListLoader}
       />
-      {messenger.loading && <ActivityIndicator/>}
     </SafeAreaView>
   }
 

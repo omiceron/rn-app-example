@@ -19,42 +19,40 @@ class PeopleList extends Component {
     openUserInfoScreen: func.isRequired
   }
 
+  renderSectionHeader = ({section}) =>
+    <Text style = {styles.header}>
+      {section.title}
+    </Text>
+
+  renderItem = ({item: {user, key}}) => {
+    const {getPhoto, openChatScreen, openUserInfoScreen} = this.props
+
+    return <PersonCard
+      onPress = {openChatScreen.bind(null, user.uid)}
+      getPhoto = {getPhoto.bind(null, user.uid)}
+      openUserInfoScreen = {openUserInfoScreen.bind(null, user.uid)}
+      user = {user}
+    />
+  }
+
   render() {
-    const {
-      getPhoto,
-      openChatScreen,
-      openUserInfoScreen,
-      people: {
-        sections
-      }
-    } = this.props
+    console.log('PEOPLE LIST:', 'render')
 
-    const renderSectionHeader = ({section}) =>
-      <Text style = {styles.header}>
-        {section.title}
-      </Text>
-
+    const {people} = this.props
     const SectionSeparatorComponent = ({trailingItem, trailingSection}) =>
       trailingSection && !trailingItem ? <Separator topIndent = {8}/> : null
 
     const ItemSeparatorComponent = () => <Separator leftIndent = {48}/>
 
-    const renderItem = ({item: {person, key}}) =>
-      <PersonCard
-        onPress = {openChatScreen.bind(null, person.uid)}
-        getPhoto = {getPhoto.bind(null, key)}
-        openUserInfoScreen = {openUserInfoScreen.bind(null, person.uid)}
-        person = {person}
-      />
-
     return <SafeAreaView style = {styles.container}>
       <SectionList
-        sections = {sections}
+        sections = {people.sections}
         contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}
         ItemSeparatorComponent = {ItemSeparatorComponent}
         SectionSeparatorComponent = {SectionSeparatorComponent}
-        renderSectionHeader = {renderSectionHeader}
-        renderItem = {renderItem}
+        renderSectionHeader = {this.renderSectionHeader}
+        renderItem = {this.renderItem}
+        initialNumToRender = {Number.MAX_SAFE_INTEGER}
         // automaticallyAdjustContentInsets = {false}
       />
     </SafeAreaView>
