@@ -3,8 +3,14 @@ import BasicStore from './basic-store'
 import firebase from 'firebase'
 import {entitiesFromFB} from './utils'
 import {AUTH_STORE} from '../constants'
+import {AsyncStorage} from 'react-native'
+import {toJS} from 'mobx'
 
 class EntitiesStore extends BasicStore {
+  constructor(...args) {
+    super(...args)
+    this.retrieveCachedEntities()
+  }
 
   @observable loading = false
   @observable loaded = false
@@ -21,8 +27,7 @@ class EntitiesStore extends BasicStore {
     return Object.values(this.entities)
   }
 
-  @action
-  clear() {
+  @action clear = () => {
     this.entities = {}
     this.loading = false
     this.loaded = false
@@ -31,6 +36,26 @@ class EntitiesStore extends BasicStore {
   @computed
   get size() {
     return Object.keys(this.entities).length
+  }
+
+  cacheEntities = async () => {
+    console.log('CACHE:', 'cache entities from store', this.storeName)
+    return await AsyncStorage.mergeItem(`meowchat:store:${this.storeName}`, JSON.stringify(toJS(this.entities)))
+  }
+
+  @action retrieveCachedEntities = async () => {
+    console.log('CACHE:', 'get entities from store', this.storeName)
+    const cachedEntities = await AsyncStorage.getItem(`meowchat:store:${this.storeName}`)
+      .then(JSON.parse)
+
+    if (!cachedEntities) {
+      console.log('CACHE:', 'get entities from store', this.storeName)
+      return
+    }
+
+    this.entities = cachedEntities
+
+    return cachedEntities
   }
 }
 

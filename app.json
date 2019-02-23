@@ -1,5 +1,7 @@
 {
   "expo": {
+    "name": "Meowchat",
+    "slug": "meowchat",
     "sdkVersion": "32.0.0",
     "facebookScheme": "fb1943342692364166",
     "facebookAppId": "1943342692364166",
@@ -7,7 +9,7 @@
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
-      "backgroundColor": "#fff0c0"
+      "backgroundColor": "#fffffd"
     }
   }
 }

@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
-import {FlatList, View, StyleSheet, ActivityIndicator, SafeAreaView} from 'react-native'
+import {FlatList, View, StyleSheet, ActivityIndicator, SafeAreaView, LayoutAnimation} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import PostCard from './post-card'
-import {FEED_STORE, DEFAULT_BACKGROUND_COLOR} from '../../constants'
+import {FEED_STORE, INACTIVE_BACKGROUND_COLOR} from '../../constants'
+import {reaction} from 'mobx'
+import ListLoader from '../common/list-loader'
 
 @inject(FEED_STORE)
 @observer
@@ -18,37 +20,54 @@ class Feed extends Component {
     })
   }
 
+  constructor(...args) {
+    super(...args)
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+    reaction(
+      () => this.props.feed.posts.length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+  }
+
+  renderItem = ({item: {title, text, comments, location, coords, uid, likesNumber, isLiked}, index}) => {
+    return <PostCard
+      title = {title}
+      text = {text}
+      coords = {coords}
+      likesNumber = {likesNumber}
+      isLiked = {isLiked}
+      comments = {comments}
+      uid = {uid}
+      location = {location}
+      // isLastItem = {index === this.props.feed.size - 1}
+      // isFirstItem = {index === 0}
+
+      // onLikeNumberPress = {onLikeNumberPress}
+    />
+  }
+
   render() {
-    const {fetchPosts, posts, loading, loaded, setLike, refreshFeed} = this.props.feed
+    console.log('!!!', 'render')
+    const {feed} = this.props
     // const {onLikeNumberPress} = this.props
 
-    const renderItem = ({item: {title, text, comments, location, coords, uid, likesNumber, isLiked}}) =>
-      <PostCard
-        title = {title}
-        text = {text}
-        coords = {coords}
-        likesNumber = {likesNumber}
-        isLiked = {isLiked}
-        comments = {comments}
-        uid = {uid}
-        location = {location}
-        // onLikeNumberPress = {onLikeNumberPress}
-      />
-
-    const ItemSeparatorComponent = () => <View style = {{height: 16}}/>
+    const ItemSeparatorComponent = () => <View style = {{height: 4}}/>
 
     return <SafeAreaView style = {styles.container}>
       <FlatList
-        data = {posts}
-        refreshing = {loading}
-        onRefresh = {refreshFeed}
-        onEndReached = {fetchPosts}
-        initialNumToRender = {Number.MAX_SAFE_INTEGER}
-        onEndReachedThreshold = {0.5}
-        renderItem = {renderItem}
-        ItemSeparatorComponent = {ItemSeparatorComponent}
+        data = {feed.posts}
+        // refreshing = {feed.loading}
+        // onRefresh = {feed.refreshFeed}
+        onEndReached = {feed.fetchPosts}
+        // initialNumToRender = {Number.MAX_SAFE_INTEGER}
+        onEndReachedThreshold = {0.1}
+        renderItem = {this.renderItem}
+        // ItemSeparatorComponent = {ItemSeparatorComponent}
+        ListFooterComponent = {feed.loading && ListLoader}
+        ListHeaderComponent = {<View style = {{height: 8}}/>}
       />
-      {loading && <ActivityIndicator/>}
     </SafeAreaView>
   }
 }
@@ -56,7 +75,7 @@ class Feed extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   }
 })
 

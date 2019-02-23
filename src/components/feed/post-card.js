@@ -1,10 +1,13 @@
 import React, {Component, PureComponent} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing} from 'react-native'
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing, Image} from 'react-native'
 import PropTypes from 'prop-types'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
-import {NAVIGATION_STORE} from '../../constants'
+import {
+  NAVIGATION_STORE, WHITE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR,
+  BLACK_TEXT_COLOR
+} from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
 
@@ -18,7 +21,8 @@ class PostCard extends Component {
     likesNumber: PropTypes.number.isRequired,
     isLiked: PropTypes.bool.isRequired,
     uid: PropTypes.string.isRequired,
-    coords: PropTypes.object
+    coords: PropTypes.object,
+    // isFirstItem: PropTypes.bool.isRequired
   }
 
   // TODO: do something with this mess
@@ -31,9 +35,9 @@ class PostCard extends Component {
 
   render() {
     const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords} = this.props
-    console.log('render card', title, isLiked)
+    // console.log('render card', title, isLiked)
 
-    return <View style = {styles.container}>
+    return <View style = {[styles.container]}>
       <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
 
         <View style = {styles.row}>
@@ -63,6 +67,7 @@ class PostCard extends Component {
         onLikePress = {() => feed.setLike(uid)}
         onCounterPress = {() => navigation.push('likesList', {postId: uid})}
       />
+
     </View>
   }
 
@@ -71,17 +76,27 @@ class PostCard extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: WHITE_BACKGROUND_COLOR,
     paddingHorizontal: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(192,192,192,0.5)'
+    borderColor: 'rgba(192,192,192,0.5)',
+    // borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 6,
+    shadowOffset: {
+      width: 3,
+      height: 3
+    },
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    margin: 8,
   },
   text: {
-    color: 'rgba(127,127,127,1)',
+    color: INACTIVE_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '100'
   },
   title: {
+    color: BLACK_TEXT_COLOR,
     fontSize: 16,
     fontWeight: '600'
   },

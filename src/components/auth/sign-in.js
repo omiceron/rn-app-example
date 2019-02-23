@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {
-  View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated
+  View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, TouchableWithoutFeedback
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import SocialMedia from './social-media'
@@ -25,7 +25,7 @@ import {
   OPACITY,
   SCALE,
   AUTH_STORE,
-  KEYBOARD_STORE, HIT_SLOP
+  KEYBOARD_STORE, HIT_SLOP, WHITE_TEXT_COLOR, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR
 } from '../../constants'
 
 @inject(AUTH_STORE)
@@ -102,7 +102,7 @@ class SignIn extends Component {
       }]}>
       <Text style = {[styles.titleText]}>
         <Text style = {styles.boldText}>
-          Meow
+          Me<Text style = {{fontFamily: 'Meowchat'}}></Text>w
         </Text>
         chat
       </Text>
@@ -222,36 +222,38 @@ class SignIn extends Component {
   }
 
   render() {
-    return <BackgroundImage onPress = {this.props.keyboard.dismiss}
-                            overlayOpacity = {0.2}
-                            blurRadius = {5}
-                            source = {require('../../../assets/images/splash.png')}
-                            resizeMode = 'contain'
-                            style = {{
-                              backgroundColor: '#fff0c0'
-                            }}
-
-      // onPress = {() => this.onFocus({duration: 2000, endCoordinates: {height: 0, screenY: 0}})}
+    // return <BackgroundImage onPress = {this.props.keyboard.dismiss}
+    //                         overlayOpacity = {0.2}
+    //                         blurRadius = {5}
+    //                         source = {require('../../../assets/images/splash.png')}
+    //                         resizeMode = 'contain'
+    //                         style = {{
+    //                           backgroundColor: '#fff0c0'
+    //                         }}>
+    return <TouchableWithoutFeedback
+      onPress = {this.props.keyboard.dismiss}
     >
-      <SafeAreaView style = {styles.container}>
-        {this.renderInput()}
+      <SafeAreaView style = {{flex: 1, backgroundColor: '#7a839e'}}>
+        <View style = {styles.container}>
+          {this.renderInput()}
 
-        <Animated.View
-          onLayout = {this.props.setLayout(FOOTER)}
-          style = {{
-            // flex: 3,
-            // minHeight: 168,
-            opacity: this.getAnimation(FOOTER + OPACITY),
-            transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
-          }}>
+          <Animated.View
+            onLayout = {this.props.setLayout(FOOTER)}
+            style = {{
+              opacity: this.getAnimation(FOOTER + OPACITY),
+              transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
+            }}>
 
-          {this.renderDivider()}
-          {this.renderSocial()}
-          {this.renderRegister()}
-        </Animated.View>
+            {this.renderDivider()}
+            {this.renderSocial()}
+            {this.renderRegister()}
+          </Animated.View>
+
+        </View>
 
       </SafeAreaView>
-    </BackgroundImage>
+    </TouchableWithoutFeedback>
+  // </BackgroundImage>
 
   }
 }
@@ -260,15 +262,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 8,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#7a839e'
   },
   text: {
-    color: 'white',
+    color: WHITE_TEXT_COLOR,
     fontSize: 14,
     fontFamily: 'HelveticaNeue-Thin'
   },
   titleText: {
-    color: 'rgba(255,255,255,0.8)',
+    color: WHITE_TRANSPARENT_BACKGROUND_COLOR,
     fontSize: 50,
     fontFamily: 'HelveticaNeue-UltraLight'
   },
@@ -282,14 +285,14 @@ const styles = StyleSheet.create({
   divider: {
     flex: 3,
     height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(255,255,255, .8)'
+    backgroundColor: WHITE_TRANSPARENT_BACKGROUND_COLOR
   },
   dividerTextView: {
     flex: 5,
     alignItems: 'center'
   },
   dividerText: {
-    color: 'white',
+    color: WHITE_TEXT_COLOR,
     fontSize: 18,
     fontFamily: 'HelveticaNeue-Thin'
   },

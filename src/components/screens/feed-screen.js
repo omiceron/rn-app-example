@@ -5,6 +5,7 @@ import {FEED_STORE} from '../../constants/index'
 import Loader from '../common/loader'
 import NavigationButton from '../navigation/navigation-button'
 import PropTypes from 'prop-types'
+import {DEFAULT_HEADER_COLOR} from '../../constants'
 
 @inject(FEED_STORE)
 @observer
@@ -19,11 +20,6 @@ class FeedScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
       title: 'Feed',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF',
       headerRight: <NavigationButton icon = 'ios-add' onPress = {() => navigation.navigate('postForm')}/>
     })
   }
@@ -33,9 +29,13 @@ class FeedScreen extends Component {
   // }
 
   render() {
-    const {size, loading, loaded} = this.props.feed
+    const {size, loading, loaded, lastPostKey} = this.props.feed
 
-    if (!size && (!loaded || loading)) return <Loader/>
+    if (!lastPostKey) {
+      if (loaded) return null
+      return <Loader/>
+    }
+    // if (!size && (!loaded || loading)) return <Loader/>
 
     return <Feed /*onLikeNumberPress = {this.handleOnLikeNumberPress}*//>
   }

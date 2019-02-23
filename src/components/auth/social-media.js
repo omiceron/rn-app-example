@@ -2,6 +2,7 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import {WHITE_TRANSPARENT_BACKGROUND_COLOR} from '../../constants'
 
 class SocialMedia extends Component {
   static propTypes = {
@@ -12,7 +13,7 @@ class SocialMedia extends Component {
   render() {
     return <TouchableOpacity onPress = {this.props.onPress}>
       <View style = {styles.container}>
-        <Icon name = {this.props.name} size = {30} color = 'rgba(255,255,255, 0.8)'/>
+        <Icon name = {this.props.name} size = {30} color = {WHITE_TRANSPARENT_BACKGROUND_COLOR}/>
       </View>
     </TouchableOpacity>
   }

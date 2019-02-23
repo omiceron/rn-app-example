@@ -1,25 +1,27 @@
 import React, {Component} from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
+import PropTypes from 'prop-types'
 import {INACTIVE_BACKGROUND_COLOR} from '../../constants'
 
-class Loader extends Component {
-  static propTypes = {}
+class ListLoader extends Component {
+  static propTypes = {
+    loading: PropTypes.bool
+  }
 
   render() {
     return <View style = {styles.container}>
-      <ActivityIndicator size = 'small'/>
+      <ActivityIndicator/>
     </View>
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: INACTIVE_BACKGROUND_COLOR,
     flex: 1,
+    height: 60,
     justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   }
 })
 
-export default Loader
-
+export default ListLoader

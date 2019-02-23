@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react'
 import {View, StyleSheet, Text} from 'react-native'
 import PropTypes from 'prop-types'
+import {INACTIVE_TEXT_COLOR} from '../../constants'
 
 class RowSeparator extends PureComponent {
   static propTypes = {
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: '100',
-    color: 'grey',
+    color: INACTIVE_TEXT_COLOR,
     margin: 8
   },
   hint: {

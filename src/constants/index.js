@@ -1,7 +1,7 @@
 import {Dimensions, Easing} from 'react-native'
 import {FileSystem, Constants} from 'expo'
 
-export const LOCAL_AVATAR_URI = FileSystem.cacheDirectory
+export const CACHE_DIR = FileSystem.cacheDirectory
 export const KEYBOARD_EASING = Easing.bezier(0.17, 0.59, 0.4, 0.77)
 export const WINDOW_HEIGHT = Dimensions.get('window').height
 export const WINDOW_WIDTH = Dimensions.get('window').width
@@ -16,9 +16,27 @@ export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-dig
 export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
-export const DEFAULT_BACKGROUND_COLOR = '#efeff4'
-export const WHITE_BACKGROUND_COLOR = '#ffffff'
-export const NAVIGATION_TINT_COLOR = '#ffffff'
+export const DEFAULT_HEADER_COLOR = '#7a839e'
+export const ACTIVE_TINT_COLOR = '#423c6d'
+export const USER_MESSAGE_COLOR = '#423c6d'
+export const MESSAGE_COLOR = '#eeeeee'
+export const WARNING_COLOR = '#c7444a'
+export const INFO_COLOR = '#eadcc1'
+export const UNDERLAY_COLOR = '#F6F6F9'
+export const OFFLINE_COLOR = '#7f7f7f'
+
+// export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
+
+export const WHITE_TRANSPARENT_BACKGROUND_COLOR = 'rgba(255, 255, 253, 0.8)'
+
+
+export const WHITE_BACKGROUND_COLOR = '#fffffd'
+export const INACTIVE_BACKGROUND_COLOR = '#ebebef'
+
+export const BLACK_TEXT_COLOR = '#333333'
+export const WHITE_TEXT_COLOR = '#fffffd'
+export const INACTIVE_TEXT_COLOR = '#898990'
+export const HIGHLIGHTED_TEXT_COLOR = '#94b5c2'
 
 export const FEED_CHUNK_LENGTH = 10
 export const MESSAGES_CHUNK_LENGTH = 30

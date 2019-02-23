@@ -1,13 +1,28 @@
 import React, {Component, PureComponent} from 'react'
-import {View, ImageBackground, StyleSheet} from 'react-native'
+import {View, ImageBackground, StyleSheet, Image, ActivityIndicator} from 'react-native'
 import PropTypes from 'prop-types'
+import {observer} from 'mobx-react'
+import {observable} from 'mobx'
 
+@observer
 class BasicAvatar extends Component {
   static propTypes = {
     // style: View.propTypes.style,
     uri: PropTypes.string,
     size: PropTypes.number
   }
+
+  // @observable loaded = false
+  // @observable uri = null
+  //
+  // async componentWillMount() {
+  //   if (this.props.uri) await Image.prefetch(this.props.uri)
+  //   else {
+  //     this.uri = `https://loremflickr.com/200/200/cat?random=${Math.random()}`
+  //     await Image.prefetch(this.uri)
+  //   }
+  //   this.loaded = true
+  // }
 
   render() {
     const {style, uri, size} = this.props
@@ -17,6 +32,10 @@ class BasicAvatar extends Component {
       width: size,
       borderRadius: size / 2
     }
+
+    // if (!this.loaded) return <View style = {[styles.content, container, style]}>
+    //   <ActivityIndicator/>
+    //  </View>
 
     return <View style = {[container, style]}>
       <ImageBackground

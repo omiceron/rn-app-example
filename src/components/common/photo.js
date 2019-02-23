@@ -4,7 +4,7 @@ import {Camera, Permissions} from 'expo'
 import {observable, action} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import {NAVIGATION_STORE} from '../../constants'
+import {NAVIGATION_STORE, WHITE_TEXT_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(NAVIGATION_STORE)
@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 class Photo extends Component {
   static propTypes = {
     base64: PropTypes.bool,
-    photoHandler: PropTypes.func.isRequired,
+    photoHandler: PropTypes.func.isRequired
   }
 
   @observable permitted = false
@@ -47,13 +47,13 @@ class Photo extends Component {
 
   renderCancelButton() {
     return <TouchableOpacity style = {styles.cameraButton} onPress = {this.goBack}>
-      <Icon name = 'ios-arrow-back' size = {40} color = '#FFF'/>
+      <Icon name = 'ios-arrow-back' size = {40} color = {WHITE_TEXT_COLOR}/>
     </TouchableOpacity>
   }
 
   renderFlipButton() {
     return <TouchableOpacity style = {styles.cameraButton} onPress = {this.flipCamera}>
-      <Icon name = 'ios-reverse-camera' size = {40} color = '#FFF'/>
+      <Icon name = 'ios-reverse-camera' size = {40} color = {WHITE_TEXT_COLOR}/>
     </TouchableOpacity>
   }
 
@@ -64,7 +64,12 @@ class Photo extends Component {
     </SafeAreaView>
 
     if (!this.permitted) return null
-    return <Camera style = {styles.container} type = {this.type} ref = {ref => this.camera = ref}>
+    return <Camera
+      // pictureSize = {'352x288'}
+      style = {styles.container}
+      type = {this.type}
+      ref = {ref => this.camera = ref}
+    >
       <SafeAreaView style = {styles.overlay}>
         <View style = {styles.controls}>
           {this.renderCancelButton()}
@@ -84,8 +89,9 @@ class Photo extends Component {
 
   takePicture = async () => {
     const {base64, photoHandler} = this.props
+    // this.camera.getAvailablePictureSizesAsync().then(console.log)
     const photo = await this.camera.takePictureAsync({base64, quality: 0.1})
-
+    // console.log(photo)
     photoHandler && await photoHandler(photo)
 
     this.goBack()

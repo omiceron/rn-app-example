@@ -22,14 +22,14 @@ import {
 
 const stores = {}
 
-stores[USER_STORE] = new UserStore(stores)
-stores[FEED_STORE] = new FeedStore(stores)
-stores[KEYBOARD_STORE] = new KeyboardStore(stores)
-stores[AVATAR_STORE] = new UserAvatarStore(stores)
-stores[AUTH_STORE] = new AuthStore(stores)
-stores[NAVIGATION_STORE] = new NavigationStore(stores)
-stores[PEOPLE_STORE] = new PeopleStore(stores)
-stores[EVENTS_STORE] = new EventsStore(stores)
-stores[MESSENGER_STORE] = new MessengerStore(stores)
+stores[USER_STORE] = new UserStore(stores, USER_STORE)
+stores[FEED_STORE] = new FeedStore(stores, FEED_STORE)
+stores[KEYBOARD_STORE] = new KeyboardStore(stores, KEYBOARD_STORE)
+stores[AVATAR_STORE] = new UserAvatarStore(stores, AVATAR_STORE)
+stores[AUTH_STORE] = new AuthStore(stores, AUTH_STORE)
+stores[NAVIGATION_STORE] = new NavigationStore(stores, NAVIGATION_STORE)
+stores[PEOPLE_STORE] = new PeopleStore(stores, PEOPLE_STORE)
+// stores[EVENTS_STORE] = new EventsStore(stores, EVENTS_STORE)
+stores[MESSENGER_STORE] = new MessengerStore(stores, MESSENGER_STORE)
 
 export default stores

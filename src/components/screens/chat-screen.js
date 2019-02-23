@@ -41,16 +41,12 @@ class ChatScreen extends Component {
       // headerTitle: !user && <Loader/>,
       // title: user && user.firstName,
       title: firstName,
-      headerRight: <TouchableAvatar size = {40}
-                                    style = {{marginRight: 10}}
-                                    onPress = {navigateToUserScreen}
-        // uri = {avatar}
+      headerRight: <TouchableAvatar
+        size = {40}
+        style = {{marginRight: 10}}
+        onPress = {navigateToUserScreen}
+        uri = {avatar}
       />,
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF',
       tabBarVisible: false
       // headerLeft: <HeaderBackButton tintColor = 'white' onPress = {navigateToMessenger}/>,
       // headerLeft: <HeaderLeft onPress = {navigateToMessenger}/>,

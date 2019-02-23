@@ -23,8 +23,7 @@ export function isPropsDiffer(props, nextProps) {
 
   for (const key in unobservableNextProps) {
     if (unobservableNextProps.hasOwnProperty(key) &&
-      unobservableNextProps[key] !== unobservableProps[key]
-    ) {
+      unobservableNextProps[key] !== unobservableProps[key]) {
       return true
     }
   }
@@ -37,4 +36,31 @@ export function getDate(timestamp, options = {}) {
 
 export function getTime(timestamp) {
   return new Date(timestamp).toLocaleTimeString(LOCALE, TIME_FORMAT)
+}
+
+export function urlToBlob(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.onerror = reject
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response)
+      }
+    }
+    xhr.open('GET', url)
+    xhr.responseType = 'blob'
+    xhr.send()
+  })
+}
+
+export function alphabetic(p, options = {}) {
+  if (typeof p === 'string') p = [p]
+  const deep = (obj) => p.reduce((acc, c) => acc ? acc[c] : undefined, obj)
+  return (a, b) => {
+    a = deep(a)
+    b = deep(b)
+    if (a === undefined && b === undefined) return 0
+
+    return a > b ? a === b ? 0 : 1 : -1
+  }
 }

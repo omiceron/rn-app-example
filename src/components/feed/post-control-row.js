@@ -3,6 +3,7 @@ import {View, StyleSheet} from 'react-native'
 import Like from './like'
 import LikesCounter from './likes-counter'
 import PropTypes from 'prop-types'
+// import Icon from 'react-native-vector-icons/Ionicons'
 
 // import {inject, observer} from 'mobx-react'
 // import {FEED_STORE, NAVIGATION_STORE} from '../../constants'
@@ -34,7 +35,9 @@ class PostControlRow extends Component {
         style = {styles.button}
         likesNumber = {likesNumber}
         onPress = {onCounterPress}
+        isLiked = {isLiked}
       />
+      {/*{this.renderComments()}*/}
     </View>
 
   }

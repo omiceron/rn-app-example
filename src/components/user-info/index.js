@@ -9,7 +9,11 @@ import SegmentedCard from '../common/segmented-card'
 import TableRow from '../common/table-row'
 import TableSeparator from '../common/table-separator'
 import TableView from '../common/table-view'
-import {DEFAULT_BACKGROUND_COLOR, FEED_STORE} from '../../constants'
+import {
+  INACTIVE_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
+  BLACK_TEXT_COLOR,
+  WHITE_BACKGROUND_COLOR
+} from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
 
 @inject(FEED_STORE)
@@ -37,12 +41,17 @@ class UserInfo extends Component {
 
   }
 
+  LeftComponent = () => <Avatar
+    size = {60}
+    onPress = {this.props.openUserAvatarsScreen}
+    uri = {this.props.user.avatar}
+  />
+
+
   render() {
 
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
-
-    const LeftComponent = () => <Avatar size = {60} onPress = {openUserAvatarsScreen}/>
 
     const renderLikedPosts = () =>
       <TableView>
@@ -90,7 +99,7 @@ class UserInfo extends Component {
       <TableView>
         <SegmentedCard
           mainContainerStyle = {styles.textView}
-          LeftComponent = {LeftComponent}>
+          LeftComponent = {this.LeftComponent}>
 
           <View>
             <Text style = {styles.text}>
@@ -137,12 +146,12 @@ class UserInfo extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   simpleRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: 'white'
+    backgroundColor: WHITE_BACKGROUND_COLOR
   },
   separator: {
     display: 'flex',
@@ -150,10 +159,10 @@ const styles = StyleSheet.create({
     marginBottom: 35
   },
   online: {
-    color: '#67E'
+    color: HIGHLIGHTED_TEXT_COLOR
   },
   offline: {
-    color: 'rgba(127,127,127,1)',
+    color: OFFLINE_COLOR,
   },
   avatar: {
     height: 70,
@@ -164,7 +173,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: BLACK_TEXT_COLOR
   },
   imageView: {
     flex: 1,
@@ -178,7 +188,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   blueButton: {
-    color: '#67E',
+    color: DEFAULT_HEADER_COLOR,
     textAlign: 'center'
   }
 })

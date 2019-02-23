@@ -1,7 +1,10 @@
 import {action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
-import {CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE, PEOPLE_STORE} from '../constants'
+import {
+  AVATAR_STORE, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE,
+  PEOPLE_STORE
+} from '../constants'
 
 // chat structure:
 //
@@ -240,12 +243,12 @@ class MessengerStore extends EntitiesStore {
   }
 
   convertChat = async (payload) => {
-    const people = this.getStore(PEOPLE_STORE)
+    const [chat] = await this.convertChats(payload)
 
-    const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
-
-    chat.loaded = !chat.lastMessage
-    chat.user = await people.getUserLazily(chat.userId)
+    // const people = this.getStore(PEOPLE_STORE)
+    // const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
+    // chat.loaded = !chat.lastMessage
+    // chat.user = await people.getUserLazily(chat.userId)
 
     return chat
   }
@@ -262,12 +265,10 @@ class MessengerStore extends EntitiesStore {
     }))
   }
 
-  @action appendChat = (chatData) => {
-    const chat = this.entities[chatData.chatId]
-
-    this.entities[chatData.chatId] = {...(chat || {}), ...chatData}
-
-    return chatData
+  @action appendChat = (chat) => {
+    const oldChat = this.entities[chat.chatId] || {}
+    this.entities[chat.chatId] = {...oldChat, ...chat}
+    return chat
   }
 
   @action appendMessage = (chatId, message) => {
@@ -286,6 +287,7 @@ class MessengerStore extends EntitiesStore {
     // console.log('APPEND MESSAGE:', 'message appended')
   }
 
+  // TODO: add sync
   getChatWith = async (userId, user) => {
     console.log('GET CHAT:', 'checking chat')
 

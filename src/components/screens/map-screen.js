@@ -2,17 +2,22 @@ import React, {Component} from 'react'
 import {StyleSheet} from 'react-native'
 import {MapView, Location} from 'expo'
 import {REGION_DELTAS} from '../../constants'
+import PropTypes from 'prop-types'
 
 class MapScreen extends Component {
+  static propTypes = {
+    navigation: PropTypes.shape({
+      state: PropTypes.shape({
+        params: PropTypes.shape({
+          coords: PropTypes.object.isRequired
+        })
+      })
+    })
+  }
+
   static navigationOptions = ({navigation}) => {
     return ({
-      title: 'Location',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF'
-
+      title: 'Location'
     })
   }
 

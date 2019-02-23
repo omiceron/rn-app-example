@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {RectButton} from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import SegmentedCard from "./segmented-card"
-import { ROW_HEIGHT } from '../../constants'
+import {WHITE_TEXT_COLOR, ROW_HEIGHT, ACTIVE_TINT_COLOR} from '../../constants'
 
 class SwipeableCard extends Component {
   static propTypes = {
@@ -135,11 +135,11 @@ class SwipeableCard extends Component {
 const styles = StyleSheet.create({
   leftAction: {
     flex: 1,
-    backgroundColor: '#497AFC',
+    backgroundColor: ACTIVE_TINT_COLOR,
     justifyContent: 'center',
   },
   actionText: {
-    color: 'white',
+    color: WHITE_TEXT_COLOR,
     fontSize: 16,
     backgroundColor: 'transparent',
     padding: 10,

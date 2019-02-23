@@ -7,7 +7,10 @@ import TableSeparator from '../common/table-separator'
 import TableRow from '../common/table-row'
 import SegmentedCard from '../common/segmented-card'
 import TableView from '../common/table-view'
-import {AUTH_STORE, AVATAR_STORE, DEFAULT_BACKGROUND_COLOR, NAVIGATION_STORE, USER_STORE} from '../../constants'
+import {
+  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, USER_STORE,
+  WARNING_COLOR
+} from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
 
 // avatar photo
@@ -40,16 +43,9 @@ class Settings extends Component {
     })
   }
 
-  // async componentWillMount() {
-  // await this.props.auth.checkUserAvatar()
-  // await Expo.FileSystem.deleteAsync(localAvatar)
-  // console.log(await AsyncStorage.getItem(`user`).then(res => JSON.parse(res)))
-  // }
-
   render() {
     const {navigate} = this.props.navigation
     const {avatar, loading} = this.props.avatar
-    const {signOut} = this.props.auth
     const {
       firstName,
       lastName,
@@ -167,19 +163,21 @@ class Settings extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DEFAULT_BACKGROUND_COLOR
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: BLACK_TEXT_COLOR
+
   },
   textView: {
     flex: 1,
     justifyContent: 'space-around',
-    marginLeft: 10
+    marginLeft: 10,
   },
   redButton: {
-    color: '#E67',
+    color: WARNING_COLOR,
     textAlign: 'center'
   }
 })

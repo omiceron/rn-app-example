@@ -12,11 +12,6 @@ class PostFormScreen extends Component {
 
     return ({
       title: 'Add post',
-      headerStyle: {
-        backgroundColor: '#67E',
-        borderBottomWidth: 0
-      },
-      headerTintColor: '#FFF',
       headerLeft: <NavigationButton title = 'Cancel' onPress = {() => navigation.navigate('feed')}/>,
       headerRight: <NavigationButton title = 'Send' onPress = {sendPost}/>
     })

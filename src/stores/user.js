@@ -3,7 +3,7 @@ import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {AsyncStorage} from 'react-native'
 import {FileSystem} from 'expo'
-import {LOCAL_AVATAR_URI, PEOPLE_REFERENCE} from '../constants'
+import {CACHE_DIR, PEOPLE_REFERENCE} from '../constants'
 import {entitiesFromFB} from './utils'
 import {observer} from 'mobx-react'
 import {autorun} from 'mobx'
@@ -11,7 +11,7 @@ import {autorun} from 'mobx'
 class UserStore extends EntitiesStore {
   constructor(...args) {
     super(...args)
-
+    // console.log(this.getStore('people'))
     this.retrieveCachedUserData()
   }
 

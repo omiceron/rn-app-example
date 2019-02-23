@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
 import {AsyncStorage, ImageBackground, StyleSheet} from 'react-native'
-// import BackgroundImage from '../common/background-image'
+import {SplashScreen} from 'expo'
 import image from '../../../assets/images/splash.png'
+import {WHITE_BACKGROUND_COLOR} from '../../constants'
+import {LayoutAnimation} from 'react-native'
+
 
 class AuthLoadingScreen extends Component {
   componentWillMount() {
@@ -12,15 +15,14 @@ class AuthLoadingScreen extends Component {
     const user = await AsyncStorage.getItem('user')
     const initialRouteName = user ? 'app' : 'auth'
     this.props.navigation.navigate(initialRouteName)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    SplashScreen.hide()
   }
 
   render() {
-    // return <BackgroundImage/>
-    // return <View style = {{backgroundColor: 'black', flex: 1}}/>
     return <ImageBackground
       source = {image}
       resizeMode = 'contain'
-      // source = {require('../../../assets/images/splash.png')}
       style = {styles.container}
     />
   }
@@ -30,8 +32,8 @@ class AuthLoadingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff0c0'
-  },
+    backgroundColor: WHITE_BACKGROUND_COLOR
+  }
 })
 
 export default AuthLoadingScreen

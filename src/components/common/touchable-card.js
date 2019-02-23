@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native'
 import {RectButton} from 'react-native-gesture-handler'
 import BasicCard from './basic-card'
 import PropTypes from 'prop-types'
+import {UNDERLAY_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 class TouchableCard extends Component {
   static propTypes = {
@@ -16,7 +17,7 @@ class TouchableCard extends Component {
 
     return <RectButton
       style = {styles.container}
-      underlayColor = {'#F6F6F9'}
+      underlayColor = {UNDERLAY_COLOR}
       onLongPress = {onLongPress}
       onPress = {onPress}
       activeOpacity = {1}
@@ -30,7 +31,8 @@ class TouchableCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF'
+    // TODO
+    backgroundColor: WHITE_BACKGROUND_COLOR
   }
 })
 

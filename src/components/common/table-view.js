@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, ScrollView, Text} from 'react-native'
 import PropTypes from 'prop-types'
+import {WHITE_BACKGROUND_COLOR} from '../../constants'
 
 class TableView extends Component {
   static propTypes = {
@@ -47,7 +48,7 @@ class TableView extends Component {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: WHITE_BACKGROUND_COLOR,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(192,192,192,0.5)'

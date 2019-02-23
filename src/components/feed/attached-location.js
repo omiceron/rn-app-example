@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
+import {OFFLINE_COLOR} from '../../constants'
 
 class AttachedLocation extends Component {
   static propTypes = {
@@ -14,7 +15,7 @@ class AttachedLocation extends Component {
       <View style = {styles.container}>
 
         <View style = {styles.iconContainer}>
-          <Icon size = {20} color = 'rgba(127,127,127,1)' name = 'ios-pin'/>
+          <Icon size = {20} color = {OFFLINE_COLOR} name = 'ios-pin'/>
         </View>
 
         <View style = {styles.textContainer}>
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     // marginVertical: 8
   },
   text: {
-    color: 'rgba(127,127,127,1)',
+    color: OFFLINE_COLOR,
     fontSize: 16,
     fontWeight: '100'
   }

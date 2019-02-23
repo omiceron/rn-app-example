@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {MapView, Permissions, Location} from 'expo'
 import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {observer, inject} from 'mobx-react'
-import {FEED_STORE, HIT_SLOP, NAVIGATION_STORE, REGION_DELTAS} from '../../constants'
+import {
+  BLACK_TEXT_COLOR, FEED_STORE, HIT_SLOP, INACTIVE_TEXT_COLOR, NAVIGATION_STORE,
+  REGION_DELTAS
+} from '../../constants'
 import {observable, action} from 'mobx'
 import Loader from '../common/loader'
 
@@ -72,12 +75,12 @@ class LocationForm extends Component {
     if (!coords) return <Loader/>
 
     const renderIcon = () => <TouchableOpacity onPress = {this.handleSubmit} hitSlop = {HIT_SLOP}>
-      <Icon color = '#67E' size = {16} name = 'ios-pin'/>
+      <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
     </TouchableOpacity>
 
     return <TableView style = {styles.container}>
 
-      <TableRow RightComponent = {renderIcon}>
+      <TableRow>
         <TextInput
           style = {[styles.text]}
           placeholder = 'Type your address here'
@@ -90,18 +93,24 @@ class LocationForm extends Component {
         />
       </TableRow>
 
-      <MapView
-        ref = {ref => this.map = ref}
+      <KeyboardAvoidingView
         style = {styles.container}
-        initialRegion = {{...coords, ...REGION_DELTAS}}
-        // region = {{...coords, ...REGION_DELTAS}}
+        behavior = 'padding'
+        enabled
       >
-        <MapView.Marker
-          draggable
-          coordinate = {{...coords}}
-          onDragEnd = {(e) => setCoords(e.nativeEvent.coordinate)}
-        />
-      </MapView>
+        <MapView
+          ref = {ref => this.map = ref}
+          style = {styles.container}
+          initialRegion = {{...coords, ...REGION_DELTAS}}
+          // region = {{...coords, ...REGION_DELTAS}}
+        >
+          <MapView.Marker
+            draggable
+            coordinate = {{...coords}}
+            onDragEnd = {(e) => setCoords(e.nativeEvent.coordinate)}
+          />
+        </MapView>
+      </KeyboardAvoidingView>
 
     </TableView>
   }
@@ -113,7 +122,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '100',
+    color: BLACK_TEXT_COLOR
   }
 })
 
