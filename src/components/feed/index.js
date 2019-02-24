@@ -61,7 +61,7 @@ class Feed extends Component {
         // refreshing = {feed.loading}
         // onRefresh = {feed.refreshFeed}
         onEndReached = {feed.fetchPosts}
-        // initialNumToRender = {Number.MAX_SAFE_INTEGER}
+        initialNumToRender = {Number.MAX_SAFE_INTEGER}
         onEndReachedThreshold = {0.1}
         renderItem = {this.renderItem}
         // ItemSeparatorComponent = {ItemSeparatorComponent}

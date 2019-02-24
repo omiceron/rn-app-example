@@ -39,6 +39,7 @@ export const INACTIVE_TEXT_COLOR = '#898990'
 export const HIGHLIGHTED_TEXT_COLOR = '#94b5c2'
 
 export const FEED_CHUNK_LENGTH = 10
+export const CHATS_CHUNK_LENGTH = 8
 export const MESSAGES_CHUNK_LENGTH = 30
 
 export const LOGO = 'logo'

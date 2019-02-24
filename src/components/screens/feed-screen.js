@@ -13,7 +13,7 @@ class FeedScreen extends Component {
   static propTypes = {
     feed: PropTypes.shape({
       posts: PropTypes.array.isRequired,
-      loading: PropTypes.bool.isRequired,
+      loading: PropTypes.bool.isRequired
     })
   }
 
@@ -29,15 +29,12 @@ class FeedScreen extends Component {
   // }
 
   render() {
-    const {size, loading, loaded, lastPostKey} = this.props.feed
+    const {posts, loading, loaded} = this.props.feed
 
-    if (!lastPostKey) {
-      if (loaded) return null
-      return <Loader/>
-    }
-    // if (!size && (!loaded || loading)) return <Loader/>
+    if (!posts.length && (!loaded || loading)) return <Loader/>
 
-    return <Feed /*onLikeNumberPress = {this.handleOnLikeNumberPress}*//>
+    return <Feed/>
+    // return <Feed onLikeNumberPress = {this.handleOnLikeNumberPress}/>
   }
 
 }

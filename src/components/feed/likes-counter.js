@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   text: {
     // color: 'rgba(127,127,127,1)',
     fontSize: 16,
-    fontWeight: '100'
+    fontWeight: '300'
   }
 })
 
