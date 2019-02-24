@@ -45,7 +45,7 @@ class PersonCard extends Component {
       rightActions: [
         // {title: 'Info', color: '#C8C7CD', callback: openUserInfoScreen},
         {title: 'Info', color: '#eadcc1', callback: openUserInfoScreen},
-        {title: 'Photo', color: '#FFAB00', callback: getPhoto}
+        // {title: 'Photo', color: '#FFAB00', callback: getPhoto}
       ]
     }
 

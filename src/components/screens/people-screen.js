@@ -17,6 +17,8 @@ class PeopleListScreen extends Component {
     if (!people.loaded && !people.loading) people.fetchAllUsers()
   }
 
+
+  // TODO: loading behavior must depend on AsyncStorage
   render() {
     const {people} = this.props
     if (!people.size) return <Loader/>
