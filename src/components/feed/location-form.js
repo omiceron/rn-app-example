@@ -63,6 +63,7 @@ class LocationForm extends Component {
     this.props.feed.clearLocationForm()
   }
 
+  // TODO: Check this
   handleSubmit = async () => {
     const coords = await this.props.feed.getCoordsFromAddress()
     if (!coords) return
