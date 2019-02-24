@@ -33,7 +33,7 @@ class AuthStore extends BasicStore {
 
         await this.getStore(PEOPLE_STORE).fetchAllUsers()
         await this.getStore(FEED_STORE).fetchPosts()
-        this.getStore(MESSENGER_STORE).fetchChats()
+        await this.getStore(MESSENGER_STORE).fetchChats()
       }
     })
 

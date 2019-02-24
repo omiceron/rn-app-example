@@ -2,7 +2,7 @@ import {action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {
-  AVATAR_STORE, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE,
+  AVATAR_STORE, CHATS_CHUNK_LENGTH, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE,
   PEOPLE_STORE
 } from '../constants'
 
@@ -102,14 +102,14 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action fetchChats = () => {
+  @action fetchChats = async () => {
     if (this.loaded || this.loading) return
 
     console.log('FETCH CHATS:', 'start')
     this.loading = true
 
     const chunkShift = this.earliestFetchedChatTimestamp ? 1 : 0
-    const chunkLength = 8 + chunkShift
+    const chunkLength = CHATS_CHUNK_LENGTH + chunkShift
 
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
@@ -120,6 +120,8 @@ class MessengerStore extends EntitiesStore {
       !isEmpty && await this.appendFetchedChats(payload)
       this.loaded = isEmpty || currentChunkLength < chunkLength
       this.loading = false
+
+      return true
     })
 
     let ref = this.currentUserChatsReference
@@ -130,7 +132,7 @@ class MessengerStore extends EntitiesStore {
       ref = ref.endAt(this.earliestFetchedChatTimestamp)
     }
 
-    ref.once('value', callback)
+    return await ref.once('value').then(callback)
   }
 
   @action appendFetchedChats = async (payload) => {
