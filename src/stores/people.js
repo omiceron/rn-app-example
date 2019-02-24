@@ -38,6 +38,7 @@ class PeopleStore extends EntitiesStore {
 
   // TODO: flags?
   @action getUserLazily = async (userId) => {
+    console.log('PEOPLE:', 'getUserLazily')
     if (!this.entities[userId]) await this.refreshUser(userId)
     return this.entities[userId]
   }
@@ -55,6 +56,7 @@ class PeopleStore extends EntitiesStore {
   }
 
   @action refreshUser = async (userId) => {
+    console.log('PEOPLE:', 'refresh user')
     const callback = async (snapshot) => {
       return await
         this.convertUser({[userId]: snapshot.val()})
@@ -72,6 +74,7 @@ class PeopleStore extends EntitiesStore {
     return user
   }
 
+  // TODO: avatar to object {uri, cache}
   @action convertUsers = async (payload) => {
     return Promise.all(Object.entries(payload).map(async ([key, {chats, ...user}]) => {
       user.uid = key
@@ -82,7 +85,7 @@ class PeopleStore extends EntitiesStore {
     }))
   }
 
-  @action fetchAllUsers = () => {
+  @action fetchAllUsers = async () => {
     if (this.loaded || this.loading) return
 
     this.loading = true
@@ -101,14 +104,17 @@ class PeopleStore extends EntitiesStore {
       // this.entities = {...this.entities, ...users}
       //     await this.cacheEntities()
 
-
       // TODO: render issue
       await this.appendFetchedUsers(payload)
       this.loaded = true
       this.loading = false
+
+      return true
     })
 
-    this.reference.once('value', callback)
+    return await this.reference
+      .once('value')
+      .then(callback)
   }
 
   @action appendFetchedUsers = async (payload) => {

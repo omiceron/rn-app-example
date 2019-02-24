@@ -31,9 +31,9 @@ class AuthStore extends BasicStore {
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
 
+        await this.getStore(PEOPLE_STORE).fetchAllUsers()
+        await this.getStore(FEED_STORE).fetchPosts()
         this.getStore(MESSENGER_STORE).fetchChats()
-        this.getStore(MESSENGER_STORE).subscribeOnChats()
-        this.getStore(FEED_STORE).fetchPosts()
       }
     })
 

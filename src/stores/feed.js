@@ -71,7 +71,9 @@ class FeedStore extends EntitiesStore {
     return this.posts[this.size - 1]
   }
 
-  @action fetchPosts = () => {
+  @action fetchPosts = async () => {
+    console.log('FEED:', 'fetching posts started')
+
     if (this.loaded || this.loading) return
 
     this.loading = true
@@ -92,6 +94,7 @@ class FeedStore extends EntitiesStore {
       // console.log('!!!', 'loading = false')
       this.loading = false
 
+      return true
       // TODO: wtf?
     })
 
@@ -103,7 +106,8 @@ class FeedStore extends EntitiesStore {
       ref = ref.endAt(this.lastPostKey)
     }
 
-    ref.once('value', callback)
+    return await ref.once('value')
+      .then(callback)
 
   }
 
