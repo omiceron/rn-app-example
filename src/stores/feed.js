@@ -11,6 +11,7 @@ import {
 import loremIpsum from 'lorem-ipsum'
 import {Location} from 'expo'
 import {entitiesFromFB} from './utils'
+import {toJS} from 'mobx'
 
 class FeedStore extends EntitiesStore {
 
@@ -111,22 +112,43 @@ class FeedStore extends EntitiesStore {
 
   }
 
+  cacheFeed = async () => {
+    const posts = this.posts
+      .slice(0, FEED_CHUNK_LENGTH)
+      .reduce((acc, post) => ({...acc, [post.uid]: toJS(post)}), {})
+
+    return await this.cache(posts)
+  }
+
   @action appendFetchedPosts = async (payload) => {
     // console.log('!!!', 'start append')
-    // Object.entries(payload).forEach(([postId, post]) => this.appendPost(postId, post))
     const posts = await this.convertPosts(payload)
-      .then(posts => posts.reduce((acc, post) => {
-        if (!this.entities[post.uid]) {
-          acc[post.uid] = post
-        }
-        return acc
-        // return {...acc, [post.uid]: post}
-      }, {}))
+      .then(posts => posts.reduce((acc, post) => ({...acc, [post.uid]: post}), {}))
 
     this.entities = {...this.entities, ...posts}
-
-    // console.log('!!!', 'end append')
+    await this.cacheFeed()
+    return true
   }
+
+  // feed structure:
+  //
+  // [postId]: {
+  //   title: string
+  //   text: string
+  //   coords: ?obj
+  //   location: ?string
+  //   likesNumber: number
+  //   isLiked: bool
+  //   uid: [postId]
+  //   key: [postId]
+  //   user: obj
+  //   timestamp: number
+  //   likes: ?obj {
+  //     [likeId]: {
+  //       userId: string
+  //     }
+  //   }
+  // }
 
   // TODO: maybe fetch user too?
   convertPosts = async (payload) => {
@@ -166,20 +188,20 @@ class FeedStore extends EntitiesStore {
 
     this.entities[postId] = post
 
+    await this.cacheFeed()
+
+    return true
+
   }
 
   @action refreshPost = async (postId) => {
     const callback = async (snapshot) => {
       const post = snapshot.val()
-      // TODO: postId?
       const postId = snapshot.key
-      // post.uid = snapshot.key
-
-      // this.appendPost(post)
-      await this.appendPost(postId, post)
+      return await this.appendPost(postId, post)
     }
 
-    await this.reference
+    return await this.reference
       .child(postId)
       .once('value').then(callback)
 
@@ -310,7 +332,7 @@ class FeedStore extends EntitiesStore {
       return
     }
 
-    this.setCoords(coords)
+    await this.setCoords(coords)
 
     return coords
   }
