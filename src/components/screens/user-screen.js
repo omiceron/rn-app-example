@@ -16,7 +16,7 @@ class UserScreen extends Component {
 
   async componentWillMount() {
     const {userId} = this.props.navigation.state.params
-    this.user = await this.props.people.refreshUser(userId)
+    this.user = await this.props.people.getUserGreedily(userId)
   }
 
   render() {
