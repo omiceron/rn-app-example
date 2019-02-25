@@ -66,7 +66,7 @@ class Feed extends Component {
         renderItem = {this.renderItem}
         // ItemSeparatorComponent = {ItemSeparatorComponent}
         ListFooterComponent = {feed.loading && ListLoader}
-        ListHeaderComponent = {<View style = {{height: 8}}/>}
+        // ListHeaderComponent = {<View style = {{height: 8}}/>}
       />
     </SafeAreaView>
   }
