@@ -29,7 +29,8 @@ class AuthStore extends BasicStore {
         AsyncStorage.getAllKeys().then(console.log)
         this.getStore(USER_STORE).startPresenceWatcher()
         this.getStore(USER_STORE).subscribeOnUserData(user.uid)
-        this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
+        this.getStore(AVATAR_STORE).subscribeOnUserAvatar()
+        this.getStore(MESSENGER_STORE).subscribeOnChats()
 
         await this.getStore(PEOPLE_STORE).fetchAllUsers()
         await this.getStore(FEED_STORE).fetchPosts()
