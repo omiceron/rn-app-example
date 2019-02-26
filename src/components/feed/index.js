@@ -49,7 +49,7 @@ class Feed extends Component {
   }
 
   render() {
-    console.log('!!!', 'render')
+    // console.log('!!!', 'render')
     const {feed} = this.props
     // const {onLikeNumberPress} = this.props
 
