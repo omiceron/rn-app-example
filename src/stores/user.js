@@ -27,6 +27,11 @@ class UserStore extends EntitiesStore {
   }
 
   @computed
+  get currentUserId() {
+    return this.entities.uid
+  }
+
+  @computed
   get lastName() {
     return this.entities.lastName
   }
@@ -101,8 +106,8 @@ class UserStore extends EntitiesStore {
           return
         }
 
-        const {firstName, lastName, userInfo} = JSON.parse(res)
-        this.entities = {firstName, lastName, userInfo}
+        const {firstName, lastName, userInfo, uid} = JSON.parse(res)
+        this.entities = {firstName, lastName, userInfo, uid}
         this.loaded = true
       })
       .catch(err => console.log('AsyncStorage error'))
