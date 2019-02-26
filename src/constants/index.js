@@ -39,7 +39,7 @@ export const INACTIVE_TEXT_COLOR = '#898990'
 export const HIGHLIGHTED_TEXT_COLOR = '#94b5c2'
 
 export const FEED_CHUNK_LENGTH = 10
-export const CHATS_CHUNK_LENGTH = 8
+export const CHATS_CHUNK_LENGTH = 7
 export const MESSAGES_CHUNK_LENGTH = 30
 
 export const LOGO = 'logo'
@@ -59,7 +59,7 @@ export const HEIGHT = '-height'
 export const AUTH_STORE = 'auth'
 export const KEYBOARD_STORE = 'keyboard'
 export const NAVIGATION_STORE = 'navigation'
-export const USER_STORE = 'user'
+export const CURRENT_USER_STORE = 'currentUser'
 export const PEOPLE_STORE = 'people'
 export const EVENTS_STORE = 'events'
 export const AVATAR_STORE = 'avatar'

@@ -2,7 +2,7 @@ import EntitiesStore from './entities-store'
 import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
-import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
+import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, CURRENT_USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
 import path from 'path'
 import {FileSystem} from 'expo'
 import {alphabetic, urlToBlob} from './utils'
@@ -38,7 +38,7 @@ class PeopleStore extends EntitiesStore {
 
   // TODO: flags?
   @action getUserLazily = async (userId) => {
-    console.log('PEOPLE:', 'getUserLazily')
+    // console.log('PEOPLE:', 'getUserLazily')
     if (!this.entities[userId]) await this.refreshUser(userId)
     return this.entities[userId]
   }
@@ -190,7 +190,7 @@ class PeopleStore extends EntitiesStore {
     await ref.put(file)
     const avatar = await ref.getDownloadURL()
 
-    await this.getStore(USER_STORE).updatePerson(userId, {avatar})
+    await this.getStore(CURRENT_USER_STORE).updatePerson(userId, {avatar})
   }
 
 }

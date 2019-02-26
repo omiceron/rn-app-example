@@ -4,7 +4,7 @@ import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 import {
   AUTH_STORE, INFO_COLOR, MESSENGER_STORE, INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR, ROW_HEIGHT,
-  USER_STORE, WARNING_COLOR
+  CURRENT_USER_STORE, WARNING_COLOR
 } from '../../constants'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {getTime} from '../../stores/utils'
@@ -13,6 +13,7 @@ import {observable, action} from 'mobx'
 import SegmentedCard from '../common/segmented-card'
 
 @inject(AUTH_STORE)
+@inject(CURRENT_USER_STORE)
 @inject(MESSENGER_STORE)
 @observer
 class ChatCard extends Component {
@@ -57,7 +58,7 @@ class ChatCard extends Component {
   }
 
   render() {
-    let {
+    const {
       currentUserId,
       openChatScreen,
       openUserInfoScreen,
@@ -77,7 +78,7 @@ class ChatCard extends Component {
     console.log('render chat', firstName)
 
     const {text, user: lastMessageUserId} = lastMessage
-    const isCurrentUser = userId === lastMessageUserId
+    const isCurrentUser = this.props.currentUser.currentUserId === lastMessageUserId
 
     // TODO Color
     if (this.isArchived) return <View style = {{backgroundColor: '#497AFC', height: 76}}/>

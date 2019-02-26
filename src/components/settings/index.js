@@ -8,7 +8,7 @@ import TableRow from '../common/table-row'
 import SegmentedCard from '../common/segmented-card'
 import TableView from '../common/table-view'
 import {
-  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, USER_STORE,
+  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE,
   WARNING_COLOR
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
@@ -17,7 +17,7 @@ import {string, func, shape, bool} from 'prop-types'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
-@inject(USER_STORE)
+@inject(CURRENT_USER_STORE)
 @inject(AVATAR_STORE)
 @observer
 class Settings extends Component {
@@ -28,7 +28,7 @@ class Settings extends Component {
     auth: shape({
       signOut: func.isRequired
     }),
-    user: shape({
+    currentUser: shape({
       firstName: string.isRequired,
       lastName: string,
       userInfo: string,
@@ -54,7 +54,7 @@ class Settings extends Component {
       setFirstName,
       setUserInfo,
       updateUserData
-    } = this.props.user
+    } = this.props.currentUser
 
     const LeftComponent = () =>
       <CurrentUserAvatar
