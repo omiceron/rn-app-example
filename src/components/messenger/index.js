@@ -24,7 +24,7 @@ class Messenger extends Component {
       })
     }),
     messenger: shape({
-      // orderedChats: array.isRequired
+      // chats: array.isRequired
     })
   }
 
@@ -47,7 +47,7 @@ class Messenger extends Component {
 
   render() {
     const {messenger} = this.props
-    const chats = messenger.orderedChats
+    const chats = messenger.chats
 
     if (!chats.length) return <EmptyList/>
     return <SafeAreaView style = {styles.container}>
