@@ -40,8 +40,6 @@ class EntitiesStore extends BasicStore {
 
   cache = async (obj) => {
     console.log('cached!')
-    // console.log(obj)
-    // console.log(Object.values(toJS(obj)).sort((a, b) => b.timestamp - a.timestamp).slice(0, 10).reduce((acc, c) => ({...acc, [c.key]: c}), {}))
     return await AsyncStorage.setItem(`meowchat:store:${this.storeName}`, JSON.stringify(toJS(obj)))
   }
 
@@ -56,7 +54,7 @@ class EntitiesStore extends BasicStore {
       .then(JSON.parse)
 
     if (!cachedEntities) {
-      console.log('CACHE:', 'get entities from store', this.storeName)
+      console.log('CACHE:', 'no cached entities from store', this.storeName)
       return
     }
 
