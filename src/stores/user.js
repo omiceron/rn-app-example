@@ -9,11 +9,6 @@ import {observer} from 'mobx-react'
 import {autorun} from 'mobx'
 
 class UserStore extends EntitiesStore {
-  constructor(...args) {
-    super(...args)
-    // console.log(this.getStore('people'))
-    this.retrieveCachedUserData()
-  }
 
   get currentUserReference() {
     return firebase.database()
@@ -24,6 +19,11 @@ class UserStore extends EntitiesStore {
   @computed
   get firstName() {
     return this.entities.firstName
+  }
+
+  @computed
+  get currentUserId() {
+    return this.entities.uid || this.user.uid
   }
 
   @computed
@@ -52,20 +52,21 @@ class UserStore extends EntitiesStore {
       .then(() => console.log('User data has been successfully updated'))
   }
 
-  @action subscribeOnUserData = (uid) => {
+  @action subscribeOnUserData = () => {
     console.log('Subscribed on user data changes...')
 
-    const callback = action(data => {
+    const callback = action(async (snapshot) => {
       this.loading = true
 
-      const {firstName = null, lastName = null, userInfo = null} = data.val() || {}
+      const {firstName, lastName, userInfo} = snapshot.val() || {}
+      const uid = snapshot.key
 
-      this.entities = {...this.entities, firstName, lastName, userInfo}
+      this.entities = {...this.entities, firstName, lastName, userInfo, uid}
 
-      this.cacheUserData({uid, firstName, lastName, userInfo}).catch(console.error)
+      await this.cacheEntities()
 
       this.loading = false
-      this.loaded = true
+      // this.loaded = true
 
       console.log('User data updated')
 
@@ -73,10 +74,6 @@ class UserStore extends EntitiesStore {
 
     this.currentUserReference.on('value', callback)
 
-  }
-
-  cacheUserData = async (data) => {
-    await AsyncStorage.mergeItem('user', JSON.stringify(data)).catch(console.error)
   }
 
   startPresenceWatcher = () => {
@@ -91,21 +88,6 @@ class UserStore extends EntitiesStore {
 
     firebase.database().ref('.info/connected')
       .on('value', callback)
-  }
-
-  @action retrieveCachedUserData = () => {
-    AsyncStorage.getItem('user')
-      .then(res => {
-        if (!res) {
-          console.log('There is no cached user')
-          return
-        }
-
-        const {firstName, lastName, userInfo} = JSON.parse(res)
-        this.entities = {firstName, lastName, userInfo}
-        this.loaded = true
-      })
-      .catch(err => console.log('AsyncStorage error'))
   }
 
   async updatePerson(uid, data) {

@@ -1,9 +1,9 @@
-import React, {Component, PureComponent} from 'react';
+import React, {Component, PureComponent} from 'react'
 import {Animated, StyleSheet, Text, View} from 'react-native'
 import PropTypes from 'prop-types'
 import {RectButton} from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
-import SegmentedCard from "./segmented-card"
+import SegmentedCard from './segmented-card'
 import {WHITE_TEXT_COLOR, ROW_HEIGHT, ACTIVE_TINT_COLOR} from '../../constants'
 
 class SwipeableCard extends Component {
@@ -12,7 +12,7 @@ class SwipeableCard extends Component {
     rightActions: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       color: PropTypes.string.isRequired,
-      callback: PropTypes.func.isRequired,
+      callback: PropTypes.func.isRequired
     })),
     leftAction: PropTypes.func,
     onSwipeableLeftOpen: PropTypes.func
@@ -25,7 +25,7 @@ class SwipeableCard extends Component {
 
     const translateX = dragX.interpolate({
       inputRange: [0, 50, 100, 101],
-      outputRange: [-20, 0, 0, 1],
+      outputRange: [-20, 0, 0, 1]
     })
 
     const onPressHandler = () => {
@@ -51,7 +51,7 @@ class SwipeableCard extends Component {
   renderRightAction = (title, color, x, progress, onPress, key) => {
     const translateX = progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [x, 0],
+      outputRange: [x, 0]
     })
 
     const onPressHandler = () => {
@@ -84,7 +84,6 @@ class SwipeableCard extends Component {
     </View>
   }
 
-
   updateRef = ref => {
     this._swipeableRow = ref
   }
@@ -116,41 +115,38 @@ class SwipeableCard extends Component {
       friction = {1}
       leftThreshold = {30}
       rightThreshold = {40}
-      // overshootLeft = {false}
-      // overshootRight = {false}
+      overshootLeft = {false}
+      overshootRight = {false}
       onSwipeableLeftOpen = {this.onSwipeableLeftOpen}
       renderLeftActions = {renderLeftActions || this.renderLeftActions}
       renderRightActions = {renderRightActions || this.renderRightActions}
     >
-      {/*<RectButton {...rest}>*/}
       <SegmentedCard {...rest}>
         {children}
-      {/*</RectButton>*/}
       </SegmentedCard>
     </Swipeable>
   }
 }
 
-
 const styles = StyleSheet.create({
   leftAction: {
     flex: 1,
     backgroundColor: ACTIVE_TINT_COLOR,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   actionText: {
     color: WHITE_TEXT_COLOR,
     fontSize: 16,
     backgroundColor: 'transparent',
     padding: 10,
-    fontWeight: '600',
+    fontWeight: '600'
 
   },
   rightAction: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'
+  }
 })
 
 export default SwipeableCard

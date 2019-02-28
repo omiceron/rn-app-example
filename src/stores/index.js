@@ -16,13 +16,13 @@ import {
   EVENTS_STORE,
   MESSENGER_STORE,
   PEOPLE_STORE,
-  USER_STORE,
+  CURRENT_USER_STORE,
   FEED_STORE
 } from "../constants"
 
 const stores = {}
 
-stores[USER_STORE] = new UserStore(stores, USER_STORE)
+stores[CURRENT_USER_STORE] = new UserStore(stores, CURRENT_USER_STORE)
 stores[FEED_STORE] = new FeedStore(stores, FEED_STORE)
 stores[KEYBOARD_STORE] = new KeyboardStore(stores, KEYBOARD_STORE)
 stores[AVATAR_STORE] = new UserAvatarStore(stores, AVATAR_STORE)

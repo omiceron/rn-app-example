@@ -24,9 +24,9 @@ class MessengerScreen extends Component {
   })
 
   render() {
-    const {loading, loaded, size} = this.props.messenger
+    const {loading, loaded, chats} = this.props.messenger
 
-    if (size <= 1 && (!loaded || loading)) return <Loader/>
+    if (!chats.length && (!loaded || loading)) return <Loader/>
 
     return <Messenger
       openUserInfoScreen = {this.openUserInfoScreen}

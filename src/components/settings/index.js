@@ -8,16 +8,14 @@ import TableRow from '../common/table-row'
 import SegmentedCard from '../common/segmented-card'
 import TableView from '../common/table-view'
 import {
-  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, USER_STORE,
+  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE,
   WARNING_COLOR
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
 
-// avatar photo
-
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
-@inject(USER_STORE)
+@inject(CURRENT_USER_STORE)
 @inject(AVATAR_STORE)
 @observer
 class Settings extends Component {
@@ -28,7 +26,7 @@ class Settings extends Component {
     auth: shape({
       signOut: func.isRequired
     }),
-    user: shape({
+    [CURRENT_USER_STORE]: shape({
       firstName: string.isRequired,
       lastName: string,
       userInfo: string,
@@ -46,15 +44,8 @@ class Settings extends Component {
   render() {
     const {navigate} = this.props.navigation
     const {avatar, loading} = this.props.avatar
-    const {
-      firstName,
-      lastName,
-      userInfo,
-      setLastName,
-      setFirstName,
-      setUserInfo,
-      updateUserData
-    } = this.props.user
+    // const currentUser = this.props[CURRENT_USER_STORE]
+    const {currentUser} = this.props
 
     const LeftComponent = () =>
       <CurrentUserAvatar
@@ -74,10 +65,10 @@ class Settings extends Component {
             placeholder = 'First Name'
             textContentType = 'givenName'
             returnKeyType = 'next'
-            defaultValue = {firstName}
-            onChangeText = {setFirstName}
+            defaultValue = {currentUser.firstName}
+            onChangeText = {currentUser.setFirstName}
             onSubmitEditing = {() => this.lastNameRef.focus()}
-            onBlur = {updateUserData}
+            onBlur = {currentUser.updateUserData}
           />
 
           <Separator leftIndent = {0}/>
@@ -88,10 +79,10 @@ class Settings extends Component {
             placeholder = 'Last Name'
             textContentType = 'familyName'
             returnKeyType = 'next'
-            defaultValue = {lastName}
-            onChangeText = {setLastName}
+            defaultValue = {currentUser.lastName}
+            onChangeText = {currentUser.setLastName}
             onSubmitEditing = {() => this.infoRef.focus()}
-            onBlur = {updateUserData}
+            onBlur = {currentUser.updateUserData}
           />
         </SegmentedCard>
       </TableView>
@@ -117,9 +108,9 @@ class Settings extends Component {
             style = {styles.text}
             placeholder = 'Info'
             returnKeyType = 'done'
-            defaultValue = {userInfo}
-            onChangeText = {setUserInfo}
-            onBlur = {updateUserData}
+            defaultValue = {currentUser.userInfo}
+            onChangeText = {currentUser.setUserInfo}
+            onBlur = {currentUser.updateUserData}
           />
         </TableRow>
       </TableView>
@@ -174,7 +165,7 @@ const styles = StyleSheet.create({
   textView: {
     flex: 1,
     justifyContent: 'space-around',
-    marginLeft: 10,
+    marginLeft: 10
   },
   redButton: {
     color: WARNING_COLOR,

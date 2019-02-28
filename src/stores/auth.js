@@ -6,7 +6,7 @@ import validator from 'validator'
 import {
   PEOPLE_STORE,
   AVATAR_STORE,
-  USER_STORE,
+  CURRENT_USER_STORE,
   FEED_STORE,
   MESSENGER_STORE,
   NAVIGATION_STORE
@@ -27,9 +27,10 @@ class AuthStore extends BasicStore {
 
       if (user) {
         AsyncStorage.getAllKeys().then(console.log)
-        this.getStore(USER_STORE).startPresenceWatcher()
-        this.getStore(USER_STORE).subscribeOnUserData(user.uid)
-        this.getStore(AVATAR_STORE).subscribeOnUserAvatar(user.uid)
+        this.getStore(CURRENT_USER_STORE).startPresenceWatcher()
+        this.getStore(CURRENT_USER_STORE).subscribeOnUserData(user.uid)
+        this.getStore(AVATAR_STORE).subscribeOnUserAvatar()
+        this.getStore(MESSENGER_STORE).subscribeOnChats()
 
         await this.getStore(PEOPLE_STORE).fetchAllUsers()
         await this.getStore(FEED_STORE).fetchPosts()
@@ -137,14 +138,14 @@ class AuthStore extends BasicStore {
   }
 
   async checkUser() {
-    const {firstName} = this || this.getStore(USER_STORE)
+    const {firstName} = this || this.getStore(CURRENT_USER_STORE)
     return firebase.functions().httpsCallable('checkUser')({firstName})
 
   }
 
   signOut = async () => {
     this.clear()
-    const stores = [MESSENGER_STORE, AVATAR_STORE, USER_STORE, FEED_STORE, PEOPLE_STORE]
+    const stores = [MESSENGER_STORE, AVATAR_STORE, CURRENT_USER_STORE, FEED_STORE, PEOPLE_STORE]
     stores.forEach(store => this.getStore(store).off())
     // AsyncStorage.removeItem('user')
     await firebase.auth().signOut()
