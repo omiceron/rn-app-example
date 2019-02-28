@@ -33,7 +33,7 @@ class SwipeableCard extends Component {
       leftAction()
     }
 
-    return leftAction && <RectButton
+    return <RectButton
       style = {styles.leftAction}
       onPress = {onPressHandler}
     >
@@ -48,10 +48,11 @@ class SwipeableCard extends Component {
     </RectButton>
   }
 
-  renderRightAction = (title, color, x, progress, onPress, key) => {
+  renderRightAction = (title, color, x, progress, onPress, key, dragX) => {
     const translateX = progress.interpolate({
       inputRange: [0, 1],
-      outputRange: [x, 0]
+      outputRange: [x, 0],
+      extrapolate: 'clamp'
     })
 
     const onPressHandler = () => {
@@ -70,16 +71,16 @@ class SwipeableCard extends Component {
     </Animated.View>
   }
 
-  renderRightActions = (progress) => {
+  renderRightActions = (progress, dragX) => {
     const {rightActionWidth = ROW_HEIGHT, rightActions} = this.props
 
     if (!rightActions) return null
 
     const width = rightActionWidth * rightActions.length
 
-    return rightActions && <View style = {{width, flexDirection: 'row'}}>
-      {rightActions.map(({title, color, x, callback}, i) =>
-        this.renderRightAction(title, color, width - rightActionWidth * i, progress, callback, i)
+    return <View style = {{width, flexDirection: 'row'}}>
+      {rightActions.map(({title, color, callback}, i) =>
+        this.renderRightAction(title, color, width - rightActionWidth * i, progress, callback, i, dragX)
       )}
     </View>
   }
@@ -115,8 +116,8 @@ class SwipeableCard extends Component {
       friction = {1}
       leftThreshold = {30}
       rightThreshold = {40}
-      overshootLeft = {false}
-      overshootRight = {false}
+      // overshootLeft = {false}
+      // overshootRight = {false}
       onSwipeableLeftOpen = {this.onSwipeableLeftOpen}
       renderLeftActions = {renderLeftActions || this.renderLeftActions}
       renderRightActions = {renderRightActions || this.renderRightActions}

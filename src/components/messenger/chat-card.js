@@ -4,7 +4,7 @@ import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 import {
   AUTH_STORE, INFO_COLOR, MESSENGER_STORE, INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR, ROW_HEIGHT,
-  CURRENT_USER_STORE, WARNING_COLOR
+  CURRENT_USER_STORE, WARNING_COLOR, ACTIVE_TINT_COLOR
 } from '../../constants'
 import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {getTime} from '../../stores/utils'
@@ -81,7 +81,7 @@ class ChatCard extends Component {
     const isCurrentUser = this.props.currentUser.currentUserId === lastMessageUserId
 
     // TODO Color
-    if (this.isArchived) return <View style = {{backgroundColor: '#497AFC', height: 76}}/>
+    if (this.isArchived) return <View style = {{backgroundColor: ACTIVE_TINT_COLOR, height: 76}}/>
 
     return <SwipeableCard
       onPress = {openChatScreen.bind(null, userId)}
