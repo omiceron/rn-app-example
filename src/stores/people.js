@@ -146,7 +146,7 @@ class PeopleStore extends EntitiesStore {
         this.entities[userId].avatarCacheControl = null
         this.entities[userId].avatar = null
       }
-      return
+      return {}
     }
     const avatarsDirectory = path.join(CACHE_DIR, AVATARS_STORAGE_REFERENCE)
 
