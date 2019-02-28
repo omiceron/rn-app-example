@@ -23,8 +23,12 @@ class SettingsScreen extends Component {
   })
 
   render() {
-    return this.props.currentUser.loaded ? <Settings /*onPress = {this.handlePress}*//> : <Loader/>
+    return this.props.currentUser.size ? <Settings/> : <Loader/>
   }
+
+  // render() {
+  //   return this.props.currentUser.loaded ? <Settings /*onPress = {this.handlePress}*//> : <Loader/>
+  // }
 
   // handlePress = () => {
   //   this.props.navigation.navigate('userPhoto')
