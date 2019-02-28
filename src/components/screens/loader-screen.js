@@ -12,7 +12,8 @@ class AuthLoadingScreen extends Component {
   }
 
   bootstrapAsync = async () => {
-    const user = await AsyncStorage.getItem('user')
+    const user = await AsyncStorage.getItem('meowchat:store:currentUser')
+    // const initialRouteName = user ? 'Example' : 'auth'
     const initialRouteName = user ? 'app' : 'auth'
     this.props.navigation.navigate(initialRouteName)
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
