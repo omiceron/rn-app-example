@@ -102,14 +102,14 @@ class MessengerStore extends EntitiesStore {
     console.log('SUBSCRIBE ON CHATS:', 'start')
 
     const callback = async (snapshot) => {
-      const payload = snapshot.val() || {}
+      const payload = snapshot.val()
+
+      if (!payload) return
 
       // TODO: loading?
       console.log('SUBSCRIBE ON CHATS:', 'get data')
 
-      await this.convertChat(payload)
-        .then(this.appendChat)
-
+      await this.convertChat(payload).then(this.appendChat)
       this.setTimestamp(payload)
     }
 
@@ -142,18 +142,13 @@ class MessengerStore extends EntitiesStore {
       const payload = snapshot.val() || {}
 
       const currentChunkLength = Object.values(payload).filter(x => x.lastMessage).length
-      // const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
-
-      // console.log(this.user.uid, isEmpty, Object.values(payload).map(x => [!!x.lastMessage, x.chatId]))
 
       this.setTimestamp(payload)
 
       !isEmpty && await this.appendFetchedChats(payload)
       this.loaded = isEmpty || currentChunkLength < chunkLength
       this.loading = false
-
-      console.log(chunkShift, currentChunkLength, chunkLength, this.loaded, isEmpty, currentChunkLength < chunkLength)
 
       return true
     })
@@ -174,8 +169,6 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action appendFetchedChats = async (payload) => {
-    // const {fetchUserInfo} = this.getStore(PEOPLE_STORE)
-
     // Object.entries(payload).forEach(async ([key, chat]) => {
     //   if (!this.entities[chat.chatId]) {
     //     chat.user = await fetchUserInfo(chat.userId)
@@ -198,21 +191,89 @@ class MessengerStore extends EntitiesStore {
     //     }, {}
     //   ))
 
+    // TODO: handle condition
     const chats = await
       this.convertChats(payload)
-        .then(chats => chats.reduce((acc, chat) => {
-          // TODO: handle this condition
-          // if (!this.entities[chat.chatId]) {
-            acc[chat.chatId] = chat
-          // }
-          return acc
-        }, {}))
+        .then(chats => chats.reduce((acc, chat) => ({...acc, [chat.chatId]: chat}), {}))
 
     this.entities = {...this.entities, ...chats}
 
     await this.cacheMessenger()
 
     return true
+  }
+
+  convertChat = async (payload) => {
+    const [chat] = await this.convertChats(payload)
+
+    // const people = this.getStore(PEOPLE_STORE)
+    // const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
+    // chat.loaded = !chat.lastMessage
+    // chat.user = await people.getUserLazily(chat.userId)
+
+    return chat
+  }
+
+  convertChats = async (payload) => {
+    const people = this.getStore(PEOPLE_STORE)
+
+    return Promise.all(Object.entries(payload).map(async ([key, chat]) => {
+      chat.user = await people.getUserLazily(chat.userId)
+      chat.loaded = !chat.lastMessage
+
+      return ({...chat, key})
+    }))
+  }
+
+  @action appendChat = async (chat) => {
+    const oldChat = this.entities[chat.chatId] || {}
+    this.entities[chat.chatId] = {...oldChat, ...chat}
+    await this.cacheMessenger()
+    return chat
+  }
+
+  // TODO: add sync
+  getChatWith = async (userId, user) => {
+    console.log('GET CHAT:', 'checking chat')
+
+    const callback = async (snapshot) => {
+      if (snapshot.exists()) {
+        const chat = await this.convertChat(snapshot.val())
+        console.log('GET CHAT:', 'chat UID is', chat.chatId)
+
+        await this.appendChat(chat)
+
+        return chat.chatId
+      } else {
+        console.log('GET CHAT:', 'there is no chat with user', userId, 'yet')
+        return null
+      }
+    }
+
+    return await this.currentUserChatsReference
+      .orderByChild('userId')
+      .equalTo(userId)
+      .once('value')
+      .then(callback)
+  }
+
+  createChatWith = async (userId) => {
+    console.log('CREATE CHAT:', 'start')
+
+    const {chatId, key} = await
+      firebase
+        .functions()
+        .httpsCallable('createChatWith')({userId})
+        .then(res => res.data)
+        .catch(console.error)
+
+    console.log('CREATE CHAT:', 'chat created', chatId)
+
+    await this.appendChat({chatId, userId, key, messages: {}, loaded: true})
+
+    console.log('CREATE CHAT:', 'chat appended')
+
+    return chatId
   }
 
   @action subscribeOnMessages = (chatId) => {
@@ -286,35 +347,6 @@ class MessengerStore extends EntitiesStore {
         this.appendMessage(chatId, {...message, userId: message.user, key}))
   }
 
-  convertChat = async (payload) => {
-    const [chat] = await this.convertChats(payload)
-
-    // const people = this.getStore(PEOPLE_STORE)
-    // const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
-    // chat.loaded = !chat.lastMessage
-    // chat.user = await people.getUserLazily(chat.userId)
-
-    return chat
-  }
-
-  convertChats = async (payload) => {
-    const people = this.getStore(PEOPLE_STORE)
-
-    return Promise.all(Object.entries(payload).map(async ([key, chat]) => {
-      chat.user = await people.getUserLazily(chat.userId)
-      chat.loaded = !chat.lastMessage
-
-      return ({...chat, key})
-    }))
-  }
-
-  @action appendChat = async (chat) => {
-    const oldChat = this.entities[chat.chatId] || {}
-    this.entities[chat.chatId] = {...oldChat, ...chat}
-    await this.cacheMessenger()
-    return chat
-  }
-
   // TODO: change temporary message uid to actual
   @action appendMessage = (chatId, message) => {
     // console.log('APPEND MESSAGE:', 'start')
@@ -331,50 +363,6 @@ class MessengerStore extends EntitiesStore {
     this.entities[chatId].messages[message.key] = message
 
     // console.log('APPEND MESSAGE:', 'message appended')
-  }
-
-  // TODO: add sync
-  getChatWith = async (userId, user) => {
-    console.log('GET CHAT:', 'checking chat')
-
-    const callback = async (snapshot) => {
-      if (snapshot.exists()) {
-        const chat = await this.convertChat(snapshot.val())
-        console.log('GET CHAT:', 'chat UID is', chat.chatId)
-
-        await this.appendChat(chat)
-
-        return chat.chatId
-      } else {
-        console.log('GET CHAT:', 'there is no chat with user', userId, 'yet')
-        return null
-      }
-    }
-
-    return await this.currentUserChatsReference
-      .orderByChild('userId')
-      .equalTo(userId)
-      .once('value')
-      .then(callback)
-  }
-
-  createChatWith = async (userId) => {
-    console.log('CREATE CHAT:', 'start')
-
-    const {chatId, key} = await
-      firebase
-        .functions()
-        .httpsCallable('createChatWith')({userId})
-        .then(res => res.data)
-        .catch(console.error)
-
-    console.log('CREATE CHAT:', 'chat created', chatId)
-
-    await this.appendChat({chatId, userId, key, messages: {}, loaded: true})
-
-    console.log('CREATE CHAT:', 'chat appended')
-
-    return chatId
   }
 
   sendMessage = (text, chatId) => {
