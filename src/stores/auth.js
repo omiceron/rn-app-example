@@ -217,7 +217,7 @@ class AuthStore extends BasicStore {
       } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
       if (isNewUser) {
-        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
+        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
       }
 
       this.getStore(NAVIGATION_STORE).navigate('app')
