@@ -6,6 +6,7 @@ import Loader from '../common/loader'
 import NavigationButton from '../navigation/navigation-button'
 import PropTypes from 'prop-types'
 import {DEFAULT_HEADER_COLOR} from '../../constants'
+import EmptyList from '../common/empty-list'
 
 @inject(FEED_STORE)
 @observer
@@ -32,6 +33,7 @@ class FeedScreen extends Component {
     const {posts, loading, loaded} = this.props.feed
 
     if (!posts.length && (!loaded || loading)) return <Loader/>
+    if (!posts.length) return <EmptyList title = {'There are no posts yet...'}/>
 
     return <Feed/>
     // return <Feed onLikeNumberPress = {this.handleOnLikeNumberPress}/>

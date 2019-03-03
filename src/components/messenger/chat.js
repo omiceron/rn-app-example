@@ -19,7 +19,7 @@ import {
   WHITE_BACKGROUND_COLOR, WHITE_TEXT_COLOR
 } from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
-import EmptyList from './empty-list'
+import EmptyList from '../common/empty-list'
 import {reaction} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 
@@ -100,7 +100,7 @@ class Chat extends Component {
     return <SafeAreaView style = {styles.container}>
       {messenger.isChatLoading(chatId) && <ActivityIndicator/>}
       {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
-        <EmptyList/> : this.renderMessagesList()}
+        <EmptyList title = {'You have no messages yet...'}/> : this.renderMessagesList()}
 
       <KeyboardAvoidingView
         behavior = 'padding'
