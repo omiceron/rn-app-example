@@ -41,6 +41,7 @@ class AuthStore extends BasicStore {
   }
 
   @observable user = null
+  @observable loading = false
 
   @observable email = ''
   @observable password = ''
@@ -86,19 +87,21 @@ class AuthStore extends BasicStore {
   clear() {
     this.email = ''
     this.password = ''
+    this.loading = false
 
     this.signUpEmail = ''
     this.signUpPassword = ''
     this.firstName = ''
   }
 
-  signIn = async () => {
+  @action signIn = async () => {
     if (!this.isEmailValid || !this.isPasswordValid) {
       Alert.alert('Password or E-mail are not valid!')
       return
     }
 
     try {
+      this.loading = true
       await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
     } catch (e) {
       Alert.alert('Password or E-mail are not valid!')
@@ -106,15 +109,19 @@ class AuthStore extends BasicStore {
       return
     }
 
+    this.clear()
     this.getStore(NAVIGATION_STORE).navigate('app')
   }
 
-  signUp = async () => {
+  @action signUp = async () => {
 
     if (!this.isSignUpEmailValid || !this.isSignUpPasswordValid || !this.isFirstNameValid) {
       Alert.alert('Password, E-mail or first name are not valid!')
       return
     }
+
+    this.loading = true
+
     const email = this.signUpEmail
     const password = this.signUpPassword
     await firebase.functions().httpsCallable('createUser')({
@@ -153,7 +160,9 @@ class AuthStore extends BasicStore {
     this.getStore(NAVIGATION_STORE).navigate('auth')
   }
 
-  loginWithFacebook = async () => {
+  @action loginWithFacebook = async () => {
+    this.loading = true
+
     const {type, token} = await Facebook.logInWithReadPermissionsAsync(
       facebookAppId,
       {permissions: ['public_profile', 'email']}
@@ -184,15 +193,19 @@ class AuthStore extends BasicStore {
       } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
       if (isNewUser) {
-        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, avatar, email})
+        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
       }
 
       this.getStore(NAVIGATION_STORE).navigate('app')
 
     }
+
+    this.clear()
   }
 
-  loginWithGoogle = async () => {
+  @action loginWithGoogle = async () => {
+    this.loading = true
+
     const {type, idToken, accessToken} = await Google.logInAsync({
       iosClientId: googleClientId,
       scopes: ['profile', 'email']
@@ -223,6 +236,8 @@ class AuthStore extends BasicStore {
       this.getStore(NAVIGATION_STORE).navigate('app')
 
     }
+    this.clear()
+
   }
 
 }
