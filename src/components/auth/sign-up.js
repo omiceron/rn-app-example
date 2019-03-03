@@ -140,6 +140,7 @@ class SignUp extends Component {
         disabled = {!isSignUpEmailValid || !isSignUpPasswordValid || !isFirstNameValid}
         title = 'Sign up'
         onPress = {signUp}
+        loading = {this.props.auth.loading}
       />
 
     </Animated.View>
