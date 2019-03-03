@@ -1,10 +1,10 @@
 # Moewchat
-React Native mobile chat and social network application example
+React Native mobile chat and social network application example for Expo
 
 ## Installation
 
-### Setting backend
-If you want to use your custom backend you should start a Firebase project using these Google products:
+### Setting up backend
+Skip this step if you don't want to use your custom backend. In other case you should start a Firebase project using these Google products:
 * [Firebase Realtime Database](https://firebase.google.com/products/realtime-database/)
 * [Firebase Cloud Storage](https://firebase.google.com/products/storage/)
 * [Firebase Cloud Functions](https://firebase.google.com/products/functions/)
@@ -17,8 +17,8 @@ Then deploy [Meowchat Firebase Cloud Functions](https://github.com/omiceron/fire
   }
 }
 ```
-Set your [config.js](src/config.js) according to your project
 
+Set your [config.js](src/config.js) according to your project:
 ```js
 export const appName = 'YOUR_FIREBASE_PROJECT_NAME'
 export const facebookAppId = 'YOUR_FACEBOOK_APP_ID'
@@ -35,6 +35,16 @@ export const config = {
   messagingSenderId
 }
 ```
+### Running app on your phone
+Meowchat is a React Native Expo project. You should use Expo to compile your app. Follow the instructions on [Expo](https://expo.io/).
 
+## Features
+Some features of Meowchat
+### Authentication
+#### Creating your user with e-mail
 
-![](https://media.giphy.com/media/1o1xaEGDLnqM9Xt1eb/giphy.gif)
+![](https://media.giphy.com/media/9xcvP1RryNHX3KQUDu/giphy.gif)
+
+#### Signing in
+#### Creating your user with Facebook or Google+
+
