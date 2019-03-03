@@ -42,9 +42,24 @@ Meowchat is a React Native Expo project. You should use Expo to compile your app
 Some features of Meowchat
 ### Authentication
 #### Creating your user with e-mail
+Simple user creating
 
 ![](https://media.giphy.com/media/9xcvP1RryNHX3KQUDu/giphy.gif)
 
 #### Signing in
-#### Creating your user with Facebook or Google+
+![](https://media.giphy.com/media/2sbLWwUPztCxPq21Cv/giphy.gif)
 
+#### Creating your user with Facebook or Google+
+Creating user or signing in via OAuth2.0
+
+![](https://media.giphy.com/media/woeRYRKL4f9mZ0Nv20/giphy.gif)
+
+#### Revealing password
+There is no such behavior in React Native to reveal password, so I did it myself
+
+![](https://media.giphy.com/media/iee6cDJjplRxryzc1w/giphy.gif)
+
+#### Signing out
+You can see the job of presence watcher
+
+![](https://media.giphy.com/media/5SBLekZH5RPMMDOFOW/giphy.gif)
