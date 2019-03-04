@@ -39,7 +39,8 @@ export const config = {
 Meowchat is a React Native Expo project. You should use Expo to compile your app. Follow the instructions on [Expo](https://expo.io/).
 
 ## Features
-Some features of Meowchat
+Some features of Meowchat.
+
 ### Authentication
 #### Creating your user with e-mail
 Simple user creating.
@@ -70,12 +71,12 @@ If you're signing out all cached data will be wiped out. Apropos, you can see th
 Chatting features
 
 #### Creating chat
-If user has no chat with other user new chat will be created, but nobody will see that
+If user has no chat with other user new chat will be created, but nobody will see that.
 
 ![](https://media.giphy.com/media/ScBNh9A3UPabj7eFjB/giphy.gif)
 
 #### Sending messages
-Simple chatting. New message raises chat to the top of the list, even if it's from user you have no chat with
+Simple chatting. New message raises chat to the top of the list, even if it's from user you have no chat with.
 
 ![](https://media.giphy.com/media/xWfaOMKpqRd2UPsJzc/giphy.gif)
 
@@ -122,10 +123,12 @@ Likes screen. Refreshing with each interaction. Posts and likes realtime update 
 ### Users
 
 #### User screen
+You can navigate to posts that user created or liked. User screen refreshes user data. So the user information will be always up-to-date.
 
 ![](https://media.giphy.com/media/31WWI0XlrHuqyOfamK/giphy.gif)
 
 #### User presence
+Works even if you close your app.
 
 ![](https://media.giphy.com/media/yN5yGzdzMx1ulBB2My/giphy.gif)
 
@@ -149,6 +152,6 @@ You can surf deep inside the app and all your navigation history will be saved u
 ![](https://media.giphy.com/media/TgFmTo7K3c0NSkLzy5/giphy.gif)
 
 #### Independent navigation screens
-Navigation screens are independent. That means you can open same chats due to deep navigation and that will not break you navigation history.
+Navigation screens are independent. That means you can open same chats due to deep navigation and that will not break your navigation history.
 
 ![](https://media.giphy.com/media/2sYDjdZ9tppLsJtrPK/giphy.gif)
