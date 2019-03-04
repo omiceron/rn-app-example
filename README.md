@@ -45,7 +45,7 @@ Some features of Meowchat.
 #### Creating your user with e-mail
 Simple user creating.
 
-![](https://media.giphy.com/media/9xcvP1RryNHX3KQUDu/giphy.gif)
+![](https://media.giphy.com/media/8PBhMwzvBxoqrAVnaI/giphy.gif)
 
 #### Signing in
 All fields are validated.
@@ -68,7 +68,6 @@ If you're signing out all cached data will be wiped out. Apropos, you can see th
 ![](https://media.giphy.com/media/5SBLekZH5RPMMDOFOW/giphy.gif)
 
 ### Chatting
-Chatting features
 
 #### Creating chat
 If user has no chat with other user new chat will be created, but nobody will see that.
@@ -76,7 +75,7 @@ If user has no chat with other user new chat will be created, but nobody will se
 ![](https://media.giphy.com/media/ScBNh9A3UPabj7eFjB/giphy.gif)
 
 #### Sending messages
-Simple chatting. New message raises chat to the top of the list, even if it's from user you have no chat with.
+Simple chatting. New message raises chat to the top of the list, even if it's from user you have no chat with. Delivery status implemented.
 
 ![](https://media.giphy.com/media/xWfaOMKpqRd2UPsJzc/giphy.gif)
 
