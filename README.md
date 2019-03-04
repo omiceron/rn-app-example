@@ -1,5 +1,5 @@
 # Moewchat
-React Native mobile chat and social network application example for Expo
+React Native mobile chat and social network application example for Expo.
 
 ## Installation
 
@@ -42,24 +42,113 @@ Meowchat is a React Native Expo project. You should use Expo to compile your app
 Some features of Meowchat
 ### Authentication
 #### Creating your user with e-mail
-Simple user creating
+Simple user creating.
 
 ![](https://media.giphy.com/media/9xcvP1RryNHX3KQUDu/giphy.gif)
 
 #### Signing in
+All fields are validated.
+
 ![](https://media.giphy.com/media/2sbLWwUPztCxPq21Cv/giphy.gif)
 
 #### Creating your user with Facebook or Google+
-Creating user or signing in via OAuth2.0
+Creating user or signing in via OAuth 2.0.
 
 ![](https://media.giphy.com/media/woeRYRKL4f9mZ0Nv20/giphy.gif)
 
 #### Revealing password
-There is no such behavior in React Native to reveal password, so I did it myself
+There is no such behavior in React Native to reveal password, so I did it myself.
 
 ![](https://media.giphy.com/media/iee6cDJjplRxryzc1w/giphy.gif)
 
 #### Signing out
-You can see the job of presence watcher
+If you're signing out all cached data will be wiped out. Apropos, you can see the presence watcher working there.
 
 ![](https://media.giphy.com/media/5SBLekZH5RPMMDOFOW/giphy.gif)
+
+### Chatting
+Chatting features
+
+#### Creating chat
+If user has no chat with other user new chat will be created, but nobody will see that
+
+![](https://media.giphy.com/media/ScBNh9A3UPabj7eFjB/giphy.gif)
+
+#### Sending messages
+Simple chatting. New message raises chat to the top of the list, even if it's from user you have no chat with
+
+![](https://media.giphy.com/media/xWfaOMKpqRd2UPsJzc/giphy.gif)
+
+#### Lazy loading chats
+Chats are loading by last message order.
+
+![](https://media.giphy.com/media/ReBwkQvACPKkUslvkf/giphy.gif)
+
+#### Archive and Deleting chats
+Swipeable rows deliver some good options.
+
+![](https://media.giphy.com/media/KyyZakKyp8TB6MQP5X/giphy.gif)
+![](https://media.giphy.com/media/jy1RFIdpQ6yiD14MKB/giphy.gif)
+
+### Posting
+
+#### Creating post
+
+![](https://media.giphy.com/media/23dQTW9QPAJTYATE7B/giphy.gif)
+
+#### Attach location
+Location stored on Firebase as an object of a coordinates
+
+![](https://media.giphy.com/media/d2S8bKdxqSVKc1oKsd/giphy.gif)
+
+#### Location parse
+You can extract your location from address
+
+![](https://media.giphy.com/media/9rlv85NylAXvcmDfvv/giphy.gif)
+
+#### Revealing post
+
+![](https://media.giphy.com/media/1hMaBK8zJCb4ea8Eum/giphy.gif)
+
+#### Lazy loading posts
+
+![](https://media.giphy.com/media/2SYqtUZVygVt81e6qV/giphy.gif)
+
+#### Likes
+Likes screen. Refreshing with each interaction. Posts and likes realtime update are disabled for performance reasons.
+
+![](https://media.giphy.com/media/8Z5Ozn2IYm0Zi46nZ1/giphy.gif)
+
+### Users
+
+#### User screen
+
+![](https://media.giphy.com/media/31WWI0XlrHuqyOfamK/giphy.gif)
+
+#### User presence
+
+![](https://media.giphy.com/media/yN5yGzdzMx1ulBB2My/giphy.gif)
+
+#### Editing current user
+
+![](https://media.giphy.com/media/33G91Npxpg7GjQxnLK/giphy.gif)
+
+#### Add photo for current user
+
+![](https://media.giphy.com/media/9oI623JG6TIzvOOFe5/giphy.gif)
+
+### Other
+#### Caching store
+Fetched info stored on your device. When you open Meowchat next time, you'll see last state you had before closing.
+
+![](https://media.giphy.com/media/1yMPVby8mafX2nprpN/giphy.gif)
+
+#### Deep navigation
+You can surf deep inside the app and all your navigation history will be saved until you close Meowchat.
+
+![](https://media.giphy.com/media/TgFmTo7K3c0NSkLzy5/giphy.gif)
+
+#### Independent navigation screens
+Navigation screens are independent. That means you can open same chats due to deep navigation and that will not break you navigation history.
+
+![](https://media.giphy.com/media/2sYDjdZ9tppLsJtrPK/giphy.gif)
