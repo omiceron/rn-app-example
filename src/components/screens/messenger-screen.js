@@ -14,7 +14,7 @@ class MessengerScreen extends Component {
     super(...args)
 
     reaction(
-      () => this.props.messenger.size,
+      () => this.props.messenger.chats.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
   }
