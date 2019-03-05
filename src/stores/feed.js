@@ -72,11 +72,15 @@ class FeedStore extends EntitiesStore {
     return this.posts[this.size - 1]
   }
 
+  // @action fetchPosts = () => this.fetchEntities(
+  //   () => this.reference.orderByKey(),
+  //   this.appendFetchedPosts,
+  //   FEED_CHUNK_LENGTH)
+  //
   @action fetchPosts = async () => {
+    if (this.loaded || this.loading || !this.user) return
+
     console.log('FEED:', 'fetching posts started')
-
-    if (this.loaded || this.loading) return
-
     this.loading = true
 
     const chunkShift = this.lastPostKey ? 1 : 0
@@ -85,18 +89,17 @@ class FeedStore extends EntitiesStore {
     const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
 
-      this.lastPostKey = Object.keys(payload)[0]
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
+
+      this.lastPostKey = Object.keys(payload)[0]
 
       !isEmpty && await this.appendFetchedPosts(payload)
 
       this.loaded = isEmpty || currentChunkLength < chunkLength
-      // console.log('!!!', 'loading = false')
       this.loading = false
 
       return true
-      // TODO: wtf?
     })
 
     let ref = this.reference

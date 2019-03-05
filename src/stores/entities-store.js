@@ -31,6 +31,7 @@ class EntitiesStore extends BasicStore {
     this.entities = {}
     this.loading = false
     this.loaded = false
+    this.lastEntityKey = null
   }
 
   @computed
@@ -45,7 +46,7 @@ class EntitiesStore extends BasicStore {
 
   cacheEntities = async () => {
     console.log('CACHE:', 'cache entities from store', this.storeName)
-    return await AsyncStorage.mergeItem(`meowchat:store:${this.storeName}`, JSON.stringify(toJS(this.entities)))
+    return await this.cache(this.entities)
   }
 
   @action retrieveCachedEntities = async () => {
@@ -62,6 +63,53 @@ class EntitiesStore extends BasicStore {
 
     return cachedEntities
   }
+
+  @observable lastEntityKey = null
+
+  @action fetchEntities = async (getReference,
+                                 setEntities,
+                                 storeChunkLength = 0,
+                                 context = this,
+                                 chunkFilter = () => true,
+                                 getLastKey = (payload) => Object.keys(payload)[0]) => {
+    if (context.loaded || context.loading || !this.user) return
+
+    console.log(this.storeName.toUpperCase(), ': fetching entities', 'start')
+
+    context.loading = true
+
+    const chunkShift = context.lastEntityKey ? 1 : 0
+    const chunkLength = storeChunkLength + chunkShift
+
+    const callback = action(async (snapshot) => {
+      const payload = snapshot.val() || {}
+
+      const currentChunkLength = Object.entries(payload).filter(chunkFilter).length
+      const isEmpty = currentChunkLength === chunkShift
+
+      context.lastEntityKey = getLastKey(payload, context)
+
+      !isEmpty && await setEntities(payload)
+
+      context.loaded = isEmpty || currentChunkLength < chunkLength
+      context.loading = false
+
+      return true
+    })
+
+    let ref = getReference()
+
+    if (storeChunkLength) {
+      ref = ref.limitToLast(chunkLength)
+    }
+
+    if (context.lastEntityKey) {
+      ref = ref.endAt(context.lastEntityKey)
+    }
+
+    return await ref.once('value').then(callback)
+  }
+
 }
 
 export function loadAllHelper(refName) {

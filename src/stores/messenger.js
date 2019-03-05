@@ -93,6 +93,10 @@ class MessengerStore extends EntitiesStore {
     if (!timestamps.length) return
     const timestamp = Math.min(...timestamps)
 
+    // if (timestamp < this.lastEntityKey || !this.lastEntityKey) {
+    //   this.lastEntityKey = timestamp
+    // }
+
     if (timestamp < this.lastChatTimestamp || !this.lastChatTimestamp) {
       this.lastChatTimestamp = timestamp
     }
@@ -128,6 +132,28 @@ class MessengerStore extends EntitiesStore {
     return await this.cache(chats)
   }
 
+  // @action getTimestamp = (payload) => {
+  //   const timestamps = Object.values(payload).filter(x => x.lastMessage).map(x => x.lastMessage.timestamp)
+  //   if (!timestamps.length) return
+  //   const timestamp = Math.min(...timestamps)
+  //
+  //   if (timestamp < this.lastEntityKey || !this.lastEntityKey) {
+  //     return timestamp
+  //   }
+  //
+  //   return this.lastEntityKey
+  // }
+
+  // fetchChats = () => {
+  //   return this.fetchEntities(
+  //     () => this.currentUserChatsReference.orderByChild('lastMessage/timestamp'),
+  //     this.appendFetchedChats,
+  //     CHATS_CHUNK_LENGTH,
+  //     this,
+  //     ([key, chat]) => chat.lastMessage,
+  //     this.getTimestamp)
+  // }
+
   @action fetchChats = async () => {
     if (this.loaded || this.loading || !this.user) return
 
@@ -147,6 +173,7 @@ class MessengerStore extends EntitiesStore {
       this.setTimestamp(payload)
 
       !isEmpty && await this.appendFetchedChats(payload)
+
       this.loaded = isEmpty || currentChunkLength < chunkLength
       this.loading = false
 
@@ -306,10 +333,16 @@ class MessengerStore extends EntitiesStore {
       .on('child_added', callback)
   }
 
+  // fetchMessages = (chatId) => this.fetchEntities(
+  //   () => this.getChatReference(chatId).orderByKey(),
+  //   this.appendFetchedMessages.bind(null, chatId),
+  //   MESSAGES_CHUNK_LENGTH,
+  //   this.entities[chatId])
+
   @action fetchMessages = (chatId) => {
     console.log('FETCH MESSAGES:', 'start')
+    console.log('!LOADED', this.entities[chatId].loaded)
     if (this.entities[chatId].loaded || this.entities[chatId].loading) return
-
     this.entities[chatId].loading = true
 
     const lastMessage = this.getLastFetchedMessage(chatId)
@@ -361,6 +394,8 @@ class MessengerStore extends EntitiesStore {
     }
 
     this.entities[chatId].messages[message.key] = message
+
+    // this.cacheMessenger()
 
     // console.log('APPEND MESSAGE:', 'message appended')
   }

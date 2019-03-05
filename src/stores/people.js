@@ -88,6 +88,8 @@ class PeopleStore extends EntitiesStore {
     }))
   }
 
+  // fetchAllUsers = () => this.fetchEntities(() => this.reference, this.appendFetchedUsers)
+
   @action fetchAllUsers = async () => {
     if (this.loaded || this.loading) return
 

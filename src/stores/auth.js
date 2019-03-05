@@ -21,12 +21,13 @@ import {facebookAppId, googleClientId} from '../config'
 class AuthStore extends BasicStore {
   constructor(...args) {
     super(...args)
-
     firebase.auth().onAuthStateChanged(async user => {
       this.setUser(user)
 
       if (user) {
-        AsyncStorage.getAllKeys().then(console.log)
+        // AsyncStorage.getAllKeys().then(console.log)
+        // AsyncStorage.getItem('meowchat:store:messenger').then(res => console.log(JSON.parse(res)))
+
         this.getStore(CURRENT_USER_STORE).startPresenceWatcher()
         this.getStore(CURRENT_USER_STORE).subscribeOnUserData(user.uid)
         this.getStore(AVATAR_STORE).subscribeOnUserAvatar()
