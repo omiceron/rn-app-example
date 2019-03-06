@@ -1,7 +1,9 @@
 # Moewchat
-React Native mobile chat and social network application example for Expo.
+React Native iOS chat and social network application example for Expo.
 
 ## Installation
+
+Если вы работодатель и хотите проверить приложение на работоспособность, скачайте [Expo](https://itunes.apple.com/app/apple-store/id982107779) и перейдите по ссылке на [бандл](https://expo.io/@omiceron/meowchat) проекта.
 
 ### Setting up backend
 Skip this step if you don't want to use your custom backend. In other case you should start a Firebase project using these Google products:
