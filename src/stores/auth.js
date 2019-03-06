@@ -26,7 +26,7 @@ class AuthStore extends BasicStore {
 
       if (user) {
         // AsyncStorage.getAllKeys().then(console.log)
-        // AsyncStorage.getItem('meowchat:store:messenger').then(res => console.log(JSON.parse(res)))
+        AsyncStorage.getItem('meowchat:store:messenger').then(res => console.log(JSON.parse(res)))
 
         this.getStore(CURRENT_USER_STORE).startPresenceWatcher()
         this.getStore(CURRENT_USER_STORE).subscribeOnUserData(user.uid)
