@@ -3,6 +3,8 @@ import {View, ImageBackground, StyleSheet, Image, ActivityIndicator} from 'react
 import PropTypes from 'prop-types'
 import {observer} from 'mobx-react'
 import {observable} from 'mobx'
+import Icon from 'react-native-vector-icons/Ionicons'
+import {INACTIVE_BACKGROUND_COLOR, WHITE_TEXT_COLOR} from '../../constants'
 
 @observer
 class BasicAvatar extends Component {
@@ -37,9 +39,19 @@ class BasicAvatar extends Component {
     //   <ActivityIndicator/>
     //  </View>
 
+    // if (!uri) {
+    //   return <View style = {[container, style, {
+    //     backgroundColor: INACTIVE_BACKGROUND_COLOR, justifyContent: 'center',
+    //     alignItems: 'center'
+    //   }]}>
+        {/*<Icon name = 'ios-camera' size = {size / 2} color = {WHITE_TEXT_COLOR}/>*/}
+      // </View>
+    // }
+
     return <View style = {[container, style]}>
       <ImageBackground
-        source = {{uri: uri || `https://loremflickr.com/200/200/cat?random=${Math.random()}`}}
+        source = {uri ? {uri} : require('../../../assets/images/no-photo.png')}
+        // source = {{uri: uri || `https://loremflickr.com/200/200/cat?random=${Math.random()}`}}
         style = {styles.content}
         imageStyle = {[container]}
       >

@@ -19,9 +19,10 @@ import {
   WHITE_BACKGROUND_COLOR, WHITE_TEXT_COLOR
 } from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
-import EmptyList from './empty-list'
+import EmptyList from '../common/empty-list'
 import {reaction} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
+import ListLoader from '../common/list-loader'
 
 // redesign the chat
 
@@ -62,6 +63,17 @@ class Chat extends Component {
   // TODO: Make chat computed property
   // TODO: LayoutAnimation onFocus in emptyList
 
+  renderListLoader = () => <View style = {{
+    flex: 1,
+    height: 60,
+    justifyContent: 'center',
+    backgroundColor: WHITE_BACKGROUND_COLOR
+  }}>
+    <ActivityIndicator/>
+  </View>
+
+  renderItem = ({item}) => <Message {...item}/>
+
   renderMessagesList = () => {
     const {messenger, chatId} = this.props
 
@@ -69,9 +81,11 @@ class Chat extends Component {
       enableEmptySections
       onEndReached = {messenger.fetchMessages.bind(null, chatId)}
       inverted
+      initialNumToRender = {Number.MAX_SAFE_INTEGER}
       onEndReachedThreshold = {0.5}
       data = {messenger.getMessages(chatId)}
-      renderItem = {({item}) => <Message {...item}/>}
+      renderItem = {this.renderItem}
+      ListFooterComponent = {messenger.isChatLoading(chatId) && this.renderListLoader()}
     />
   }
 
@@ -96,11 +110,10 @@ class Chat extends Component {
     // console.log('render chat')
     const {messenger, chatId} = this.props
     // const {uid: currentUserId} = this.props.auth.user
-
+    // TODO Keyboard
     return <SafeAreaView style = {styles.container}>
-      {messenger.isChatLoading(chatId) && <ActivityIndicator/>}
       {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
-        <EmptyList/> : this.renderMessagesList()}
+        <EmptyList title = {'You have no messages yet...'}/> : this.renderMessagesList()}
 
       <KeyboardAvoidingView
         behavior = 'padding'

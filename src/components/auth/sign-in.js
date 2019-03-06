@@ -162,6 +162,7 @@ class SignIn extends Component {
           disabled = {!isEmailValid || !isPasswordValid}
           title = 'Sign in'
           onPress = {signIn}
+          loading = {this.props.auth.loading}
         />
 
         <View style = {styles.row}>

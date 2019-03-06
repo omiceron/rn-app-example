@@ -23,6 +23,7 @@ export default class App extends React.Component {
     })
 
     await Asset.fromModule(require('./assets/images/splash.png')).downloadAsync()
+    await Asset.fromModule(require('./assets/images/no-photo.png')).downloadAsync()
   }
 
   render() {

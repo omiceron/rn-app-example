@@ -7,7 +7,7 @@ import ChatCard from './chat-card'
 import Separator from '../common/separator'
 import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
-import EmptyList from './empty-list'
+import EmptyList from '../common/empty-list'
 import ListLoader from '../common/list-loader'
 
 @inject(MESSENGER_STORE)
@@ -49,7 +49,7 @@ class Messenger extends Component {
     const {messenger} = this.props
     const chats = messenger.chats
 
-    if (!chats.length) return <EmptyList/>
+    if (!chats.length) return <EmptyList title = {'You have no chats yet...'}/>
     return <SafeAreaView style = {styles.container}>
       <FlatList
         contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}

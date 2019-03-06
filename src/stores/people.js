@@ -6,6 +6,7 @@ import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, CURRENT_USER_STORE, CACHE_D
 import path from 'path'
 import {FileSystem} from 'expo'
 import {alphabetic, urlToBlob} from './utils'
+import {toJS} from 'mobx'
 
 class PeopleStore extends EntitiesStore {
   @computed
@@ -58,6 +59,8 @@ class PeopleStore extends EntitiesStore {
   @action refreshUser = async (userId) => {
     console.log('PEOPLE:', 'refresh user')
     const callback = async (snapshot) => {
+      // TODO FIX THIS. Problem caused by posts linked to deleted user
+      // if (!snapshot.val()) return false
       return await
         this.convertUser({[userId]: snapshot.val()})
           .then(this.appendUser)
@@ -84,6 +87,8 @@ class PeopleStore extends EntitiesStore {
       return {...user, key}
     }))
   }
+
+  // fetchAllUsers = () => this.fetchEntities(() => this.reference, this.appendFetchedUsers)
 
   @action fetchAllUsers = async () => {
     if (this.loaded || this.loading) return

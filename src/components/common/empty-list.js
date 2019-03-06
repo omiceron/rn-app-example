@@ -1,16 +1,18 @@
 import React, {PureComponent} from 'react'
 import {View, StyleSheet, Text, Keyboard, TouchableWithoutFeedback} from 'react-native'
 import PropTypes from 'prop-types'
-import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR} from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR} from '../../constants/index'
 
 class EmptyList extends PureComponent {
-  static propTypes = {}
+  static propTypes = {
+    title: PropTypes.string.isRequired
+  }
 
   render() {
     return <View style = {styles.container}>
       <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
         <Text style = {styles.text}>
-          You have no messages yet...
+          {this.props.title}
         </Text>
       </TouchableWithoutFeedback>
     </View>

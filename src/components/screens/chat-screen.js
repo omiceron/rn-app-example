@@ -63,7 +63,7 @@ class ChatScreen extends Component {
   }
 
   render() {
-    if (!this.chatId || this.props.messenger.loading) return <Loader/>
+    if (this.props.messenger.loading || !this.chatId) return <Loader/>
     return <Chat chatId = {this.chatId}/>
   }
 

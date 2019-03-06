@@ -7,6 +7,8 @@ import {CACHE_DIR, PEOPLE_REFERENCE} from '../constants'
 import {entitiesFromFB} from './utils'
 import {observer} from 'mobx-react'
 import {autorun} from 'mobx'
+import {toJS} from 'mobx'
+
 
 class UserStore extends EntitiesStore {
 
@@ -48,7 +50,7 @@ class UserStore extends EntitiesStore {
 
   @action updateUserData = () => {
     this.currentUserReference
-      .update(this.entities)
+      .update(toJS(this.entities))
       .then(() => console.log('User data has been successfully updated'))
   }
 
@@ -58,8 +60,9 @@ class UserStore extends EntitiesStore {
     const callback = action(async (snapshot) => {
       this.loading = true
 
-      const {firstName, lastName, userInfo} = snapshot.val() || {}
-      const uid = snapshot.key
+      // TODO undefined entities
+      const {firstName = null, lastName = null, userInfo = null} = snapshot.val() || {}
+      const uid = snapshot.key || null
 
       this.entities = {...this.entities, firstName, lastName, userInfo, uid}
 
