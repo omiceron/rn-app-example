@@ -20,11 +20,7 @@ class UserPhotoScreen extends Component {
   })
 
   render() {
-    return <Photo photoHandler = {this.getPhoto.bind(this)}/>
-  }
-
-  getPhoto(photo) {
-    this.props.avatar.takePhoto(photo)
+    return <Photo photoHandler = {this.props.avatar.takePhoto}/>
   }
 
 }
