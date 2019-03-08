@@ -40,6 +40,7 @@ class UserStore extends EntitiesStore {
 
   off() {
     this.currentUserReference.child('online').set(firebase.database.ServerValue.TIMESTAMP)
+    firebase.database().ref('.info/connected').off()
     this.clear()
     this.currentUserReference.off()
   }
@@ -89,7 +90,8 @@ class UserStore extends EntitiesStore {
       }
     }
 
-    firebase.database().ref('.info/connected')
+    firebase.database()
+      .ref('.info/connected')
       .on('value', callback)
   }
 
