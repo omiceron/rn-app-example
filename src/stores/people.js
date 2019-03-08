@@ -186,18 +186,6 @@ class PeopleStore extends EntitiesStore {
     return {uri, avatarCacheControl}
   }
 
-  async takePhoto(userId, uri) {
-    const file = await urlToBlob(uri)
-    const ref = firebase.storage()
-      .ref(AVATARS_STORAGE_REFERENCE)
-      .child(`${userId}.jpg`)
-
-    await ref.put(file)
-    const avatar = await ref.getDownloadURL()
-
-    await this.getStore(CURRENT_USER_STORE).updatePerson(userId, {avatar})
-  }
-
 }
 
 export default PeopleStore

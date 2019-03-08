@@ -127,7 +127,8 @@ class MessengerStore extends EntitiesStore {
   cacheMessenger = async () => {
     const chats = this.chats
       .slice(0, CHATS_CHUNK_LENGTH)
-      .reduce((acc, {subscribed, loaded, loading, ...chat}) => {
+      .reduce((acc, chat) => {
+      // .reduce((acc, {subscribed, loaded, loading, ...chat}) => {
         // if (chat.messages) {
         //   chat.messages = this.getMessages(chat.chatId)
         //     .slice(0, MESSAGES_CHUNK_LENGTH)
