@@ -43,15 +43,14 @@ class Settings extends Component {
 
   render() {
     const {navigate} = this.props.navigation
-    const {avatar, loading} = this.props.avatar
-    // const currentUser = this.props[CURRENT_USER_STORE]
+    const {uri, loading} = this.props.avatar
     const {currentUser} = this.props
 
     const LeftComponent = () =>
       <CurrentUserAvatar
         size = {80}
-        onPress = {() => navigate('userPhoto')}
-        uri = {avatar}
+        onPress = {() => !loading && navigate('userPhoto')}
+        uri = {uri}
         loading = {loading}
       />
 
