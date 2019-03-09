@@ -65,6 +65,7 @@ export const EVENTS_STORE = 'events'
 export const AVATAR_STORE = 'avatar'
 export const MESSENGER_STORE = 'messenger'
 export const FEED_STORE = 'feed'
+export const ATTACHMENTS_STORE = 'attachments'
 
 export const POSTS_REFERENCE = 'posts'
 export const CHATS_REFERENCE = 'chats'
@@ -74,3 +75,4 @@ export const PEOPLE_REFERENCE = 'people'
 export const USER_AVATAR_REFERENCE = 'avatar'
 
 export const AVATARS_STORAGE_REFERENCE = 'avatars'
+export const ATTACHMENTS_STORAGE_REFERENCE = 'attachments'

@@ -3,8 +3,13 @@ import Photo from '../common/photo'
 import {inject} from 'mobx-react'
 import {AVATAR_STORE, WARNING_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
+import {ImagePicker, MediaLibrary} from 'expo'
+import {observable, action, toJS} from 'mobx'
+import {observer} from 'mobx-react'
+import {SafeAreaView, View, Image, FlatList} from 'react-native'
 
 @inject(AVATAR_STORE)
+@observer
 class UserPhotoScreen extends Component {
   static propTypes = {
     avatar: PropTypes.shape({
@@ -18,6 +23,10 @@ class UserPhotoScreen extends Component {
       backgroundColor: WARNING_COLOR
     }
   })
+
+  // componentDidMount() {
+  //   ImagePicker.launchImageLibraryAsync()
+  // }
 
   render() {
     return <Photo photoHandler = {this.props.avatar.takePhoto}/>
