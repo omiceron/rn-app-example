@@ -2,10 +2,15 @@ import {action, computed, observable} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {
-  AVATAR_STORE, CHATS_CHUNK_LENGTH, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE, PEOPLE_REFERENCE,
+  ATTACHMENTS_STORE,
+  AVATAR_STORE, CACHE_DIR, CHATS_CHUNK_LENGTH, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE,
+  PEOPLE_REFERENCE,
   PEOPLE_STORE
 } from '../constants'
 import {toJS} from 'mobx'
+import {urlToBlob} from './utils'
+import {FileSystem} from 'expo'
+import path from 'path'
 
 // chat structure:
 //
@@ -127,8 +132,7 @@ class MessengerStore extends EntitiesStore {
   cacheMessenger = async () => {
     const chats = this.chats
       .slice(0, CHATS_CHUNK_LENGTH)
-      .reduce((acc, chat) => {
-      // .reduce((acc, {subscribed, loaded, loading, ...chat}) => {
+      .reduce((acc, {subscribed, loaded, loading, ...chat}) => {
         // if (chat.messages) {
         //   chat.messages = this.getMessages(chat.chatId)
         //     .slice(0, MESSAGES_CHUNK_LENGTH)
@@ -236,7 +240,7 @@ class MessengerStore extends EntitiesStore {
           }
 
           return {...acc, [chat.chatId]: chat}
-        }), {})
+        }, {}))
 
     // TODO merge
     this.entities = {...this.entities, ...chats}
@@ -330,19 +334,25 @@ class MessengerStore extends EntitiesStore {
 
     if (this.entities[chatId].subscribed) return
 
-    const callback = (snapshot) => {
+    const callback = async (snapshot) => {
       console.log('SUBSCRIBE ON MESSAGES:', 'get data')
 
       // TODO: Rename 'user' to 'userId'
-      const {text, timestamp, user, token} = snapshot.val()
+      const {text, timestamp, user, token, attachments} = snapshot.val()
       const {key} = snapshot
+
+      const files = this.getStore(ATTACHMENTS_STORE)
+
+      const attachmentsArray = await Promise.all(Object.values(attachments)
+        .map(files.getAttachmentLazily))
 
       const message = {
         key,
         token,
         timestamp,
         text,
-        userId: user
+        userId: user,
+        attachments: attachmentsArray
       }
 
       this.appendMessage(chatId, message)
@@ -372,13 +382,13 @@ class MessengerStore extends EntitiesStore {
     const chunkShift = lastMessage ? 1 : 0
     const chunkLength = MESSAGES_CHUNK_LENGTH + chunkShift
 
-    const callback = action((snapshot) => {
+    const callback = action(async (snapshot) => {
       const payload = snapshot.val() || {}
 
       const currentChunkLength = Object.keys(payload).length
       const isEmpty = currentChunkLength === chunkShift
 
-      !isEmpty && this.appendFetchedMessages(chatId, payload)
+      !isEmpty && await this.appendFetchedMessages(chatId, payload)
 
       this.entities[chatId].loaded = isEmpty || currentChunkLength < chunkLength
       this.entities[chatId].loading = false
@@ -396,12 +406,34 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action appendFetchedMessages = (chatId, payload) => {
-    Object
-      .entries(payload)
-      .forEach(([key, message]) =>
-        this.appendMessage(chatId, {...message, userId: message.user, key}))
+  @action appendFetchedMessages = async (chatId, payload) => {
+    const files = this.getStore(ATTACHMENTS_STORE)
 
+    const messagesPromises = Object.entries(payload)
+      .map(async ([key, message]) => {
+
+        if (message.attachments) {
+          const attachments = await Promise.all(Object.values(message.attachments).map(files.getAttachmentLazily))
+          message.attachments = attachments.filter(Boolean)
+        }
+
+        message.key = key
+        message.userId = message.user
+
+        return message
+
+      })
+
+    const messagesArray = await Promise.all(messagesPromises)
+
+    const messages = messagesArray
+      .reduce((acc, message) => ({...acc, [message.key]: message}), {})
+
+    if (!this.entities[chatId].messages) {
+      this.entities[chatId].messages = {}
+    }
+
+    this.entities[chatId].messages = {...this.entities[chatId].messages, ...messages}
     // this.cacheMessenger()
 
   }
@@ -426,7 +458,7 @@ class MessengerStore extends EntitiesStore {
     // console.log('APPEND MESSAGE:', 'message appended')
   }
 
-  sendMessage = (text, chatId) => {
+  sendMessage = (text, chatId, attachments = {}) => {
     if (!text) return
 
     // https://github.com/omiceron/firebase-functions-example
@@ -439,12 +471,20 @@ class MessengerStore extends EntitiesStore {
       key,
       timestamp: Date.now(),
       userId: this.user.uid,
-      pending: true
+      pending: true,
+      attachments
     }
 
     this.appendMessage(chatId, tempMessage)
 
-    sendMessage({text, chatId, token: key})
+    attachments = attachments.reduce((acc, {url, uid, ...rest}) => ({...acc, [uid]: url}), {})
+
+    sendMessage({
+      text,
+      chatId,
+      attachments,
+      token: key
+    })
       .then(res => {
         console.log('SEND MESSAGE:', 'got server respond', res.data.key)
       })
