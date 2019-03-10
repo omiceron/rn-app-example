@@ -1,5 +1,7 @@
 import {toJS} from 'mobx'
 import {SHORT_DATE_FORMAT, DATE_FORMAT, LOCALE, TIME_FORMAT} from '../constants'
+import {FileSystem} from 'expo'
+import path from 'path'
 
 export function entitiesFromFB(data) {
   Object.entries(data).forEach(([key, value]) => value.uid = key)
@@ -63,4 +65,17 @@ export function alphabetic(p, options = {}) {
 
     return a > b ? a === b ? 0 : 1 : -1
   }
+}
+
+export async function copyFile(from, to) {
+  const targetDirectory = path.dirname(to)
+
+  const {isDirectory} = await FileSystem.getInfoAsync(targetDirectory)
+    .catch(console.warn)
+
+  if (!isDirectory) await FileSystem.makeDirectoryAsync(targetDirectory, {intermediates: true})
+    .catch(console.warn)
+
+  return await FileSystem.copyAsync({from, to})
+    .catch(console.warn)
 }
