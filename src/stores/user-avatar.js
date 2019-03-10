@@ -1,14 +1,15 @@
-import mobx, {observable, action, computed} from 'mobx'
+import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
-import {LoginManager, AccessToken} from 'react-native-fbsdk'
 import EntitiesStore from './entities-store'
-import {AsyncStorage} from 'react-native'
 import {FileSystem, ImageManipulator, MediaLibrary} from 'expo'
-import {USER_AVATAR_REFERENCE, CACHE_DIR, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE} from '../constants'
-import {entitiesFromFB, urlToBlob} from './utils'
+import {
+  USER_AVATAR_REFERENCE, CACHE_DIR, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE,
+  NAVIGATION_STORE
+} from '../constants'
+import {urlToBlob} from './utils'
 import path from 'path'
-import {reaction, autorun} from 'mobx'
+import {reaction} from 'mobx'
 
 // TODO 1. Merge user and user-avatar
 // TODO 3. New store class for user settings instead of entities-store
@@ -96,7 +97,7 @@ class UserAvatarStore extends EntitiesStore {
       const firebaseAvatarHash = await this.fetchCacheControl(uri)
         .catch(console.warn)
 
-      if (firebaseAvatarHash !== this.entities.avatarCacheControl) {
+      if (firebaseAvatarHash !== this.entities.cacheControl) {
         console.log('Cached avatar and server avatar are different')
         this.downloadCurrentUserAvatar(uri)
           .catch(err => console.warn('AVATAR:', 'update avatar error'))
@@ -130,11 +131,11 @@ class UserAvatarStore extends EntitiesStore {
     const {uri} = await FileSystem.downloadAsync(url, avatarUri)
       .catch(console.warn)
 
-    const avatarCacheControl = await this.fetchCacheControl(url)
+    const cacheControl = await this.fetchCacheControl(url)
       .catch(console.warn)
 
     this.entities.uri = uri
-    this.entities.avatarCacheControl = avatarCacheControl
+    this.entities.cacheControl = cacheControl
 
     await this.cacheEntities()
       .catch(console.warn)
@@ -146,14 +147,18 @@ class UserAvatarStore extends EntitiesStore {
   }
 
   @action
-  takePhoto = async ({uri}) => {
-    if (this.loading) return
+  takePhoto = async ({uri, cancelled}, doNotSave) => {
+    if (this.loading || cancelled) return
     this.loading = true
 
-    console.log('AVATAR:', 'saving to camera roll...')
-    MediaLibrary.createAssetAsync(uri)
-      .then(() => console.log('AVATAR:', 'saved to camera roll'))
-      .catch(console.warn)
+    this.entities.uri = uri
+
+    if (!doNotSave) {
+      console.log('AVATAR:', 'saving to camera roll...')
+      MediaLibrary.createAssetAsync(uri)
+        .then(() => console.log('AVATAR:', 'saved to camera roll'))
+        .catch(console.warn)
+    }
 
     // TODO: in rn 58 expo 32 fetch api returns zero-sized blob, so using polyfill
     // const file = await fetch(uri).then(res => res.blob())
@@ -177,7 +182,7 @@ class UserAvatarStore extends EntitiesStore {
     const file = await urlToBlob(avatarUri)
       .catch(console.warn)
 
-    const {md5} = await FileSystem.getInfoAsync(avatarUri, {md5: true})
+    const {md5: cacheControl} = await FileSystem.getInfoAsync(avatarUri, {md5: true})
       .catch(console.warn)
 
     const ref = firebase.storage()
@@ -192,7 +197,7 @@ class UserAvatarStore extends EntitiesStore {
     const newAvatarUrl = await ref.getDownloadURL()
       .catch(console.warn)
 
-    await ref.updateMetadata({cacheControl: md5})
+    await ref.updateMetadata({cacheControl})
       .catch(console.warn)
     console.log('AVATAR:', 'cacheControl updated')
 
@@ -201,7 +206,7 @@ class UserAvatarStore extends EntitiesStore {
     console.log('AVATAR:', 'database updated')
 
     this.entities.uri = avatarUri
-    this.entities.avatarCacheControl = md5
+    this.entities.cacheControl = cacheControl
 
     await this.cacheEntities()
       .catch(console.warn)
