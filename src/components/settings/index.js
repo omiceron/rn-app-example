@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {TextInput, StyleSheet, ScrollView, ActionSheetIOS} from 'react-native'
+import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import Separator from '../common/separator'
 import CurrentUserAvatar from './current-user-avatar'
@@ -12,6 +12,7 @@ import {
   WARNING_COLOR
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
+import {ImagePicker} from 'expo'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
@@ -49,7 +50,8 @@ class Settings extends Component {
     const LeftComponent = () =>
       <CurrentUserAvatar
         size = {80}
-        onPress = {() => !loading && navigate('userPhoto')}
+        onPress = {() => !loading && this.getPhoto()}
+        // onPress = {() => !loading && navigate('userPhoto')}
         uri = {uri}
         loading = {loading}
       />
@@ -132,6 +134,46 @@ class Settings extends Component {
       <TableSeparator hint = 'Press button to log out'/>
 
     </ScrollView>
+  }
+
+  getPhoto = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Choose photo from gallery', 'Take snapshot', 'Delete photo'],
+        destructiveButtonIndex: 3,
+        cancelButtonIndex: 0
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 1) {
+          StatusBar.setHidden(true, 'slide')
+
+          const photo = await ImagePicker.launchImageLibraryAsync()
+            .catch(console.warn)
+
+          StatusBar.setHidden(false, 'slide')
+
+          this.props.avatar.takePhoto(photo, true)
+            .catch(console.warn)
+
+        }
+        if (buttonIndex === 2) {
+          StatusBar.setHidden(true, 'slide')
+
+          const photo = await ImagePicker.launchCameraAsync()
+            .catch(console.warn)
+
+          StatusBar.setHidden(false, 'slide')
+
+          this.props.avatar.takePhoto(photo)
+            .catch(console.warn)
+
+        }
+        if (buttonIndex === 3) {
+          alert('removed!')
+        }
+
+      }
+    )
   }
 
   handleSignOut = () => ActionSheetIOS.showActionSheetWithOptions(
