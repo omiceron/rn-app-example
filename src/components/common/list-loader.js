@@ -9,7 +9,7 @@ class ListLoader extends Component {
   }
 
   render() {
-    return <View style = {styles.container}>
+    return <View style = {[styles.container, this.props.style]}>
       <ActivityIndicator/>
     </View>
   }
