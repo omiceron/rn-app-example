@@ -78,7 +78,6 @@ class AttachmentsStore extends EntitiesStore {
     attachment.uri = attachmentUri
     await this.appendAttachment(attachment)
 
-
     yield uid
 
     const ref = firebase.storage()
@@ -153,7 +152,7 @@ class AttachmentsStore extends EntitiesStore {
           .then(() => console.log('Deleted from device'))
 
         delete this.entities[uid]
-        return
+        return {}
       }
     }
 
@@ -168,6 +167,13 @@ class AttachmentsStore extends EntitiesStore {
 
     return this.entities[uid]
 
+  }
+
+  @action convertAttachments = async (payload) => {
+    const attachmentsPromises = Object.values(payload).map(this.getAttachmentLazily)
+    const attachments = await Promise.all(attachmentsPromises)
+
+    return attachments.filter(Boolean)
   }
 
 }
