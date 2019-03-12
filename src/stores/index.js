@@ -5,7 +5,6 @@ import KeyboardStore from './keyboard'
 import UserAvatarStore from './user-avatar'
 import NavigationStore from './navigation'
 import PeopleStore from './people'
-import EventsStore from './events'
 import FeedStore from './feed'
 import MessengerStore from "./messenger"
 import {
@@ -13,12 +12,12 @@ import {
   KEYBOARD_STORE,
   NAVIGATION_STORE,
   AVATAR_STORE,
-  EVENTS_STORE,
   MESSENGER_STORE,
   PEOPLE_STORE,
   CURRENT_USER_STORE,
-  FEED_STORE
-} from "../constants"
+  FEED_STORE, ATTACHMENTS_STORE
+} from '../constants'
+import AttachmentsStore from './attachments'
 
 const stores = {}
 
@@ -29,7 +28,7 @@ stores[AVATAR_STORE] = new UserAvatarStore(stores, AVATAR_STORE)
 stores[AUTH_STORE] = new AuthStore(stores, AUTH_STORE)
 stores[NAVIGATION_STORE] = new NavigationStore(stores, NAVIGATION_STORE)
 stores[PEOPLE_STORE] = new PeopleStore(stores, PEOPLE_STORE)
-// stores[EVENTS_STORE] = new EventsStore(stores, EVENTS_STORE)
+stores[ATTACHMENTS_STORE] = new AttachmentsStore(stores, ATTACHMENTS_STORE)
 stores[MESSENGER_STORE] = new MessengerStore(stores, MESSENGER_STORE)
 
 export default stores

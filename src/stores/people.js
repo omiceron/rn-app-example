@@ -81,10 +81,13 @@ class PeopleStore extends EntitiesStore {
   @action convertUsers = async (payload) => {
     return Promise.all(Object.entries(payload).map(async ([key, {chats, ...user}]) => {
       user.uid = key
+      user.key = key
+
       const {uri, avatarCacheControl} = await this.downloadUserAvatar(user.avatar, key)
       user.avatar = uri
       user.avatarCacheControl = avatarCacheControl
-      return {...user, key}
+
+      return user
     }))
   }
 
@@ -184,18 +187,6 @@ class PeopleStore extends EntitiesStore {
     // console.log('PEOPLE:', userId,  'avatar has been downloaded')
 
     return {uri, avatarCacheControl}
-  }
-
-  async takePhoto(userId, uri) {
-    const file = await urlToBlob(uri)
-    const ref = firebase.storage()
-      .ref(AVATARS_STORAGE_REFERENCE)
-      .child(`${userId}.jpg`)
-
-    await ref.put(file)
-    const avatar = await ref.getDownloadURL()
-
-    await this.getStore(CURRENT_USER_STORE).updatePerson(userId, {avatar})
   }
 
 }

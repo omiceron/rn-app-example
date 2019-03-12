@@ -18,6 +18,7 @@ class Photo extends Component {
   @observable permitted = false
   @observable errorMessage = null
   @observable type = Camera.Constants.Type.back
+  @observable pending = false
 
   @action setType = (type) => this.type = type
   @action setPermission = (status) => {
@@ -28,9 +29,9 @@ class Photo extends Component {
   async componentWillMount() {
     StatusBar.setHidden(true, 'slide')
 
-    const res = await Permissions.askAsync(Permissions.CAMERA)
-    const {status} = res
+    const {status} = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL)
     this.setPermission(status)
+    // Camera.onCameraReady()
   }
 
   async componentWillUnmount() {
@@ -65,19 +66,21 @@ class Photo extends Component {
 
     if (!this.permitted) return null
     return <Camera
-      // pictureSize = {'352x288'}
-      style = {styles.container}
-      type = {this.type}
-      ref = {ref => this.camera = ref}
-    >
-      <SafeAreaView style = {styles.overlay}>
-        <View style = {styles.controls}>
-          {this.renderCancelButton()}
-          {this.renderSnapshotButton()}
-          {this.renderFlipButton()}
+        // pictureSize = {'352x288'}
+        style = {styles.container}
+        type = {this.type}
+        ref = {ref => {
+          this.camera = ref
+        }}
+      >
+        <View style = {styles.overlay}>
+          <View style = {styles.controls}>
+            {this.renderCancelButton()}
+            {this.renderSnapshotButton()}
+            {this.renderFlipButton()}
+          </View>
         </View>
-      </SafeAreaView>
-    </Camera>
+      </Camera>
   }
 
   flipCamera = () => {
@@ -88,11 +91,18 @@ class Photo extends Component {
   }
 
   takePicture = async () => {
-    const {base64, photoHandler} = this.props
+    // alert('camera')
+    if (this.pending) return
+    this.pending = true
+
+    const {photoHandler} = this.props
+    // TODO Make preview. Wait photo to load on device then go back
     // this.camera.getAvailablePictureSizesAsync().then(console.log)
-    const photo = await this.camera.takePictureAsync({base64, quality: 0.1})
-    // console.log(photo)
-    photoHandler && await photoHandler(photo)
+    this.camera.takePictureAsync({onPictureSaved: photoHandler})
+    this.camera.pausePreview()
+    // console.log('got photo')
+    // photoHandler(photo)
+    // console.log('handler')
 
     this.goBack()
   }

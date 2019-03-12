@@ -170,7 +170,7 @@ class FeedStore extends EntitiesStore {
 
       post.user = await this.getStore(PEOPLE_STORE).getUserLazily(post.userId)
 
-      return ({...post, key})
+      return post
     }))
   }
 

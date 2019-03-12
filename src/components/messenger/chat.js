@@ -2,42 +2,42 @@ import React, {Component} from 'react'
 import {
   View,
   TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   StyleSheet,
-  ActivityIndicator,
   FlatList,
   SafeAreaView,
-  LayoutAnimation
+  LayoutAnimation,
+  ActionSheetIOS,
+  StatusBar
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
-import Icon from 'react-native-vector-icons/Ionicons'
 import Message from './message'
-import {observable, action} from 'mobx'
+import {observable, action, computed} from 'mobx'
 import {
-  AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, USER_MESSAGE_COLOR,
-  WHITE_BACKGROUND_COLOR, WHITE_TEXT_COLOR
+  ATTACHMENTS_STORE,
+  AUTH_STORE, MESSENGER_STORE,
+  WHITE_BACKGROUND_COLOR
 } from '../../constants'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from '../common/empty-list'
 import {reaction} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 import ListLoader from '../common/list-loader'
+import {ImagePicker} from 'expo'
+import AttachmentsList from './attachments-list'
+import ChatButton from './chat-button'
 
 // redesign the chat
+// TODO: Make chat computed property
+// TODO: LayoutAnimation onFocus in emptyList
+// TODO Keyboard
 
+@inject(ATTACHMENTS_STORE)
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)
 @observer
 class Chat extends Component {
   static propTypes = {
-    // messenger: shape({
-    //   sendMessage: func.isRequired,
-    //   isChatLoaded: func.isRequired,
-    //   isChatLoading: func.isRequired,
-    //   getMessages: func.isRequired,
-    //   fetchPreviousMessages: func.isRequired
-    // }),
     chatId: string.isRequired,
     auth: shape({
       user: object.isRequired
@@ -51,26 +51,40 @@ class Chat extends Component {
       () => this.props.messenger.getMessages(this.props.chatId).length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
+
+    reaction(
+      () => this.list.length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
   }
 
   componentWillMount() {
     this.props.messenger.subscribeOnMessages(this.props.chatId)
   }
 
+  componentWillUnmount() {
+    // TODO: not the best practice but ok
+    this.attachments.forEach(this.props.attachments.deleteAttachment)
+  }
+
   @observable message = ''
   @action setMessage = message => this.message = message
 
-  // TODO: Make chat computed property
-  // TODO: LayoutAnimation onFocus in emptyList
+  @observable attachments = []
+  @action clearAttachments = () => this.attachments = []
 
-  renderListLoader = () => <View style = {{
-    flex: 1,
-    height: 60,
-    justifyContent: 'center',
-    backgroundColor: WHITE_BACKGROUND_COLOR
-  }}>
-    <ActivityIndicator/>
-  </View>
+  @computed
+  get list() {
+    return this.attachments.map(this.props.attachments.getAttachment)
+  }
+
+  @action attachFile = async ({uri, cancelled}) => {
+    if (cancelled) return
+
+    const {value: uid} = await this.props.attachments.attachFileSequence({uri}).next()
+    this.attachments = [...this.attachments, uid]
+    attachFile.next()
+  }
 
   renderItem = ({item}) => <Message {...item}/>
 
@@ -85,32 +99,12 @@ class Chat extends Component {
       onEndReachedThreshold = {0.5}
       data = {messenger.getMessages(chatId)}
       renderItem = {this.renderItem}
-      ListFooterComponent = {messenger.isChatLoading(chatId) && this.renderListLoader()}
+      ListFooterComponent = {messenger.isChatLoading(chatId) && <ListLoader style = {styles.loader}/>}
     />
   }
 
-  renderSendButton = () => {
-    const InteractiveComponent = this.message ? TouchableOpacity : View
-
-    return <View style = {styles.sendButtonContainer}>
-      <InteractiveComponent onPress = {this.sendMessageHandler}>
-        <View
-          style = {[
-            styles.sendButton, {
-              backgroundColor: this.message ? USER_MESSAGE_COLOR : INACTIVE_BACKGROUND_COLOR
-            }]}>
-          <Icon name = 'ios-send' size = {30} color = {WHITE_TEXT_COLOR}/>
-        </View>
-      </InteractiveComponent>
-    </View>
-  }
-
   render() {
-    // const {messages, fetchPreviousMessages, currentChatLoading, currentChatLoaded} = this.props.messenger
-    // console.log('render chat')
     const {messenger, chatId} = this.props
-    // const {uid: currentUserId} = this.props.auth.user
-    // TODO Keyboard
     return <SafeAreaView style = {styles.container}>
       {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
         <EmptyList title = {'You have no messages yet...'}/> : this.renderMessagesList()}
@@ -118,24 +112,31 @@ class Chat extends Component {
       <KeyboardAvoidingView
         behavior = 'padding'
         enabled
-        keyboardVerticalOffset = {65 + (isIphoneX() && getBottomSpace())}
+        keyboardVerticalOffset = {60 + (isIphoneX() && getBottomSpace())}
       >
-        <View style = {styles.sendControlContainer}>
+        <View style = {styles.controlContainer}>
 
-          <View style = {styles.sendMessageContainer}>
-            <TextInput
-              ref = {ref => this.textInput = ref}
-              style = {styles.sendMessageInput}
-              value = {this.message}
-              placeholder = 'Enter your message here'
-              onChangeText = {this.setMessage}
-              blurOnSubmit = {false}
-              enablesReturnKeyAutomatically
-              multiline
-            />
+          {this.list.length ? <AttachmentsList attachments = {this.list}/> : null}
+
+          <View style = {styles.sendControlContainer}>
+            <ChatButton icon = 'ios-attach' onPress = {this.attachHandler} isActive = {this.list.length < 10}/>
+            <View style = {styles.sendMessageContainer}>
+              <TextInput
+                ref = {ref => this.textInput = ref}
+                style = {styles.sendMessageInput}
+                value = {this.message}
+                placeholder = 'Enter your message here'
+                onChangeText = {this.setMessage}
+                blurOnSubmit = {false}
+                enablesReturnKeyAutomatically
+                multiline
+              />
+            </View>
+            <ChatButton
+              icon = 'ios-send'
+              onPress = {this.sendMessageHandler}
+              isActive = {this.message /*|| this.list.length && this.list.every(file => file.loaded)*/}/>
           </View>
-
-          {this.renderSendButton()}
 
         </View>
       </KeyboardAvoidingView>
@@ -143,8 +144,43 @@ class Chat extends Component {
   }
 
   sendMessageHandler = () => {
-    this.props.messenger.sendMessage(this.message, this.props.chatId)
+    this.props.messenger.sendMessage(this.message, this.props.chatId, this.list)
     this.setMessage('')
+    this.clearAttachments()
+  }
+
+  attachHandler = () => {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'Choose photo from gallery', 'Take snapshot'],
+        cancelButtonIndex: 0
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 1) {
+          StatusBar.setBarStyle('default', true)
+
+          const photo = await ImagePicker.launchImageLibraryAsync()
+            .catch(console.warn)
+
+          this.attachFile(photo)
+
+          StatusBar.setBarStyle('light-content', true)
+
+        }
+        if (buttonIndex === 2) {
+          StatusBar.setBarStyle('default', true)
+
+          const photo = await ImagePicker.launchCameraAsync()
+            .catch(console.warn)
+
+          this.attachFile(photo)
+
+          StatusBar.setBarStyle('light-content', true)
+
+        }
+
+      }
+    )
   }
 
 }
@@ -154,6 +190,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: WHITE_BACKGROUND_COLOR
   },
+  controlContainer: {
+    // flex: 1,
+    display: 'flex'
+  },
   sendControlContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -162,7 +202,7 @@ const styles = StyleSheet.create({
   sendMessageContainer: {
     flex: 1,
     paddingVertical: 8,
-    paddingLeft: 10,
+    // paddingLeft: 10,
     justifyContent: 'center'
   },
   sendMessageInput: {
@@ -170,16 +210,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '100'
   },
-  sendButtonContainer: {
-    justifyContent: 'flex-end',
-    padding: 8
-  },
-  sendButton: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    height: 36,
-    width: 36,
-    borderRadius: 18
+  loader: {
+    backgroundColor: WHITE_BACKGROUND_COLOR
   }
 })
 
