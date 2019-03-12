@@ -81,10 +81,13 @@ class PeopleStore extends EntitiesStore {
   @action convertUsers = async (payload) => {
     return Promise.all(Object.entries(payload).map(async ([key, {chats, ...user}]) => {
       user.uid = key
+      user.key = key
+
       const {uri, avatarCacheControl} = await this.downloadUserAvatar(user.avatar, key)
       user.avatar = uri
       user.avatarCacheControl = avatarCacheControl
-      return {...user, key}
+
+      return user
     }))
   }
 
