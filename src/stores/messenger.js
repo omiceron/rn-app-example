@@ -11,7 +11,7 @@ import {toJS} from 'mobx'
 import {urlToBlob} from './utils'
 import {FileSystem} from 'expo'
 import path from 'path'
-
+import co from 'co'
 // chat structure:
 //
 // [chatId]: {
@@ -118,7 +118,11 @@ class MessengerStore extends EntitiesStore {
       // TODO: loading?
       console.log('SUBSCRIBE ON CHATS:', 'get data')
 
-      await this.convertChat(payload).then(this.appendChat)
+      const chat = await this.convertChat(payload)
+      // TODO EXPERIMENTAL FEATURES
+      // const {value: chat} = await this.convertChatsSequence(payload, true).next()
+      await this.appendChat(chat)
+
       this.setTimestamp(payload)
     }
 
@@ -209,38 +213,11 @@ class MessengerStore extends EntitiesStore {
   }
 
   @action appendFetchedChats = async (payload) => {
-    // Object.entries(payload).forEach(async ([key, chat]) => {
-    //   if (!this.entities[chat.chatId]) {
-    //     chat.user = await fetchUserInfo(chat.userId)
-    //     chat.key = key
-    //     this.appendChat(chat)
-    //   }
-    // })
-
-    // const chats = await Promise.resolve(Object.entries(payload)
-    //   .reduce(async (accPromise, [key, chat]) => {
-    //       const acc = await accPromise
-    //
-    //       if (!this.entities[chat.chatId]) {
-    //         chat.user = await fetchUserInfo(chat.userId)
-    //         chat.key = key
-    //         acc[chat.chatId] = chat
-    //       }
-    //
-    //       return acc
-    //     }, {}
-    //   ))
 
     // TODO: handle condition
-    const chats = await
-      this.convertChats(payload)
-        .then(chats => chats.reduce((acc, chat) => {
-          if (this.entities[chat.chatId]) {
-            chat.messages = {...this.entities[chat.chatId].messages}
-          }
+    const chats = await this.convertChats(payload)
 
-          return {...acc, [chat.chatId]: chat}
-        }, {}))
+    // const {value: chats} = await this.convertChatsSequence(payload).next()
 
     // TODO merge
     this.entities = {...this.entities, ...chats}
@@ -250,36 +227,40 @@ class MessengerStore extends EntitiesStore {
     return true
   }
 
-  convertChat = async (payload) => {
-    const [chat] = await this.convertChats(payload)
-
-    // const people = this.getStore(PEOPLE_STORE)
-    // const [chat] = Object.entries(payload).map(([key, chat]) => ({...chat, key}))
-    // chat.loaded = !chat.lastMessage
-    // chat.user = await people.getUserLazily(chat.userId)
-
-    return chat
-  }
+  convertChat = async (payload) => Object.values(await this.convertChats(payload))[0]
 
   convertChats = async (payload) => {
-    const people = this.getStore(PEOPLE_STORE)
 
-    return Promise.all(Object.entries(payload).map(async ([key, chat]) => {
-      chat.user = await people.getUserLazily(chat.userId)
+    const chatsPromises = Object.entries(payload)
+      .map(async ([key, chat]) => {
+        chat.user = await this.getStore(PEOPLE_STORE).getUserLazily(chat.userId)
+        chat.key = key
 
-      if (!chat.lastMessage) {
-        chat.loaded = true
+        if (!chat.lastMessage) {
+          chat.loaded = true
+        }
+
+        return chat
+      })
+
+    const chats = await Promise.all(chatsPromises)
+
+    // Merging chats
+    return chats.reduce((acc, chat) => {
+      if (this.entities[chat.chatId]) {
+        chat.messages = {...this.entities[chat.chatId].messages}
       }
 
-      return ({...chat, key})
-    }))
+      return {...acc, [chat.chatId]: chat}
+    }, {})
+
   }
 
   @action appendChat = async (chat) => {
     const oldChat = this.entities[chat.chatId] || {}
     this.entities[chat.chatId] = {...oldChat, ...chat}
     await this.cacheMessenger()
-    return chat
+    return this.entities[chat.chatId]
   }
 
   // TODO: add sync
@@ -291,12 +272,14 @@ class MessengerStore extends EntitiesStore {
 
     const callback = async (snapshot) => {
       if (snapshot.exists()) {
-        const chat = await this.convertChat(snapshot.val())
-        console.log('GET CHAT:', 'chat UID is', chat.chatId)
+        const payload = snapshot.val()
 
+        const chat = await this.convertChat(payload)
+        console.log('GET CHAT:', 'chat UID is', chat.chatId)
         await this.appendChat(chat)
 
         return chat.chatId
+
       } else {
         console.log('GET CHAT:', 'there is no chat with user', userId, 'yet')
         return null
@@ -333,33 +316,36 @@ class MessengerStore extends EntitiesStore {
     console.log('SUBSCRIBE ON MESSAGES:', 'start')
 
     if (this.entities[chatId].subscribed) return
+    this.entities[chatId].subscribed = true
 
     const callback = async (snapshot) => {
       console.log('SUBSCRIBE ON MESSAGES:', 'get data')
 
       // TODO: Rename 'user' to 'userId'
-      const {text, timestamp, user, token, attachments} = snapshot.val()
-      const {key} = snapshot
+      const message = snapshot.val()
 
-      const files = this.getStore(ATTACHMENTS_STORE)
+      message.key = snapshot.key
+      message.userId = message.user
 
-      const attachmentsArray = await Promise.all(Object.values(attachments)
-        .map(files.getAttachmentLazily))
+      if (message.attachments) {
+        const attachmentsPromises = Object.values(message.attachments)
+          .map(this.getStore(ATTACHMENTS_STORE).getAttachmentLazily)
 
-      const message = {
-        key,
-        token,
-        timestamp,
-        text,
-        userId: user,
-        attachments: attachmentsArray
+        const attachments = await Promise.all(attachmentsPromises)
+        message.attachments = attachments.filter(Boolean)
       }
+      // const message = {
+      //   key,
+      //   token,
+      //   timestamp,
+      //   text,
+      //   userId: user,
+      //   attachments: attachmentsArray
+      // }
 
       this.appendMessage(chatId, message)
       // this.cacheMessenger()
     }
-
-    this.entities[chatId].subscribed = true
 
     this.getChatReference(chatId)
       .limitToLast(1)
@@ -374,7 +360,7 @@ class MessengerStore extends EntitiesStore {
 
   @action fetchMessages = (chatId) => {
     console.log('FETCH MESSAGES:', 'start')
-    console.log('!LOADED', this.entities[chatId].loading)
+
     if (this.entities[chatId].loaded || this.entities[chatId].loading) return
     this.entities[chatId].loading = true
 
@@ -406,28 +392,28 @@ class MessengerStore extends EntitiesStore {
 
   }
 
-  @action appendFetchedMessages = async (chatId, payload) => {
-    const files = this.getStore(ATTACHMENTS_STORE)
-
+  @action convertFetchedMessages = async (payload) => {
     const messagesPromises = Object.entries(payload)
       .map(async ([key, message]) => {
-
-        if (message.attachments) {
-          const attachments = await Promise.all(Object.values(message.attachments).map(files.getAttachmentLazily))
-          message.attachments = attachments.filter(Boolean)
-        }
-
         message.key = key
         message.userId = message.user
+
+        if (message.attachments) {
+          message.attachments = await this.getStore(ATTACHMENTS_STORE).convertAttachments(message.attachments)
+        }
 
         return message
 
       })
 
-    const messagesArray = await Promise.all(messagesPromises)
+    const messages = await Promise.all(messagesPromises)
 
-    const messages = messagesArray
-      .reduce((acc, message) => ({...acc, [message.key]: message}), {})
+    return messages.reduce((acc, message) => ({...acc, [message.key]: message}), {})
+  }
+
+  @action appendFetchedMessages = async (chatId, payload) => {
+    const messages = await this.convertFetchedMessages(payload)
+    // .then(messages => messages.reduce((acc, message) => ({...acc, [message.key]: message}), {}))
 
     if (!this.entities[chatId].messages) {
       this.entities[chatId].messages = {}
@@ -440,9 +426,7 @@ class MessengerStore extends EntitiesStore {
 
   // TODO: change temporary message uid to actual
   @action appendMessage = (chatId, message) => {
-    // console.log('APPEND MESSAGE:', 'start')
     if (!this.entities[chatId].messages) {
-      // console.log('APPEND MESSAGE:', 'no messages')
       this.entities[chatId].messages = {}
     }
 
@@ -452,10 +436,7 @@ class MessengerStore extends EntitiesStore {
     }
 
     this.entities[chatId].messages[message.key] = message
-
     // this.cacheMessenger()
-
-    // console.log('APPEND MESSAGE:', 'message appended')
   }
 
   sendMessage = (text, chatId, attachments = {}) => {
@@ -479,12 +460,14 @@ class MessengerStore extends EntitiesStore {
 
     attachments = attachments.reduce((acc, {url, uid, ...rest}) => ({...acc, [uid]: url}), {})
 
-    sendMessage({
+    const message = {
       text,
       chatId,
       attachments,
       token: key
-    })
+    }
+
+    sendMessage(message)
       .then(res => {
         console.log('SEND MESSAGE:', 'got server respond', res.data.key)
       })
@@ -523,6 +506,31 @@ class MessengerStore extends EntitiesStore {
 
     this.clear()
   }
+
+  // convertChat = async (payload) => Object.values(await this.convertChats(payload))[0]
+  //
+  // convertChats = async (payload) => {
+  //
+  //   return Object.entries(payload)
+  //     .reduce(async (accPromise, [key, chat]) => {
+  //         const acc = await accPromise
+  //
+  //         chat.user = await this.getStore(PEOPLE_STORE).getUserLazily(chat.userId)
+  //         chat.key = key
+  //
+  //         if (!chat.lastMessage) {
+  //           chat.loaded = true
+  //         }
+  //
+  //         // TODO: Can be an async conflict
+  //         if (this.entities[chat.chatId]) {
+  //           chat.messages = {...this.entities[chat.chatId].messages}
+  //         }
+  //
+  //         return {...acc, [chat.chatId]: chat}
+  //       }, Promise.resolve({})
+  //     )
+  // }
 
 }
 
