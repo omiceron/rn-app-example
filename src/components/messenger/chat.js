@@ -81,7 +81,8 @@ class Chat extends Component {
   @action attachFile = async ({uri, cancelled}) => {
     if (cancelled) return
 
-    const {value: uid} = await this.props.attachments.attachFileSequence({uri}).next()
+    const attachFile = this.props.attachments.attachFileSequence({uri})
+    const {value: uid} = await attachFile.next()
     this.attachments = [...this.attachments, uid]
     attachFile.next()
   }
