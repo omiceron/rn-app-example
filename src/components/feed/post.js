@@ -116,11 +116,13 @@ class Post extends Component {
         {location && <AttachedLocation
           location = {location}
           onPress = {this.props.openMap}
+          style = {{marginBottom: 8}}
         />}
 
         {coords && <AttachedMap
           coords = {coords}
           onPress = {this.props.openMap}
+          style = {{marginBottom: 8}}
 
         />}
 
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   scroll: {
-    paddingHorizontal: 15
+    marginHorizontal: 15
   },
   row: {
     marginVertical: 8
