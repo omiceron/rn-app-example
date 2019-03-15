@@ -27,19 +27,11 @@ class ChatScreen extends Component {
     const {user: {firstName, avatar}} = navigation.state.params
     const {userId} = navigation.state.params
 
-    // const user = navigation.getParam('user')
-
-    // const navigateToMessenger = () => {
-    //   navigation.navigate('messenger')
-    // }
-
     const navigateToUserScreen = () => {
       navigation.push('userScreen', {userId})
     }
 
     return ({
-      // headerTitle: !user && <Loader/>,
-      // title: user && user.firstName,
       title: firstName,
       headerRight: <TouchableAvatar
         size = {40}
@@ -48,13 +40,11 @@ class ChatScreen extends Component {
         uri = {avatar}
       />,
       tabBarVisible: false
-      // headerLeft: <HeaderBackButton tintColor = 'white' onPress = {navigateToMessenger}/>,
-      // headerLeft: <HeaderLeft onPress = {navigateToMessenger}/>,
 
     })
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const {userId} = this.props.navigation.state.params
     // const user = this.props.people.getUser(userId)
     // this.props.navigation.setParams({user})

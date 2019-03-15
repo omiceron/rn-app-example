@@ -11,7 +11,7 @@ import {
   MESSENGER_STORE,
   NAVIGATION_STORE
 } from '../constants'
-import {Facebook, Google} from 'expo'
+import {Facebook, Google, MediaLibrary} from 'expo'
 import {facebookAppId, googleClientId} from '../config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'
@@ -25,8 +25,7 @@ class AuthStore extends BasicStore {
       this.setUser(user)
 
       if (user) {
-        // AsyncStorage.getAllKeys().then(console.log)
-        AsyncStorage.getItem('meowchat:store:messenger').then(res => console.log(JSON.parse(res)))
+        AsyncStorage.getAllKeys().then(console.log)
 
         this.getStore(CURRENT_USER_STORE).startPresenceWatcher()
         this.getStore(CURRENT_USER_STORE).subscribeOnUserData(user.uid)

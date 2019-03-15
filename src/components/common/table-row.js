@@ -5,6 +5,7 @@ import Separator from './separator'
 import PropTypes from 'prop-types'
 import {INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR} from '../../constants'
 
+// TODO divide table row and settings row
 class TableRow extends Component {
   static propTypes = {
     // style: View.propTypes.style,
@@ -20,8 +21,8 @@ class TableRow extends Component {
     disableSeparator: PropTypes.bool,
     RightComponent: PropTypes.oneOfType([
       PropTypes.element,
-      PropTypes.func,
-    ]),
+      PropTypes.func
+    ])
   }
 
   render() {
@@ -48,7 +49,8 @@ class TableRow extends Component {
         RightComponent = {RightComponent || onValueChange && SwitchComponent}
         mainContainerStyle = {styles.textView}
         style = {[styles.container, style]}
-        {...rest}>
+        {...rest}
+      >
         {title ? <Text style = {[styles.title, titleStyle]}>{title}</Text> : children}
         {caption && <Text style = {[styles.caption, captionStyle]}>{caption}</Text>}
       </SegmentedCard>

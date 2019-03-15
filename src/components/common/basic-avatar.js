@@ -14,18 +14,6 @@ class BasicAvatar extends Component {
     size: PropTypes.number
   }
 
-  // @observable loaded = false
-  // @observable uri = null
-  //
-  // async componentWillMount() {
-  //   if (this.props.uri) await Image.prefetch(this.props.uri)
-  //   else {
-  //     this.uri = `https://loremflickr.com/200/200/cat?random=${Math.random()}`
-  //     await Image.prefetch(this.uri)
-  //   }
-  //   this.loaded = true
-  // }
-
   render() {
     const {style, uri, size} = this.props
 
@@ -34,19 +22,6 @@ class BasicAvatar extends Component {
       width: size,
       borderRadius: size / 2
     }
-
-    // if (!this.loaded) return <View style = {[styles.content, container, style]}>
-    //   <ActivityIndicator/>
-    //  </View>
-
-    // if (!uri) {
-    //   return <View style = {[container, style, {
-    //     backgroundColor: INACTIVE_BACKGROUND_COLOR, justifyContent: 'center',
-    //     alignItems: 'center'
-    //   }]}>
-        {/*<Icon name = 'ios-camera' size = {size / 2} color = {WHITE_TEXT_COLOR}/>*/}
-      // </View>
-    // }
 
     return <View style = {[container, style]}>
       <ImageBackground

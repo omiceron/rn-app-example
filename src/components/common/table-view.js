@@ -17,12 +17,9 @@ class TableView extends Component {
 
     return <ViewComponent {...rest} style = {[styles.container, style]}>
         {childrenArray.map((child, index) => {
-          // const {leadingItem, trailingItem} = child.props
           return React.cloneElement(child, {
             leadingItem: index === 0,
             trailingItem: index === childrenArray.length - 1
-            // leadingItem: leadingItem !== undefined ? leadingItem : index === 0,
-            // trailingItem: trailingItem !== undefined ? trailingItem : index === childrenArray.length - 1
           })
         })}
       </ViewComponent>

@@ -19,8 +19,7 @@ class UserAvatarsScreen extends Component {
     StatusBar.setHidden(true, 'fade')
   }
 
-  async componentWillMount() {
-    // const userId = this.props.navigation.state.params.user.uid
+  async componentDidMount() {
     const {userId} = this.props.navigation.state.params
 
     this.user = await this.props.people.getUserGreedily(userId)

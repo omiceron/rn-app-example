@@ -19,7 +19,7 @@ class LocationFormScreen extends Component {
     })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {attachLocation} = this.props.feed
     this.props.navigation.setParams({attachLocation})
   }

@@ -31,7 +31,7 @@ class LikesListScreen extends Component {
 
   @observable likes = null
 
-  async componentWillMount() {
+  async componentDidMount() {
     const {navigation, feed} = this.props
     this.likes = await feed.getPostLikes(navigation.state.params.postId)
 

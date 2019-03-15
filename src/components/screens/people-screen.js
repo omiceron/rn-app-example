@@ -12,12 +12,6 @@ class PeopleListScreen extends Component {
     title: 'People'
   }
 
-  // componentWillMount() {
-  //   const {people} = this.props
-  //   if (!people.loaded && !people.loading) people.fetchAllUsers()
-  // }
-
-
   // TODO: loading behavior must depend on AsyncStorage
   render() {
     const {people} = this.props
