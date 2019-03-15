@@ -14,12 +14,12 @@ class AttachedMap extends Component {
   }
 
   render() {
-    const {coords, onPress} = this.props
+    const {coords, onPress, style} = this.props
 
     if (!coords) return null
 
     return <MapView
-      style = {styles.container}
+      style = {[styles.container, style]}
       onPress = {onPress}
       zoomEnabled = {false}
       rotateEnabled = {false}
@@ -37,7 +37,6 @@ class AttachedMap extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 100,
-    marginBottom: 8,
     borderRadius: 10,
   }
 })
