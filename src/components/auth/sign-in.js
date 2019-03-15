@@ -30,6 +30,7 @@ import {
 
 @inject(AUTH_STORE)
 @inject(KEYBOARD_STORE)
+@withAnimation(LOGO, INPUT, FOOTER, BUTTON, KEYBOARD)
 @observer
 class SignIn extends Component {
 
@@ -254,7 +255,7 @@ class SignIn extends Component {
 
       </SafeAreaView>
     </TouchableWithoutFeedback>
-  // </BackgroundImage>
+    // </BackgroundImage>
 
   }
 }
@@ -308,6 +309,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withAnimation(SignIn, {
-  layoutNames: [LOGO, INPUT, FOOTER, BUTTON, KEYBOARD]
-})
+export default SignIn

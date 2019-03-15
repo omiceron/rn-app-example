@@ -11,19 +11,21 @@ import {
   KEYBOARD_EASING,
   KEYBOARD
 } from '../../constants'
+import {observer, inject} from 'mobx-react'
 
-export default (AnimatedComponent: React.ComponentType<any>, props: { layoutNames: string[] }) =>
+@observer
+export default (...props: string[]) => (AnimatedComponent: React.ComponentType<any>) =>
   class WithAnimation extends React.Component<*> {
   constructor(...args) {
     super(...args)
 
     if (!props) console.error('layoutNames type error')
 
-    props.layoutNames.forEach(name => this.layouts[name] = {height: 0, y: 0})
+    props.forEach(name => this.layouts[name] = {height: 0, y: 0})
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.onFocus)
     this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.onBlur)
   }
@@ -55,7 +57,8 @@ export default (AnimatedComponent: React.ComponentType<any>, props: { layoutName
       toValue,
       duration: event.duration,
       easing: KEYBOARD_EASING,
-      useNativeDriver: props.useNativeDriver === undefined || props.useNativeDriver
+      useNativeDriver: true
+      // useNativeDriver: props.useNativeDriver === undefined || props.useNativeDriver
     }).start()
   }
 
