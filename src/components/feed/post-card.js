@@ -10,6 +10,7 @@ import {
 } from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
+import MessageAttachments from '../messenger/message-attachments'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -21,7 +22,7 @@ class PostCard extends Component {
     likesNumber: PropTypes.number.isRequired,
     isLiked: PropTypes.bool.isRequired,
     uid: PropTypes.string.isRequired,
-    coords: PropTypes.object,
+    coords: PropTypes.object
     // isFirstItem: PropTypes.bool.isRequired
   }
 
@@ -34,8 +35,7 @@ class PostCard extends Component {
   }
 
   render() {
-    const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords} = this.props
-    // console.log('render card', title, isLiked)
+    const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords, attachments} = this.props
 
     return <View style = {[styles.container]}>
       <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
@@ -56,8 +56,14 @@ class PostCard extends Component {
 
       </TouchableOpacity>
 
+      {attachments && <MessageAttachments attachments = {attachments}/>}
+
       {location &&
-      <AttachedLocation location = {location} onPress = {() => navigation.navigate('mapScreen', {coords})}/>}
+      <AttachedLocation
+        location = {location}
+        style = {{marginBottom: 8}}
+        onPress = {() => navigation.navigate('mapScreen', {coords})}
+      />}
 
       <Separator/>
 
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    margin: 8,
+    margin: 8
   },
   text: {
     color: INACTIVE_TEXT_COLOR,
