@@ -439,7 +439,7 @@ class MessengerStore extends EntitiesStore {
     // this.cacheMessenger()
   }
 
-  sendMessage = (text, chatId, attachments = {}) => {
+  sendMessage = (text, chatId, attachments = []) => {
     if (!text) return
 
     // https://github.com/omiceron/firebase-functions-example
