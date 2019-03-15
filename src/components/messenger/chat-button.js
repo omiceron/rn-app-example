@@ -9,21 +9,35 @@ class ChatButton extends Component {
     isActive: PropTypes.any,
     icon: PropTypes.string.isRequired,
     size: PropTypes.number,
-    onPress: PropTypes.func.isRequired
+    onPress: PropTypes.func.isRequired,
+    color: PropTypes.string,
+    activeBackgroundColor: PropTypes.string,
+    inactiveBackgroundColor: PropTypes.string
   }
 
   render() {
-    const {isActive = true, icon, size = 30, onPress} = this.props
+    const {
+      isActive = true,
+      icon,
+      size = 30,
+      onPress,
+      color = WHITE_TEXT_COLOR,
+      activeBackgroundColor = USER_MESSAGE_COLOR,
+      inactiveBackgroundColor = INACTIVE_BACKGROUND_COLOR
+    } = this.props
+
     const InteractiveComponent = isActive ? TouchableOpacity : View
+    const backgroundColor = isActive ? activeBackgroundColor : inactiveBackgroundColor
 
     return <View style = {styles.container}>
       <InteractiveComponent onPress = {onPress}>
         <View
           style = {[
-            styles.button, {
-              backgroundColor: isActive ? USER_MESSAGE_COLOR : INACTIVE_BACKGROUND_COLOR
-            }]}>
-          <Icon name = {icon} size = {size} color = {WHITE_TEXT_COLOR}/>
+            styles.button,
+            {backgroundColor}
+          ]}
+        >
+          <Icon style = {{paddingTop: size / 10}} name = {icon} size = {size} color = {color}/>
         </View>
       </InteractiveComponent>
     </View>
@@ -36,12 +50,12 @@ const styles = StyleSheet.create({
     padding: 8
   },
   button: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     height: 36,
     width: 36,
     borderRadius: 18
-  },
+  }
 
 })
 
