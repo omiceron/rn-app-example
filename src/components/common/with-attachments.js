@@ -26,6 +26,7 @@ export default (...props) => (Component: React.ComponentType<any>) =>
       return this.attachments.map(this.props.attachments.getAttachment)
     }
 
+    // TODO: send this to store with callback
     attachFile = async ({uri, cancelled}) => {
       if (cancelled) return
 
@@ -71,6 +72,7 @@ export default (...props) => (Component: React.ComponentType<any>) =>
         attachPhotoHandler = {this.attachPhotoHandler}
         attachImageHandler = {this.attachImageHandler}
         attachmentsList = {this.attachmentsList}
+        clearAttachments = {this.clearAttachments}
       />
     }
   }
