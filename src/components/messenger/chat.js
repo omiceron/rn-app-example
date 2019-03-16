@@ -7,32 +7,34 @@ import {
   FlatList,
   SafeAreaView,
   LayoutAnimation,
-  ActionSheetIOS,
-  StatusBar
+  ActionSheetIOS
 } from 'react-native'
+
 import {observer, inject} from 'mobx-react'
 import Message from './message'
-import {observable, action, computed} from 'mobx'
-import {
-  ATTACHMENTS_STORE,
-  AUTH_STORE, MESSENGER_STORE,
-  WHITE_BACKGROUND_COLOR
-} from '../../constants'
+import {observable, action} from 'mobx'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from '../common/empty-list'
 import {reaction} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
+
+import {
+  AUTH_STORE,
+  MESSENGER_STORE,
+  WHITE_BACKGROUND_COLOR
+} from '../../constants'
+
 import ListLoader from '../common/list-loader'
-import {ImagePicker} from 'expo'
 import AttachmentsList from './attachments-list'
 import ChatButton from './chat-button'
+import withAttachments from '../common/with-attachments'
 
-// redesign the chat
+// TODO: redesign the chat
 // TODO: Make chat computed property
 // TODO: LayoutAnimation onFocus in emptyList
 // TODO Keyboard
 
-@inject(ATTACHMENTS_STORE)
+@withAttachments()
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)
 @observer
@@ -53,39 +55,17 @@ class Chat extends Component {
     )
 
     reaction(
-      () => this.list.length,
+      () => this.props.attachmentsList.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.messenger.subscribeOnMessages(this.props.chatId)
-  }
-
-  componentWillUnmount() {
-    // TODO: not the best practice but ok
-    this.attachments.forEach(this.props.attachments.deleteAttachment)
   }
 
   @observable message = ''
   @action setMessage = message => this.message = message
-
-  @observable attachments = []
-  @action clearAttachments = () => this.attachments = []
-
-  @computed
-  get list() {
-    return this.attachments.map(this.props.attachments.getAttachment)
-  }
-
-  @action attachFile = async ({uri, cancelled}) => {
-    if (cancelled) return
-
-    const attachFile = this.props.attachments.attachFileSequence({uri})
-    const {value: uid} = await attachFile.next()
-    this.attachments = [...this.attachments, uid]
-    attachFile.next()
-  }
 
   renderItem = ({item}) => <Message {...item}/>
 
@@ -117,10 +97,14 @@ class Chat extends Component {
       >
         <View style = {styles.controlContainer}>
 
-          {this.list.length ? <AttachmentsList attachments = {this.list}/> : null}
+          {this.props.attachmentsList.length ? <AttachmentsList attachments = {this.props.attachmentsList}/> : null}
 
           <View style = {styles.sendControlContainer}>
-            <ChatButton icon = 'ios-attach' onPress = {this.attachHandler} isActive = {this.list.length < 10}/>
+            <ChatButton
+              icon = 'ios-attach'
+              onPress = {this.attachHandler}
+              isActive = {this.props.attachmentsList.length < 10}
+            />
             <View style = {styles.sendMessageContainer}>
               <TextInput
                 ref = {ref => this.textInput = ref}
@@ -145,39 +129,22 @@ class Chat extends Component {
   }
 
   sendMessageHandler = () => {
-    this.props.messenger.sendMessage(this.message, this.props.chatId, this.list)
+    this.props.messenger.sendMessage(this.message, this.props.chatId, this.props.attachmentsList)
     this.setMessage('')
-    this.clearAttachments()
+    this.props.clearAttachments()
   }
 
   attachHandler = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
+    ActionSheetIOS.showActionSheetWithOptions({
         options: ['Cancel', 'Choose photo from gallery', 'Take snapshot'],
         cancelButtonIndex: 0
       },
-      async (buttonIndex) => {
+      (buttonIndex) => {
         if (buttonIndex === 1) {
-          StatusBar.setBarStyle('default', true)
-
-          const photo = await ImagePicker.launchImageLibraryAsync()
-            .catch(console.warn)
-
-          this.attachFile(photo)
-
-          StatusBar.setBarStyle('light-content', true)
-
+          this.props.attachImageHandler()
         }
         if (buttonIndex === 2) {
-          StatusBar.setBarStyle('default', true)
-
-          const photo = await ImagePicker.launchCameraAsync()
-            .catch(console.warn)
-
-          this.attachFile(photo)
-
-          StatusBar.setBarStyle('light-content', true)
-
+          this.props.attachPhotoHandler()
         }
 
       }
