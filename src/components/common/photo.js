@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, Image} from 'react-native'
 import {Camera, Permissions} from 'expo'
 import {observable, action} from 'mobx'
 import {observer, inject} from 'mobx-react'
@@ -26,12 +26,11 @@ class Photo extends Component {
     else this.errorMessage = 'permission denied'
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     StatusBar.setHidden(true, 'slide')
 
     const {status} = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL)
     this.setPermission(status)
-    // Camera.onCameraReady()
   }
 
   async componentWillUnmount() {
@@ -66,21 +65,21 @@ class Photo extends Component {
 
     if (!this.permitted) return null
     return <Camera
-        // pictureSize = {'352x288'}
-        style = {styles.container}
-        type = {this.type}
-        ref = {ref => {
-          this.camera = ref
-        }}
-      >
-        <View style = {styles.overlay}>
-          <View style = {styles.controls}>
-            {this.renderCancelButton()}
-            {this.renderSnapshotButton()}
-            {this.renderFlipButton()}
-          </View>
+      // pictureSize = {'352x288'}
+      style = {styles.container}
+      type = {this.type}
+      ref = {ref => {
+        this.camera = ref
+      }}
+    >
+      <View style = {styles.overlay}>
+        <View style = {styles.controls}>
+          {this.renderCancelButton()}
+          {this.renderSnapshotButton()}
+          {this.renderFlipButton()}
         </View>
-      </Camera>
+      </View>
+    </Camera>
   }
 
   flipCamera = () => {
@@ -90,21 +89,21 @@ class Photo extends Component {
     )
   }
 
-  takePicture = async () => {
-    // alert('camera')
+  @action takePicture = () => {
     if (this.pending) return
     this.pending = true
 
     const {photoHandler} = this.props
-    // TODO Make preview. Wait photo to load on device then go back
+    // TODO Make preview. Wait photo to load on device then go back. Expo camera freezes...
     // this.camera.getAvailablePictureSizesAsync().then(console.log)
+
     this.camera.takePictureAsync({onPictureSaved: photoHandler})
     this.camera.pausePreview()
     // console.log('got photo')
     // photoHandler(photo)
     // console.log('handler')
 
-    this.goBack()
+    setTimeout(this.goBack, 2000)
   }
 
   goBack = () => {

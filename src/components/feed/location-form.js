@@ -75,10 +75,6 @@ class LocationForm extends Component {
 
     if (!coords) return <Loader/>
 
-    const renderIcon = () => <TouchableOpacity onPress = {this.handleSubmit} hitSlop = {HIT_SLOP}>
-      <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
-    </TouchableOpacity>
-
     return <TableView style = {styles.container}>
 
       <TableRow>
