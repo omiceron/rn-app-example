@@ -12,7 +12,7 @@ import withAttachments from '../common/with-attachments'
 
 import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
-import AttachmentsList from '../messenger/attachments-list'
+import AttachmentsList from '../common/attachments-list'
 import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
 

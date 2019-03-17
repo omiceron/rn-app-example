@@ -12,6 +12,7 @@ import AttachedMap from './attached-map'
 import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
+import {computed} from 'mobx'
 import BasicAvatar from '../common/basic-avatar'
 import {getDate} from '../../stores/utils'
 import AttachedLocation from './attached-location'
@@ -27,13 +28,19 @@ class Post extends Component {
     coords: object,
     location: string,
     timestamp: number.isRequired,
-    isLiked: bool.isRequired,
     uid: string.isRequired,
-    likesNumber: number.isRequired,
     user: shape({
       firstName: string,
       lastName: string
     }).isRequired
+  }
+
+  @computed get likesNumber() {
+    return this.props.feed.getPostLikesNumber(this.props.uid)
+  }
+
+  @computed get isLiked() {
+    return this.props.feed.isPostLiked(this.props.uid)
   }
 
   renderAvatar = () => <BasicAvatar
@@ -43,15 +50,15 @@ class Post extends Component {
   />
 
   render() {
+    console.log('render post')
+
     const {
       location,
       title,
       text,
       coords,
       timestamp,
-      isLiked,
       uid: postId,
-      likesNumber,
       user: {
         firstName,
         lastName,
@@ -129,9 +136,9 @@ class Post extends Component {
         <PostSeparator/>
 
         <PostControlRow
-          isLiked = {isLiked}
-          likesNumber = {likesNumber}
-          onLikePress = {() => feed.setLike(postId)}
+          isLiked = {this.isLiked}
+          likesNumber = {this.likesNumber}
+          onLikePress = {feed.setLike.bind(null, postId)}
           onCounterPress = {this.props.openLikedPosts}
         />
 

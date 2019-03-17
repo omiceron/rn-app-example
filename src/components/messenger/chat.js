@@ -25,7 +25,7 @@ import {
 } from '../../constants'
 
 import ListLoader from '../common/list-loader'
-import AttachmentsList from './attachments-list'
+import AttachmentsList from '../common/attachments-list'
 import ChatButton from './chat-button'
 import withAttachments from '../common/with-attachments'
 

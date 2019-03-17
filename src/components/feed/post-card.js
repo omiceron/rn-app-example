@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Anim
 import PropTypes from 'prop-types'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
+import {computed} from 'mobx'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
 import {
   NAVIGATION_STORE, WHITE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR,
@@ -10,32 +11,32 @@ import {
 } from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
-import MessageAttachments from '../messenger/message-attachments'
+import Attachments from '../common/attachments'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
-  // @observer
+@observer
 class PostCard extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    likesNumber: PropTypes.number.isRequired,
-    isLiked: PropTypes.bool.isRequired,
     uid: PropTypes.string.isRequired,
     coords: PropTypes.object
-    // isFirstItem: PropTypes.bool.isRequired
   }
 
-  // TODO: do something with this mess
-  shouldComponentUpdate(nextProps) {
-    const {likesNumber: newLikesNumber, isLiked: newIsLiked} = nextProps
-    const {likesNumber, isLiked} = this.props
+  @computed
+  get likesNumber() {
+    return this.props.feed.getPostLikesNumber(this.props.uid)
+  }
 
-    return likesNumber !== newLikesNumber || isLiked !== newIsLiked
+  @computed
+  get isLiked() {
+    return this.props.feed.isPostLiked(this.props.uid)
   }
 
   render() {
-    const {title, text, location, uid, isLiked, likesNumber, navigation, feed, coords, attachments} = this.props
+    console.log('render')
+    const {title, text, location, uid, navigation, feed, coords, attachments} = this.props
 
     return <View style = {[styles.container]}>
       <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
@@ -56,7 +57,7 @@ class PostCard extends Component {
 
       </TouchableOpacity>
 
-      {attachments && <MessageAttachments attachments = {attachments}/>}
+      {attachments && <Attachments attachments = {attachments}/>}
 
       {location &&
       <AttachedLocation
@@ -68,8 +69,8 @@ class PostCard extends Component {
       <Separator/>
 
       <PostControlRow
-        isLiked = {isLiked}
-        likesNumber = {likesNumber}
+        isLiked = {this.isLiked}
+        likesNumber = {this.likesNumber}
         onLikePress = {() => feed.setLike(uid)}
         onCounterPress = {() => navigation.push('likesList', {postId: uid})}
       />
