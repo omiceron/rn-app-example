@@ -31,20 +31,7 @@ class Feed extends Component {
     )
   }
 
-  renderItem = ({item: {title, text, comments, location, coords, uid, likesNumber, isLiked, attachments}}) => {
-    return <PostCard
-      title = {title}
-      text = {text}
-      coords = {coords}
-      likesNumber = {likesNumber}
-      isLiked = {isLiked}
-      comments = {comments}
-      uid = {uid}
-      location = {location}
-      attachments = {attachments}
-      // onLikeNumberPress = {onLikeNumberPress}
-    />
-  }
+  renderItem = ({item: {likes, ...props}}) => <PostCard {...props}/>
 
   render() {
     const {feed} = this.props

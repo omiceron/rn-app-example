@@ -40,7 +40,7 @@ class EntitiesStore extends BasicStore {
   }
 
   cache = async (obj) => {
-    console.log('cached!')
+    // console.log('cached!')
     return await AsyncStorage.setItem(`meowchat:store:${this.storeName}`, JSON.stringify(toJS(obj)))
   }
 
