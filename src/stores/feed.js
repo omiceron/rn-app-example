@@ -32,6 +32,7 @@ import loremIpsum from 'lorem-ipsum'
 import {Location} from 'expo'
 import {toJS} from 'mobx'
 
+// TODO move post form to new store?
 class FeedStore extends EntitiesStore {
 
   @observable title = ''
@@ -319,7 +320,7 @@ class FeedStore extends EntitiesStore {
     return coords
   }
 
-  @action sendPost = async (attachments = []) => {
+  @action sendPost = async (attachments = {}) => {
     if (!this.title || !this.text) {
       alert('No text or title!')
       return
@@ -334,7 +335,7 @@ class FeedStore extends EntitiesStore {
         latitude: this.attachedCoords.latitude,
         longitude: this.attachedCoords.longitude
       },
-      attachments: attachments.reduce((acc, {url, uid, ...rest}) => ({...acc, [uid]: url}), {})
+      attachments
     }
 
     const {key} = await this.reference.push(newPost)

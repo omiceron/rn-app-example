@@ -26,6 +26,8 @@ class PostForm extends Component {
   constructor(...args) {
     super(...args)
 
+    this.props.setClearAttachments(this.props.clearAttachments)
+
     reaction(
       () => this.props.layouts[KEYBOARD],
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -33,7 +35,7 @@ class PostForm extends Component {
 
     reaction(
       () => this.props.attachmentsList,
-      () => this.props.getAttachmentsHelper(this.props.attachmentsList)
+      () => this.props.getAttachmentsHelper(this.props.attachmentsObject)
     )
   }
 
@@ -59,7 +61,10 @@ class PostForm extends Component {
 
   componentWillUnmount() {
     this.props.feed.clearPostForm()
+    console.log(this.props.attachmentsList)
   }
+
+  setTextInputRef = ref => this.textInput = ref
 
   render() {
     const {feed} = this.props
@@ -84,7 +89,7 @@ class PostForm extends Component {
           <TextInput
             value = {feed.text}
             onChangeText = {feed.setText}
-            ref = {ref => this.textInput = ref}
+            ref = {this.setTextInputRef}
             style = {styles.text}
             placeholder = 'Enter text here...'
             multiline
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '100',
     color: BLACK_TEXT_COLOR
-  },
+  }
 })
 
 export default PostForm

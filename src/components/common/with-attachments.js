@@ -14,16 +14,23 @@ export default (...props) => (Component: React.ComponentType<any>) =>
 
     componentWillUnmount() {
       // TODO: not the best practice but ok
-      // this.attachments.forEach(this.props.attachments.deleteAttachment)
+      this._attachments.forEach(this.props.attachments.deleteAttachment)
     }
 
-    @observable attachments = []
-    @action addAttachment = (uid) => this.attachments = [...this.attachments, uid]
-    @action clearAttachments = () => this.attachments = []
+    @observable _attachments = []
+    @action addAttachment = (uid) => this._attachments = [...this._attachments, uid]
+    @action clearAttachments = () => this._attachments = []
 
     @computed
     get attachmentsList() {
-      return this.attachments.map(this.props.attachments.getAttachment)
+      return this._attachments.map(this.props.attachments.getAttachment)
+    }
+
+    @computed get attachmentsObject() {
+      return this._attachments.reduce((acc, uid) => {
+        const {url} = this.props.attachments.getAttachment(uid)
+        return ({...acc, [uid]: url})
+      }, {})
     }
 
     // TODO: send this to store with callback
@@ -72,6 +79,7 @@ export default (...props) => (Component: React.ComponentType<any>) =>
         attachPhotoHandler = {this.attachPhotoHandler}
         attachImageHandler = {this.attachImageHandler}
         attachmentsList = {this.attachmentsList}
+        attachmentsObject = {this.attachmentsObject}
         clearAttachments = {this.clearAttachments}
       />
     }

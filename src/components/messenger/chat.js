@@ -107,7 +107,7 @@ class Chat extends Component {
             />
             <View style = {styles.sendMessageContainer}>
               <TextInput
-                ref = {ref => this.textInput = ref}
+                ref = {this.setTextInputRef}
                 style = {styles.sendMessageInput}
                 value = {this.message}
                 placeholder = 'Enter your message here'
@@ -128,8 +128,10 @@ class Chat extends Component {
     </SafeAreaView>
   }
 
+  setTextInputRef = ref => this.textInput = ref
+
   sendMessageHandler = () => {
-    this.props.messenger.sendMessage(this.message, this.props.chatId, this.props.attachmentsList)
+    this.props.messenger.sendMessage(this.message, this.props.chatId, this.props.attachmentsObject, this.props.attachmentsList)
     this.setMessage('')
     this.props.clearAttachments()
   }

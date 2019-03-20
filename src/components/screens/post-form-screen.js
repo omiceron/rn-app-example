@@ -10,30 +10,33 @@ class PostFormScreen extends Component {
   constructor(...args) {
     super(...args)
 
-    const {sendPost} = this.props.feed
-    const getAttachments = () => this.attachments
-    this.props.navigation.setParams({sendPost, getAttachments})
-
+    this.props.navigation.setParams({sendPost: this.sendPost})
   }
 
+  // TODO: send post clear attachments
   static navigationOptions = ({navigation}) => {
     const sendPost = navigation.getParam('sendPost')
-    const getAttachments = navigation.getParam('getAttachments')
 
     return ({
       title: 'Add post',
       headerLeft: <NavigationButton title = 'Cancel' onPress = {() => navigation.navigate('feed')}/>,
-      headerRight: <NavigationButton title = 'Send' onPress = {() => sendPost(getAttachments())}/>
+      headerRight: <NavigationButton title = 'Send' onPress = {sendPost}/>
     })
   }
 
-  getAttachmentsHelper = (attachments) => {
-    this.attachments = attachments
+  // TODO: maybe it's better not to use reverse data flow giving priority to decorating this screen instead of PostForm
+  getAttachmentsHelper = (attachments) => this.attachments = attachments
+  setClearAttachments = (clearAttachments) => this.clearAttachments = clearAttachments
+
+  sendPost = async () => {
+    await this.props.feed.sendPost(this.attachments)
+    this.clearAttachments()
   }
 
   render() {
     return <PostForm
       getAttachmentsHelper = {this.getAttachmentsHelper}
+      setClearAttachments = {this.setClearAttachments}
     />
   }
 

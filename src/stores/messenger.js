@@ -432,7 +432,8 @@ class MessengerStore extends EntitiesStore {
     // this.cacheMessenger()
   }
 
-  sendMessage = (text, chatId, attachments = []) => {
+  // TODO: Clean this mess
+  sendMessage = (text, chatId, attachments = {}, temp = []) => {
     if (!text) return
 
     // https://github.com/omiceron/firebase-functions-example
@@ -446,12 +447,10 @@ class MessengerStore extends EntitiesStore {
       timestamp: Date.now(),
       userId: this.user.uid,
       pending: true,
-      attachments
+      attachments: temp
     }
 
     this.appendMessage(chatId, tempMessage)
-
-    attachments = attachments.reduce((acc, {url, uid, ...rest}) => ({...acc, [uid]: url}), {})
 
     const message = {
       text,
