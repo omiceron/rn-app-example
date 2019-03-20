@@ -7,7 +7,7 @@ import {LayoutAnimation} from 'react-native'
 
 
 class AuthLoadingScreen extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.bootstrapAsync()
   }
 

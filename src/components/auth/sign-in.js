@@ -30,6 +30,7 @@ import {
 
 @inject(AUTH_STORE)
 @inject(KEYBOARD_STORE)
+@withAnimation(LOGO, INPUT, FOOTER, BUTTON, KEYBOARD)
 @observer
 class SignIn extends Component {
 
@@ -109,6 +110,8 @@ class SignIn extends Component {
     </Animated.View>
   }
 
+  setPasswordRef = ref => this.textInput = ref
+
   renderInput = () => {
     const {
       setEmail,
@@ -146,7 +149,7 @@ class SignIn extends Component {
         onChangeText = {setPassword}
         onSubmitEditing = {signIn}
         value = {password}
-        setRef = {ref => this.textInput = ref}
+        setRef = {this.setPasswordRef}
         placeholder = 'password'
         returnKeyType = 'done'
         textContentType = 'password'
@@ -254,7 +257,7 @@ class SignIn extends Component {
 
       </SafeAreaView>
     </TouchableWithoutFeedback>
-  // </BackgroundImage>
+    // </BackgroundImage>
 
   }
 }
@@ -308,6 +311,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withAnimation(SignIn, {
-  layoutNames: [LOGO, INPUT, FOOTER, BUTTON, KEYBOARD]
-})
+export default SignIn

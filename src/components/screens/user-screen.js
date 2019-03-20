@@ -14,7 +14,7 @@ class UserScreen extends Component {
 
   @observable user = null
 
-  async componentWillMount() {
+  async componentDidMount() {
     const {userId} = this.props.navigation.state.params
     this.user = await this.props.people.getUserGreedily(userId)
   }

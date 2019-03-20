@@ -12,6 +12,7 @@ import AttachedMap from './attached-map'
 import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR} from '../../constants'
 import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
+import {computed} from 'mobx'
 import BasicAvatar from '../common/basic-avatar'
 import {getDate} from '../../stores/utils'
 import AttachedLocation from './attached-location'
@@ -27,13 +28,19 @@ class Post extends Component {
     coords: object,
     location: string,
     timestamp: number.isRequired,
-    isLiked: bool.isRequired,
     uid: string.isRequired,
-    likesNumber: number.isRequired,
     user: shape({
       firstName: string,
       lastName: string
     }).isRequired
+  }
+
+  @computed get likesNumber() {
+    return this.props.feed.getPostLikesNumber(this.props.uid)
+  }
+
+  @computed get isLiked() {
+    return this.props.feed.isPostLiked(this.props.uid)
   }
 
   renderAvatar = () => <BasicAvatar
@@ -42,31 +49,23 @@ class Post extends Component {
     uri = {this.props.user.avatar}
   />
 
-  render() {
+  renderSeparator = () => <Separator style = {styles.postSeparator}/>
+
+  // TODO: user object
+  renderPostInfo = () => {
     const {
-      location,
-      title,
-      text,
-      coords,
       timestamp,
-      isLiked,
-      uid: postId,
-      likesNumber,
       user: {
         firstName,
         lastName,
         uid: userId
       },
       navigation,
-      feed
     } = this.props
 
     const date = getDate(timestamp)
 
-    const PostSeparator = () => <Separator style = {styles.postSeparator}/>
-    // TODO: user object
-    const PostInfo = () => (
-      <View style = {styles.postInfoContainer}>
+    return <View style = {styles.postInfoContainer}>
 
         <View style = {styles.date}>
           <Text style = {styles.caption}>
@@ -89,7 +88,20 @@ class Post extends Component {
         </TouchableOpacity>
 
       </View>
-    )
+  }
+
+  render() {
+    console.log('render post')
+
+    const {
+      location,
+      title,
+      text,
+      coords,
+      uid: postId,
+      feed
+    } = this.props
+
 
     // TODO: Attached location logic must be reordered
     return <SafeAreaView style = {styles.container}>
@@ -101,11 +113,11 @@ class Post extends Component {
           </Text>
         </View>
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
-        <PostInfo/>
+        {this.renderPostInfo()}
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
         <View style = {styles.row}>
           <Text style = {styles.text}>
@@ -116,20 +128,22 @@ class Post extends Component {
         {location && <AttachedLocation
           location = {location}
           onPress = {this.props.openMap}
+          style = {{marginBottom: 8}}
         />}
 
         {coords && <AttachedMap
           coords = {coords}
           onPress = {this.props.openMap}
+          style = {{marginBottom: 8}}
 
         />}
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
         <PostControlRow
-          isLiked = {isLiked}
-          likesNumber = {likesNumber}
-          onLikePress = {() => feed.setLike(postId)}
+          isLiked = {this.isLiked}
+          likesNumber = {this.likesNumber}
+          onLikePress = {feed.setLike.bind(null, postId)}
           onCounterPress = {this.props.openLikedPosts}
         />
 
@@ -143,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   scroll: {
-    paddingHorizontal: 15
+    marginHorizontal: 15
   },
   row: {
     marginVertical: 8

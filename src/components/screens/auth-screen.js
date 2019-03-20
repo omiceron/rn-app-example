@@ -11,7 +11,7 @@ class AuthScreen extends Component {
   }
 
   // TODO: delete unnecessary LA in loader
-  componentWillMount() {
+  componentDidMount() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
   }
 

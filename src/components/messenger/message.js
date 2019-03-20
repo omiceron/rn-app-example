@@ -9,7 +9,7 @@ import {
 } from '../../constants'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import MessageAttachments from './message-attachments'
+import Attachments from '../common/attachments'
 
 @inject(AUTH_STORE)
 class Message extends PureComponent {
@@ -45,7 +45,7 @@ class Message extends PureComponent {
 
         <View style = {styles.textContainer}>
           {attachments && attachments.length ?
-            <MessageAttachments style = {styles.textContainer} attachments = {attachments}/> : null}
+            <Attachments style = {styles.textContainer} attachments = {attachments}/> : null}
         </View>
       </View>
     </View>

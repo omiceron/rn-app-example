@@ -2,17 +2,19 @@ import React, {Component} from 'react'
 import {
   View,
   StyleSheet,
+  FlatList,
   ActivityIndicator,
   ImageBackground
 } from 'react-native'
 import PropTypes from 'prop-types'
 
-class MessageAttachments extends Component {
+// @observer
+class AttachmentsList extends Component {
   static propTypes = {
     attachments: PropTypes.array.isRequired
   }
 
-  renderItem = ({item}) => <View key = {item.key} style = {styles.attachmentContainer}>
+  renderItem = ({item}) => <View style = {styles.attachmentContainer}>
     <View style = {styles.thumbnail}>
       <ImageBackground
         source = {{uri: item.uri}}
@@ -27,23 +29,30 @@ class MessageAttachments extends Component {
   render() {
 
     return <View style = {styles.container}>
-      {this.props.attachments.map(item => this.renderItem({item}))}
+      <FlatList
+        horizontal = {true}
+        data = {this.props.attachments}
+        renderItem = {this.renderItem}
+      />
     </View>
+
   }
 
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    display: 'flex'
+  },
   attachmentContainer: {
-    width: 100,
-    height: 100,
+    width: 60,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center'
   },
   thumbnail: {
-    width: 90,
-    height: 90,
+    width: 50,
+    height: 50,
     borderRadius: 12
   },
   content: {
@@ -53,4 +62,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MessageAttachments
+export default AttachmentsList

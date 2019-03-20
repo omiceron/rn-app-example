@@ -2,23 +2,17 @@ import React, {Component} from 'react'
 import {
   View,
   StyleSheet,
-  FlatList,
-  Image,
   ActivityIndicator,
   ImageBackground
 } from 'react-native'
 import PropTypes from 'prop-types'
-import {observer, inject} from 'mobx-react'
-import {observable, action, computed} from 'mobx'
-import {WINDOW_WIDTH} from '../../constants'
 
-// @observer
-class Chat extends Component {
+class Attachments extends Component {
   static propTypes = {
     attachments: PropTypes.array.isRequired
   }
 
-  renderItem = ({item}) => <View style = {styles.attachmentContainer}>
+  renderItem = ({item}) => <View key = {item.key} style = {styles.attachmentContainer}>
     <View style = {styles.thumbnail}>
       <ImageBackground
         source = {{uri: item.uri}}
@@ -33,30 +27,23 @@ class Chat extends Component {
   render() {
 
     return <View style = {styles.container}>
-      <FlatList
-        horizontal = {true}
-        data = {this.props.attachments}
-        renderItem = {this.renderItem}
-      />
+      {this.props.attachments.map(item => this.renderItem({item}))}
     </View>
-
   }
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex'
-  },
+  container: {},
   attachmentContainer: {
-    width: 60,
-    height: 60,
+    width: 100,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center'
   },
   thumbnail: {
-    width: 50,
-    height: 50,
+    width: 90,
+    height: 90,
     borderRadius: 12
   },
   content: {
@@ -66,4 +53,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Chat
+export default Attachments

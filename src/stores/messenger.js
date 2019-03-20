@@ -230,7 +230,6 @@ class MessengerStore extends EntitiesStore {
   convertChat = async (payload) => Object.values(await this.convertChats(payload))[0]
 
   convertChats = async (payload) => {
-
     const chatsPromises = Object.entries(payload)
       .map(async ([key, chat]) => {
         chat.user = await this.getStore(PEOPLE_STORE).getUserLazily(chat.userId)
@@ -246,6 +245,7 @@ class MessengerStore extends EntitiesStore {
     const chats = await Promise.all(chatsPromises)
 
     // Merging chats
+    // TODO: should create new store for messages to get rid of that
     return chats.reduce((acc, chat) => {
       if (this.entities[chat.chatId]) {
         chat.messages = {...this.entities[chat.chatId].messages}
@@ -334,14 +334,6 @@ class MessengerStore extends EntitiesStore {
         const attachments = await Promise.all(attachmentsPromises)
         message.attachments = attachments.filter(Boolean)
       }
-      // const message = {
-      //   key,
-      //   token,
-      //   timestamp,
-      //   text,
-      //   userId: user,
-      //   attachments: attachmentsArray
-      // }
 
       this.appendMessage(chatId, message)
       // this.cacheMessenger()
@@ -352,6 +344,7 @@ class MessengerStore extends EntitiesStore {
       .on('child_added', callback)
   }
 
+  // TODO
   // fetchMessages = (chatId) => this.fetchEntities(
   //   () => this.getChatReference(chatId).orderByKey(),
   //   this.appendFetchedMessages.bind(null, chatId),
@@ -439,7 +432,8 @@ class MessengerStore extends EntitiesStore {
     // this.cacheMessenger()
   }
 
-  sendMessage = (text, chatId, attachments = {}) => {
+  // TODO: Clean this mess
+  sendMessage = (text, chatId, attachments = {}, temp = []) => {
     if (!text) return
 
     // https://github.com/omiceron/firebase-functions-example
@@ -453,12 +447,10 @@ class MessengerStore extends EntitiesStore {
       timestamp: Date.now(),
       userId: this.user.uid,
       pending: true,
-      attachments
+      attachments: temp
     }
 
     this.appendMessage(chatId, tempMessage)
-
-    attachments = attachments.reduce((acc, {url, uid, ...rest}) => ({...acc, [uid]: url}), {})
 
     const message = {
       text,

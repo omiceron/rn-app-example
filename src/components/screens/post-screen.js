@@ -39,10 +39,9 @@ class PostScreen extends Component {
       text,
       coords,
       timestamp,
-      isLiked,
       uid,
-      likesNumber,
-      location
+      location,
+      user
     } = this.post
 
     return <Post
@@ -51,10 +50,8 @@ class PostScreen extends Component {
       text = {text}
       coords = {coords}
       timestamp = {timestamp}
-      isLiked = {isLiked}
       uid = {uid}
-      likesNumber = {likesNumber}
-      user = {this.post.user}
+      user = {user}
       openLikedPosts = {this.openLikedPosts}
       openMap = {this.openMap}
     />

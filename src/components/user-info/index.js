@@ -35,7 +35,7 @@ class UserInfo extends Component {
   @observable likes = null
   @observable posts = null
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.likes = await this.props.feed.getUserLikedPosts(this.props.user.uid)
     this.posts = await this.props.feed.getUserPosts(this.props.user.uid)
 

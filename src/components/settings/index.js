@@ -75,7 +75,7 @@ class Settings extends Component {
           <Separator leftIndent = {0}/>
 
           <TextInput
-            ref = {ref => this.lastNameRef = ref}
+            ref = {this.setLastNameRef}
             style = {styles.text}
             placeholder = 'Last Name'
             textContentType = 'familyName'
@@ -105,7 +105,7 @@ class Settings extends Component {
       <TableView>
         <TableRow>
           <TextInput
-            ref = {ref => this.infoRef = ref}
+            ref = {this.setInfoRef}
             style = {styles.text}
             placeholder = 'Info'
             returnKeyType = 'done'
@@ -175,6 +175,9 @@ class Settings extends Component {
       }
     )
   }
+
+  setLastNameRef = ref => this.lastNameRef = ref
+  setInfoRef = ref => this.infoRef = ref
 
   handleSignOut = () => ActionSheetIOS.showActionSheetWithOptions(
     {

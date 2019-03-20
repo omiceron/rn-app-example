@@ -21,6 +21,7 @@ import {
 @inject(KEYBOARD_STORE)
 @inject(AUTH_STORE)
 @observer
+@withAnimation(INPUT, TITLE)
 class SignUp extends Component {
   static propTypes = {
     getAnimation: func.isRequired,
@@ -198,6 +199,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default withAnimation(SignUp, {
-  layoutNames: [INPUT, TITLE]
-})
+export default SignUp

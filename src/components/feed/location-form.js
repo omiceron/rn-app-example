@@ -70,14 +70,12 @@ class LocationForm extends Component {
     this.map.animateToRegion({...coords})
   }
 
+  setMapRef = ref => this.map = ref
+
   render() {
     const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
     if (!coords) return <Loader/>
-
-    const renderIcon = () => <TouchableOpacity onPress = {this.handleSubmit} hitSlop = {HIT_SLOP}>
-      <Icon color = {INACTIVE_TEXT_COLOR} size = {16} name = 'ios-pin'/>
-    </TouchableOpacity>
 
     return <TableView style = {styles.container}>
 
@@ -100,7 +98,7 @@ class LocationForm extends Component {
         enabled
       >
         <MapView
-          ref = {ref => this.map = ref}
+          ref = {this.setMapRef}
           style = {styles.container}
           initialRegion = {{...coords, ...REGION_DELTAS}}
           // region = {{...coords, ...REGION_DELTAS}}

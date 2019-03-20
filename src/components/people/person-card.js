@@ -6,7 +6,6 @@ import SwipeableCard from '../common/swipeable-card'
 import PropTypes from 'prop-types'
 import {BLACK_TEXT_COLOR, ROW_HEIGHT} from '../../constants'
 import SegmentedCard from '../common/segmented-card'
-import {isPropsDiffer} from '../../stores/utils'
 
 class PersonCard extends Component {
   static propTypes = {
@@ -20,10 +19,6 @@ class PersonCard extends Component {
     openUserInfoScreen: PropTypes.func
   }
 
-  shouldComponentUpdate(nextProps) {
-    return isPropsDiffer(this.props.user, nextProps.user)
-  }
-
   renderAvatar = () => {
     return <Avatar
       size = {30}
@@ -32,6 +27,7 @@ class PersonCard extends Component {
   }
 
   render() {
+    console.log('render person')
     const {firstName, lastName, email} = this.props.user
     const {getPhoto, openUserInfoScreen, ...rest} = this.props
     // console.log('render', firstName)

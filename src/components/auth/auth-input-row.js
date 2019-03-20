@@ -51,6 +51,8 @@ class AuthInputRow extends Component {
     </TouchableWithoutFeedback>
   }
 
+  setInputRef = ref => this.textInput = ref
+
   render() {
     const {value, visibilitySwitch, onFocus, onBlur, ...rest} = this.props
     return <AuthRow style = {styles.container}>
@@ -66,7 +68,7 @@ class AuthInputRow extends Component {
           if (onBlur) return onBlur(...args)
         }}
 
-        ref = {ref => this.textInput = ref}
+        ref = {this.setInputRef}
         secureTextEntry = {this.state.isSecured}
 
         style = {styles.text}

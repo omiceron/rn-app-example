@@ -7,16 +7,17 @@ import {OFFLINE_COLOR} from '../../constants'
 class AttachedLocation extends Component {
   static propTypes = {
     location: PropTypes.string.isRequired,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    disableIcon: PropTypes.bool
   }
 
   render() {
     return <TouchableOpacity onPress = {this.props.onPress}>
-      <View style = {styles.container}>
+      <View style = {[styles.container, this.props.style]}>
 
-        <View style = {styles.iconContainer}>
-          <Icon size = {20} color = {OFFLINE_COLOR} name = 'ios-pin'/>
-        </View>
+        {this.props.disableIcon ? null : <View style = {styles.iconContainer}>
+          <Icon size = {16} color = {OFFLINE_COLOR} name = 'ios-pin'/>
+        </View>}
 
         <View style = {styles.textContainer}>
           <Text style = {styles.text} numberOfLines = {1}>
@@ -37,16 +38,13 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: 4,
-    // marginLeft: 8,
-    marginVertical: 4,
     height: 24,
     width: 16,
     justifyContent: 'center',
     alignItems: 'center'
   },
   textContainer: {
-    flex: 1
-    // marginVertical: 8
+    flex: 1,
   },
   text: {
     color: OFFLINE_COLOR,

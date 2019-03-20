@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {FlatList, View, StyleSheet, ActivityIndicator, SafeAreaView, LayoutAnimation} from 'react-native'
+import {FlatList, View, StyleSheet, SafeAreaView, LayoutAnimation} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import PostCard from './post-card'
@@ -31,25 +31,9 @@ class Feed extends Component {
     )
   }
 
-  renderItem = ({item: {title, text, comments, location, coords, uid, likesNumber, isLiked}, index}) => {
-    return <PostCard
-      title = {title}
-      text = {text}
-      coords = {coords}
-      likesNumber = {likesNumber}
-      isLiked = {isLiked}
-      comments = {comments}
-      uid = {uid}
-      location = {location}
-      // isLastItem = {index === this.props.feed.size - 1}
-      // isFirstItem = {index === 0}
-
-      // onLikeNumberPress = {onLikeNumberPress}
-    />
-  }
+  renderItem = ({item: {likes, ...props}}) => <PostCard {...props}/>
 
   render() {
-    // console.log('!!!', 'render')
     const {feed} = this.props
     // const {onLikeNumberPress} = this.props
 
@@ -64,8 +48,8 @@ class Feed extends Component {
         initialNumToRender = {Number.MAX_SAFE_INTEGER}
         onEndReachedThreshold = {0.1}
         renderItem = {this.renderItem}
-        // ItemSeparatorComponent = {ItemSeparatorComponent}
         ListFooterComponent = {feed.loading && ListLoader}
+        // ItemSeparatorComponent = {ItemSeparatorComponent}
         // ListHeaderComponent = {<View style = {{height: 8}}/>}
       />
     </SafeAreaView>
