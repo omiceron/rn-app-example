@@ -1,8 +1,8 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
 
-class Separator extends PureComponent {
+class Separator extends Component {
   static propTypes = {
     // style: View.propTypes.style,
     leftIndent: PropTypes.number,

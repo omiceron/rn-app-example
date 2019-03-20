@@ -68,9 +68,7 @@ class Photo extends Component {
       // pictureSize = {'352x288'}
       style = {styles.container}
       type = {this.type}
-      ref = {ref => {
-        this.camera = ref
-      }}
+      ref = {this.setCameraRef}
     >
       <View style = {styles.overlay}>
         <View style = {styles.controls}>
@@ -87,6 +85,10 @@ class Photo extends Component {
       ? Camera.Constants.Type.front
       : Camera.Constants.Type.back
     )
+  }
+
+  setCameraRef = ref => {
+    this.camera = ref
   }
 
   @action takePicture = () => {

@@ -70,6 +70,8 @@ class LocationForm extends Component {
     this.map.animateToRegion({...coords})
   }
 
+  setMapRef = ref => this.map = ref
+
   render() {
     const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
@@ -96,7 +98,7 @@ class LocationForm extends Component {
         enabled
       >
         <MapView
-          ref = {ref => this.map = ref}
+          ref = {this.setMapRef}
           style = {styles.container}
           initialRegion = {{...coords, ...REGION_DELTAS}}
           // region = {{...coords, ...REGION_DELTAS}}

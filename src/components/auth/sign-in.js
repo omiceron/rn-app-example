@@ -110,6 +110,8 @@ class SignIn extends Component {
     </Animated.View>
   }
 
+  setPasswordRef = ref => this.textInput = ref
+
   renderInput = () => {
     const {
       setEmail,
@@ -147,7 +149,7 @@ class SignIn extends Component {
         onChangeText = {setPassword}
         onSubmitEditing = {signIn}
         value = {password}
-        setRef = {ref => this.textInput = ref}
+        setRef = {this.setPasswordRef}
         placeholder = 'password'
         returnKeyType = 'done'
         textContentType = 'password'

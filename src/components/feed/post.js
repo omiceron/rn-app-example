@@ -49,31 +49,23 @@ class Post extends Component {
     uri = {this.props.user.avatar}
   />
 
-  render() {
-    console.log('render post')
+  renderSeparator = () => <Separator style = {styles.postSeparator}/>
 
+  // TODO: user object
+  renderPostInfo = () => {
     const {
-      location,
-      title,
-      text,
-      coords,
       timestamp,
-      uid: postId,
       user: {
         firstName,
         lastName,
         uid: userId
       },
       navigation,
-      feed
     } = this.props
 
     const date = getDate(timestamp)
 
-    const PostSeparator = () => <Separator style = {styles.postSeparator}/>
-    // TODO: user object
-    const PostInfo = () => (
-      <View style = {styles.postInfoContainer}>
+    return <View style = {styles.postInfoContainer}>
 
         <View style = {styles.date}>
           <Text style = {styles.caption}>
@@ -96,7 +88,20 @@ class Post extends Component {
         </TouchableOpacity>
 
       </View>
-    )
+  }
+
+  render() {
+    console.log('render post')
+
+    const {
+      location,
+      title,
+      text,
+      coords,
+      uid: postId,
+      feed
+    } = this.props
+
 
     // TODO: Attached location logic must be reordered
     return <SafeAreaView style = {styles.container}>
@@ -108,11 +113,11 @@ class Post extends Component {
           </Text>
         </View>
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
-        <PostInfo/>
+        {this.renderPostInfo()}
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
         <View style = {styles.row}>
           <Text style = {styles.text}>
@@ -133,7 +138,7 @@ class Post extends Component {
 
         />}
 
-        <PostSeparator/>
+        {this.renderSeparator()}
 
         <PostControlRow
           isLiked = {this.isLiked}
