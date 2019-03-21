@@ -1,17 +1,3 @@
-import {action, computed, observable} from 'mobx'
-import firebase from 'firebase/app'
-import EntitiesStore from './entities-store'
-import {
-  ATTACHMENTS_STORE,
-  AVATAR_STORE, CACHE_DIR, CHATS_CHUNK_LENGTH, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE,
-  PEOPLE_REFERENCE,
-  PEOPLE_STORE
-} from '../constants'
-import {toJS} from 'mobx'
-import {urlToBlob} from './utils'
-import {FileSystem} from 'expo'
-import path from 'path'
-import co from 'co'
 // chat structure:
 //
 // [chatId]: {
@@ -30,7 +16,81 @@ import co from 'co'
 //   loading: bool
 // }
 
+import {action, computed, observable} from 'mobx'
+import firebase from 'firebase/app'
+import EntitiesStore from './entities-store'
+import {
+  ATTACHMENTS_STORE,
+  CHATS_CHUNK_LENGTH,
+  CHATS_REFERENCE,
+  MESSAGES_CHUNK_LENGTH,
+  MESSAGES_REFERENCE,
+  PEOPLE_REFERENCE,
+  PEOPLE_STORE
+} from '../constants'
+import {toJS} from 'mobx'
+import {StatusBar} from 'react-native'
+import {ImagePicker} from 'expo'
+
 class MessengerStore extends EntitiesStore {
+
+  @action addAttachmentToChat = (chatId, attachmentId) => {
+    if (!this.entities[chatId].attachments) this.entities[chatId].attachments = []
+    this.entities[chatId].attachments = [...this.entities[chatId].attachments, attachmentId]
+  }
+
+  @action clearAttachments = (chatId) => {
+    this.entities[chatId].attachments = []
+  }
+
+  @action deleteAttachments = (chatId) => {
+    if (!this.entities[chatId].attachments) return
+    this.entities[chatId].attachments.forEach(this.getStore(ATTACHMENTS_STORE).deleteAttachment)
+  }
+
+  getAttachments = (chatId) => {
+    if (!this.entities[chatId].attachments) return []
+    return this.entities[chatId].attachments.map(this.getStore(ATTACHMENTS_STORE).getAttachment)
+  }
+
+  attachFile = async ({uri, cancelled}, chatId) => {
+    if (cancelled) return
+
+    const attachFile = this.getStore(ATTACHMENTS_STORE).attachFileSequence({uri})
+    const {value: uid} = await attachFile.next()
+
+    this.addAttachmentToChat(chatId, uid)
+
+    attachFile.next()
+  }
+
+  attachImageHandler = async (chatId) => {
+    StatusBar.setBarStyle('default', true)
+
+    try {
+      const photo = await ImagePicker.launchImageLibraryAsync()
+      this.attachFile(photo, chatId)
+    } catch (e) {
+      console.warn(e)
+    }
+
+    StatusBar.setBarStyle('light-content', true)
+
+  }
+
+  attachPhotoHandler = async (chatId) => {
+    StatusBar.setBarStyle('default', true)
+
+    try {
+      const photo = await ImagePicker.launchCameraAsync()
+      this.attachFile(photo, chatId)
+    } catch (e) {
+      console.warn(e)
+    }
+
+    StatusBar.setBarStyle('light-content', true)
+
+  }
 
   getChatReference = (chatId) => {
     return firebase.database()
@@ -81,7 +141,7 @@ class MessengerStore extends EntitiesStore {
     return messages[messages.length - 1]
   }
 
-  // TODO: subscribe wrong behavior
+  // fixme: subscribe wrong behavior
   @computed
   get earliestFetchedChatTimestamp() {
     const chat = this.chats[this.chats.length - 1]
@@ -119,8 +179,6 @@ class MessengerStore extends EntitiesStore {
       console.log('SUBSCRIBE ON CHATS:', 'get data')
 
       const chat = await this.convertChat(payload)
-      // TODO EXPERIMENTAL FEATURES
-      // const {value: chat} = await this.convertChatsSequence(payload, true).next()
       await this.appendChat(chat)
 
       this.setTimestamp(payload)
@@ -433,9 +491,10 @@ class MessengerStore extends EntitiesStore {
   }
 
   // TODO: Clean this mess
-  sendMessage = (text, chatId, attachments = {}, temp = []) => {
+  sendMessage = (text, chatId) => {
     if (!text) return
 
+    const temp = this.getAttachments(chatId)
     // https://github.com/omiceron/firebase-functions-example
     const sendMessage = firebase.functions().httpsCallable('sendMessage')
 
@@ -452,6 +511,12 @@ class MessengerStore extends EntitiesStore {
 
     this.appendMessage(chatId, tempMessage)
 
+    // fixme
+    const attachments = this.entities[chatId].attachments.reduce((acc, uid) => {
+      const {url} = this.getStore(ATTACHMENTS_STORE).getAttachment(uid)
+      return ({...acc, [uid]: url})
+    }, {})
+
     const message = {
       text,
       chatId,
@@ -465,6 +530,7 @@ class MessengerStore extends EntitiesStore {
       })
       .catch(console.error)
 
+    this.clearAttachments(chatId)
   }
 
   @action deleteChat = (chatId) => {
