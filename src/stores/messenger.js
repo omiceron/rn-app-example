@@ -34,7 +34,7 @@ import {ImagePicker} from 'expo'
 
 class MessengerStore extends EntitiesStore {
 
-  @action addAttachmentToChat = (chatId, attachmentId) => {
+  @action addAttachment = (chatId, attachmentId) => {
     if (!this.entities[chatId].attachments) this.entities[chatId].attachments = []
     this.entities[chatId].attachments = [...this.entities[chatId].attachments, attachmentId]
   }
@@ -59,7 +59,7 @@ class MessengerStore extends EntitiesStore {
     const attachFile = this.getStore(ATTACHMENTS_STORE).attachFileSequence({uri})
     const {value: uid} = await attachFile.next()
 
-    this.addAttachmentToChat(chatId, uid)
+    this.addAttachment(chatId, uid)
 
     attachFile.next()
   }

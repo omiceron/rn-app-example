@@ -16,7 +16,7 @@ import AttachmentsList from '../common/attachments-list'
 import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
 
-@withAttachments()
+// @withAttachments()
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -26,22 +26,21 @@ class PostForm extends Component {
   constructor(...args) {
     super(...args)
 
-    this.props.setClearAttachments(this.props.clearAttachments)
-
     reaction(
       () => this.props.layouts[KEYBOARD],
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
 
-    reaction(
-      () => this.props.attachmentsList,
-      () => this.props.getAttachmentsHelper(this.props.attachmentsObject)
+
+    this.stopReactionOnAttachments = reaction(
+      () => this.props.feed.attachmentsList.length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
   }
 
   static propTypes = {
     // layouts: objectOf(objectOf(number)).isRequired,
-    getAttachmentsHelper: func.isRequired,
+    // getAttachmentsHelper: func.isRequired,
     feed: shape({
       coords: shape({
         latitude: number.isRequired,
@@ -60,8 +59,9 @@ class PostForm extends Component {
   }
 
   componentWillUnmount() {
+    this.stopReactionOnAttachments()
     this.props.feed.clearPostForm()
-    console.log(this.props.attachmentsList)
+    this.props.feed.clearAttachments()
   }
 
   setTextInputRef = ref => this.textInput = ref
@@ -96,15 +96,15 @@ class PostForm extends Component {
           />
         </TableRow>
 
-        {this.props.attachmentsList.length ? <AttachmentsList attachments = {this.props.attachmentsList}/> : null}
+        {feed.attachmentsList.length ? <AttachmentsList attachments = {feed.attachmentsList}/> : null}
 
         {feed.attachedLocation ? <TableRow>
           <AttachedLocation disableIcon location = {feed.attachedLocation}/>
         </TableRow> : null}
 
         <PostFormControlRow
-          attachImageHandler = {this.props.attachImageHandler}
-          attachPhotoHandler = {this.props.attachPhotoHandler}
+          attachImageHandler = {this.props.feed.attachImageHandler}
+          attachPhotoHandler = {this.props.feed.attachPhotoHandler}
         />
 
         <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>

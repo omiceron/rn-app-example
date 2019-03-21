@@ -31,9 +31,64 @@ import {
 import loremIpsum from 'lorem-ipsum'
 import {Location} from 'expo'
 import {toJS} from 'mobx'
+import {StatusBar} from 'react-native'
+import {ImagePicker} from 'expo'
 
 // TODO move post form to new store?
 class FeedStore extends EntitiesStore {
+
+  @observable _attachments = []
+  @action addAttachment = (uid) => this._attachments = [...this._attachments, uid]
+  @action clearAttachments = () => this._attachments = []
+
+  @computed
+  get attachmentsList() {
+    return this._attachments.map(this.getStore(ATTACHMENTS_STORE).getAttachment)
+  }
+
+  @computed get attachmentsObject() {
+    return this._attachments.reduce((acc, uid) => {
+      const {url} = this.getStore(ATTACHMENTS_STORE).getAttachment(uid)
+      return ({...acc, [uid]: url})
+    }, {})
+  }
+
+  attachFile = async ({uri, cancelled}) => {
+    if (cancelled) return
+
+    const attachFile = this.getStore(ATTACHMENTS_STORE).attachFileSequence({uri})
+    const {value: uid} = await attachFile.next()
+
+    this.addAttachment(uid)
+
+    attachFile.next()
+  }
+
+  attachImageHandler = async () => {
+    StatusBar.setBarStyle('default', true)
+
+    const photo = await ImagePicker.launchImageLibraryAsync()
+      .catch(console.warn)
+
+    this.attachFile(photo)
+
+    StatusBar.setBarStyle('light-content', true)
+
+  }
+
+  attachPhotoHandler = async () => {
+    StatusBar.setBarStyle('default', true)
+
+    try {
+      const photo = await ImagePicker.launchCameraAsync()
+      this.attachFile(photo)
+    } catch (e) {
+      console.warn(e)
+    }
+
+    StatusBar.setBarStyle('light-content', true)
+
+  }
 
   @observable title = ''
   @observable text = ''
@@ -320,7 +375,7 @@ class FeedStore extends EntitiesStore {
     return coords
   }
 
-  @action sendPost = async (attachments = {}) => {
+  @action sendPost = async () => {
     if (!this.title || !this.text) {
       alert('No text or title!')
       return
@@ -335,7 +390,7 @@ class FeedStore extends EntitiesStore {
         latitude: this.attachedCoords.latitude,
         longitude: this.attachedCoords.longitude
       },
-      attachments
+      attachments: this.attachmentsObject
     }
 
     const {key} = await this.reference.push(newPost)
@@ -343,6 +398,7 @@ class FeedStore extends EntitiesStore {
     this.refreshPost(key)
     this.getStore(NAVIGATION_STORE).goBack()
     this.clearPostForm()
+    this.clearAttachments()
     this.clearLocationForm()
   }
 
