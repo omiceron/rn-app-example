@@ -46,8 +46,6 @@ class ChatScreen extends Component {
 
   async componentDidMount() {
     const {userId} = this.props.navigation.state.params
-    // const user = this.props.people.getUser(userId)
-    // this.props.navigation.setParams({user})
     const {messenger} = this.props
     this.chatId = await messenger.getChatWith(userId) || await messenger.createChatWith(userId)
   }
