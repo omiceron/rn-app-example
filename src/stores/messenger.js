@@ -29,68 +29,10 @@ import {
   PEOPLE_STORE
 } from '../constants'
 import {toJS} from 'mobx'
-import {StatusBar} from 'react-native'
-import {ImagePicker} from 'expo'
+import withAttachments from './with-attachments'
 
+@withAttachments((store, uid) => store.entities[uid])
 class MessengerStore extends EntitiesStore {
-
-  @action addAttachment = (chatId, attachmentId) => {
-    if (!this.entities[chatId].attachments) this.entities[chatId].attachments = []
-    this.entities[chatId].attachments = [...this.entities[chatId].attachments, attachmentId]
-  }
-
-  @action clearAttachments = (chatId) => {
-    this.entities[chatId].attachments = []
-  }
-
-  @action deleteAttachments = (chatId) => {
-    if (!this.entities[chatId].attachments) return
-    this.entities[chatId].attachments.forEach(this.getStore(ATTACHMENTS_STORE).deleteAttachment)
-  }
-
-  getAttachments = (chatId) => {
-    if (!this.entities[chatId].attachments) return []
-    return this.entities[chatId].attachments.map(this.getStore(ATTACHMENTS_STORE).getAttachment)
-  }
-
-  attachFile = async ({uri, cancelled}, chatId) => {
-    if (cancelled) return
-
-    const attachFile = this.getStore(ATTACHMENTS_STORE).attachFileSequence({uri})
-    const {value: uid} = await attachFile.next()
-
-    this.addAttachment(chatId, uid)
-
-    attachFile.next()
-  }
-
-  attachImageHandler = async (chatId) => {
-    StatusBar.setBarStyle('default', true)
-
-    try {
-      const photo = await ImagePicker.launchImageLibraryAsync()
-      this.attachFile(photo, chatId)
-    } catch (e) {
-      console.warn(e)
-    }
-
-    StatusBar.setBarStyle('light-content', true)
-
-  }
-
-  attachPhotoHandler = async (chatId) => {
-    StatusBar.setBarStyle('default', true)
-
-    try {
-      const photo = await ImagePicker.launchCameraAsync()
-      this.attachFile(photo, chatId)
-    } catch (e) {
-      console.warn(e)
-    }
-
-    StatusBar.setBarStyle('light-content', true)
-
-  }
 
   getChatReference = (chatId) => {
     return firebase.database()

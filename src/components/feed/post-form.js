@@ -103,8 +103,8 @@ class PostForm extends Component {
         </TableRow> : null}
 
         <PostFormControlRow
-          attachImageHandler = {this.props.feed.attachImageHandler}
-          attachPhotoHandler = {this.props.feed.attachPhotoHandler}
+          attachImageHandler = {() => this.props.feed.attachImageHandler()}
+          attachPhotoHandler = {() => this.props.feed.attachPhotoHandler()}
         />
 
         <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>
