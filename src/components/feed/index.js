@@ -37,7 +37,7 @@ class Feed extends Component {
     const {feed} = this.props
     // const {onLikeNumberPress} = this.props
 
-    const ItemSeparatorComponent = () => <View style = {{height: 4}}/>
+    // const ItemSeparatorComponent = () => <View style = {{height: 4}}/>
 
     return <SafeAreaView style = {styles.container}>
       <FlatList
