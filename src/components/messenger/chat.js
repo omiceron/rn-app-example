@@ -53,7 +53,7 @@ class Chat extends Component {
     )
 
     this.stopReactionOnAttachments = reaction(
-      () => this.attachments.length,
+      () => this.tempAttachments.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
 
@@ -67,11 +67,10 @@ class Chat extends Component {
     this.stopReactionOnAttachments()
     this.stopReactionOnMessages()
     this.props.messenger.deleteAttachments(this.props.chatId)
-    this.props.messenger.clearAttachments(this.props.chatId)
   }
 
-  @computed get attachments() {
-    return this.props.messenger.getAttachments(this.props.chatId)
+  @computed get tempAttachments() {
+    return this.props.messenger.getTempAttachments(this.props.chatId)
   }
 
   @computed get messages() {
@@ -111,13 +110,13 @@ class Chat extends Component {
       >
         <View style = {styles.controlContainer}>
 
-          {this.attachments.length ? <AttachmentsList attachments = {this.attachments}/> : null}
+          {this.tempAttachments.length ? <AttachmentsList attachments = {this.tempAttachments}/> : null}
 
           <View style = {styles.sendControlContainer}>
             <ChatButton
               icon = 'ios-attach'
               onPress = {this.attachHandler}
-              isActive = {this.attachments.length < 10}
+              isActive = {this.tempAttachments.length < 10}
             />
             <View style = {styles.sendMessageContainer}>
               <TextInput
@@ -134,7 +133,7 @@ class Chat extends Component {
             <ChatButton
               icon = 'ios-send'
               onPress = {this.sendMessageHandler}
-              isActive = {this.message /*|| this.list.length && this.list.every(file => file.loaded)*/}/>
+              isActive = {this.message /*|| this.tempAttachments.length && this.tempAttachments.every(file => file.loaded)*/}/>
           </View>
 
         </View>

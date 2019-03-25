@@ -26,7 +26,9 @@ import {
   FEED_CHUNK_LENGTH,
   POSTS_REFERENCE,
   LIKES_REFERENCE,
-  NAVIGATION_STORE, ATTACHMENTS_STORE, CURRENT_USER_STORE
+  NAVIGATION_STORE,
+  ATTACHMENTS_STORE,
+  CURRENT_USER_STORE
 } from '../constants'
 import loremIpsum from 'lorem-ipsum'
 import {Location} from 'expo'
@@ -37,15 +39,6 @@ import withAttachments from './with-attachments'
 
 @withAttachments()
 class FeedStore extends EntitiesStore {
-
-  @computed
-  get attachmentsList() {
-    return this.getAttachments()
-  }
-
-  @computed get attachmentsObject() {
-    return this.getAttachmentsObject()
-  }
 
   @observable title = ''
   @observable text = ''
@@ -338,6 +331,8 @@ class FeedStore extends EntitiesStore {
       return
     }
 
+    const attachments = this.attachmentsToDb()
+
     const newPost = {
       title: this.title,
       text: this.text,
@@ -347,7 +342,7 @@ class FeedStore extends EntitiesStore {
         latitude: this.attachedCoords.latitude,
         longitude: this.attachedCoords.longitude
       },
-      attachments: this.attachmentsObject
+      attachments
     }
 
     const {key} = await this.reference.push(newPost)

@@ -72,10 +72,11 @@ class MessengerStore extends EntitiesStore {
     return this.entities[chatId].loading
   }
 
+  // todo: inspect
   getMessages = (chatId) => {
     const chat = this.entities[chatId]
     if (!chat || !chat.messages) return []
-    return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
+    return Object.values(chat.messages).sort((a, b) => b.timestamp - a.timestamp)
   }
 
   getLastFetchedMessage = (chatId) => {
@@ -328,11 +329,7 @@ class MessengerStore extends EntitiesStore {
       message.userId = message.user
 
       if (message.attachments) {
-        const attachmentsPromises = Object.values(message.attachments)
-          .map(this.getStore(ATTACHMENTS_STORE).getAttachmentLazily)
-
-        const attachments = await Promise.all(attachmentsPromises)
-        message.attachments = attachments.filter(Boolean)
+        message.attachments = await this.getStore(ATTACHMENTS_STORE).convertAttachments(message.attachments)
       }
 
       this.appendMessage(chatId, message)
@@ -436,7 +433,6 @@ class MessengerStore extends EntitiesStore {
   sendMessage = (text, chatId) => {
     if (!text) return
 
-    const temp = this.getAttachments(chatId)
     // https://github.com/omiceron/firebase-functions-example
     const sendMessage = firebase.functions().httpsCallable('sendMessage')
 
@@ -448,21 +444,15 @@ class MessengerStore extends EntitiesStore {
       timestamp: Date.now(),
       userId: this.user.uid,
       pending: true,
-      attachments: temp
+      attachments: this.getTempAttachments(chatId)
     }
 
     this.appendMessage(chatId, tempMessage)
 
-    // fixme
-    const attachments = this.entities[chatId].attachments.reduce((acc, uid) => {
-      const {url} = this.getStore(ATTACHMENTS_STORE).getAttachment(uid)
-      return ({...acc, [uid]: url})
-    }, {})
-
     const message = {
       text,
       chatId,
-      attachments,
+      attachments: this.attachmentsToDb(chatId),
       token: key
     }
 

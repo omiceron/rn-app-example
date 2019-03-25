@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
-import {reaction} from 'mobx'
+import {reaction, computed} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import {View, StyleSheet, TextInput, SafeAreaView, LayoutAnimation} from 'react-native'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
-import {bool, string, func, shape, objectOf, number} from 'prop-types'
+import {bool, string, func, shape, objectOf, number, array} from 'prop-types'
 
 import {KEYBOARD, FEED_STORE, BLACK_TEXT_COLOR, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE} from '../../constants/'
 
 import withAnimation from '../common/with-animation'
-import withAttachments from '../common/with-attachments'
 
 import TableView from '../common/table-view'
 import TableRow from '../common/table-row'
@@ -16,28 +15,11 @@ import AttachmentsList from '../common/attachments-list'
 import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
 
-// @withAttachments()
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
 @observer
 class PostForm extends Component {
-
-  constructor(...args) {
-    super(...args)
-
-    reaction(
-      () => this.props.layouts[KEYBOARD],
-      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    )
-
-
-    this.stopReactionOnAttachments = reaction(
-      () => this.props.feed.attachmentsList.length,
-      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    )
-  }
-
   static propTypes = {
     // layouts: objectOf(objectOf(number)).isRequired,
     // getAttachmentsHelper: func.isRequired,
@@ -54,14 +36,34 @@ class PostForm extends Component {
       text: string.isRequired,
       setTitle: func.isRequired,
       setText: func.isRequired,
-      clearPostForm: func.isRequired
-    })
+      clearPostForm: func.isRequired,
+      attachments: array
+    }),
+  }
+
+  constructor(...args) {
+    super(...args)
+
+    reaction(
+      () => this.props.layouts[KEYBOARD],
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
+
+    this.stopReactionOnAttachments = reaction(
+      () => this.tempAttachments.length,
+      () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    )
   }
 
   componentWillUnmount() {
     this.stopReactionOnAttachments()
     this.props.feed.clearPostForm()
-    this.props.feed.clearAttachments()
+    this.props.feed.deleteAttachments()
+  }
+
+  @computed
+  get tempAttachments() {
+    return this.props.feed.getTempAttachments()
   }
 
   setTextInputRef = ref => this.textInput = ref
@@ -96,7 +98,7 @@ class PostForm extends Component {
           />
         </TableRow>
 
-        {feed.attachmentsList.length ? <AttachmentsList attachments = {feed.attachmentsList}/> : null}
+        {this.tempAttachments.length ? <AttachmentsList attachments = {this.tempAttachments}/> : null}
 
         {feed.attachedLocation ? <TableRow>
           <AttachedLocation disableIcon location = {feed.attachedLocation}/>
