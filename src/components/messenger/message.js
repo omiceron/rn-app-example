@@ -29,7 +29,8 @@ class Message extends Component {
     <Icon
       name = {`ios-${this.props.pending ? 'checkmark' : 'done-all'}`}
       color = {INACTIVE_TEXT_COLOR}
-      size = {30}/>
+      size = {30}
+    />
   </View>
 
   render() {
