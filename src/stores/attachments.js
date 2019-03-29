@@ -70,15 +70,15 @@ class AttachmentsStore extends EntitiesStore {
       loading: true
     }
 
-    // await this.appendAttachment(attachment)
+    await this.appendAttachment(attachment)
+
+    yield uid
 
     await copyFile(uri, attachmentUri)
       .catch(console.warn)
 
     attachment.uri = attachmentUri
     await this.appendAttachment(attachment)
-
-    yield uid
 
     const ref = firebase.storage()
       .ref(ATTACHMENTS_STORAGE_REFERENCE)
@@ -173,8 +173,17 @@ class AttachmentsStore extends EntitiesStore {
     const attachmentsPromises = Object.values(payload).map(this.getAttachmentLazily)
     const attachments = await Promise.all(attachmentsPromises)
 
-    return attachments.filter(Boolean)
-  }
+    return attachments
+
+    // const attachments = await Object.values(payload).reduce(async (accP, url) => {
+    //   const acc = await accP
+    //   const attachment = await this.getAttachmentLazily(url)
+    //   if (!attachment) return acc
+    //   return {...acc, [attachment.uid]: attachment}
+    // }, Promise.resolve({}))
+
+    // return attachments
+}
 
 }
 

@@ -22,13 +22,13 @@ import AttachmentsStore from './attachments'
 const stores = {}
 
 stores[CURRENT_USER_STORE] = new UserStore(stores, CURRENT_USER_STORE)
-stores[FEED_STORE] = new FeedStore(stores, FEED_STORE)
 stores[KEYBOARD_STORE] = new KeyboardStore(stores, KEYBOARD_STORE)
+stores[ATTACHMENTS_STORE] = new AttachmentsStore(stores, ATTACHMENTS_STORE)
+stores[FEED_STORE] = new FeedStore(stores, FEED_STORE)
 stores[AVATAR_STORE] = new UserAvatarStore(stores, AVATAR_STORE)
 stores[AUTH_STORE] = new AuthStore(stores, AUTH_STORE)
 stores[NAVIGATION_STORE] = new NavigationStore(stores, NAVIGATION_STORE)
 stores[PEOPLE_STORE] = new PeopleStore(stores, PEOPLE_STORE)
-stores[ATTACHMENTS_STORE] = new AttachmentsStore(stores, ATTACHMENTS_STORE)
 stores[MESSENGER_STORE] = new MessengerStore(stores, MESSENGER_STORE)
 
 export default stores

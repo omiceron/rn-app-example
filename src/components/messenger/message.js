@@ -1,18 +1,21 @@
 import React, {Component, PureComponent} from 'react'
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native'
-import {string, bool, shape, array, number} from 'prop-types'
+import {View, Text, StyleSheet} from 'react-native'
+import {string, bool, shape, array, number, object} from 'prop-types'
 import {
-  ACTIVE_TINT_COLOR, AUTH_STORE, DEFAULT_HEADER_COLOR, MESSAGE_COLOR, INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR,
+  AUTH_STORE,
+  MESSAGE_COLOR,
+  INACTIVE_TEXT_COLOR,
+  BLACK_TEXT_COLOR,
   USER_MESSAGE_COLOR,
   WHITE_BACKGROUND_COLOR,
   WINDOW_WIDTH
 } from '../../constants'
-import {observer, inject} from 'mobx-react'
+import {inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Attachments from '../common/attachments'
 
 @inject(AUTH_STORE)
-class Message extends PureComponent {
+class Message extends Component {
   static propTypes = {
     userId: string.isRequired,
     text: string.isRequired,
@@ -26,7 +29,8 @@ class Message extends PureComponent {
     <Icon
       name = {`ios-${this.props.pending ? 'checkmark' : 'done-all'}`}
       color = {INACTIVE_TEXT_COLOR}
-      size = {30}/>
+      size = {30}
+    />
   </View>
 
   render() {

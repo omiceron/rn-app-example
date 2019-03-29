@@ -15,7 +15,7 @@ import Message from './message'
 import {observable, action} from 'mobx'
 import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from '../common/empty-list'
-import {reaction} from 'mobx'
+import {reaction, computed} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 
 import {
@@ -27,14 +27,12 @@ import {
 import ListLoader from '../common/list-loader'
 import AttachmentsList from '../common/attachments-list'
 import ChatButton from './chat-button'
-import withAttachments from '../common/with-attachments'
 
 // TODO: redesign the chat
 // TODO: Make chat computed property
 // TODO: LayoutAnimation onFocus in emptyList
 // TODO Keyboard
 
-@withAttachments()
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)
 @observer
@@ -49,19 +47,34 @@ class Chat extends Component {
   constructor(...args) {
     super(...args)
 
-    reaction(
-      () => this.props.messenger.getMessages(this.props.chatId).length,
+    this.stopReactionOnMessages = reaction(
+      () => this.messages.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
 
-    reaction(
-      () => this.props.attachmentsList.length,
+    this.stopReactionOnAttachments = reaction(
+      () => this.tempAttachments.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
+
   }
 
   componentDidMount() {
     this.props.messenger.subscribeOnMessages(this.props.chatId)
+  }
+
+  componentWillUnmount() {
+    this.stopReactionOnAttachments()
+    this.stopReactionOnMessages()
+    this.props.messenger.deleteAttachments(this.props.chatId)
+  }
+
+  @computed get tempAttachments() {
+    return this.props.messenger.getTempAttachments(this.props.chatId)
+  }
+
+  @computed get messages() {
+    return this.props.messenger.getMessages(this.props.chatId)
   }
 
   @observable message = ''
@@ -78,7 +91,7 @@ class Chat extends Component {
       inverted
       initialNumToRender = {Number.MAX_SAFE_INTEGER}
       onEndReachedThreshold = {0.5}
-      data = {messenger.getMessages(chatId)}
+      data = {this.messages}
       renderItem = {this.renderItem}
       ListFooterComponent = {messenger.isChatLoading(chatId) && <ListLoader style = {styles.loader}/>}
     />
@@ -87,7 +100,7 @@ class Chat extends Component {
   render() {
     const {messenger, chatId} = this.props
     return <SafeAreaView style = {styles.container}>
-      {!messenger.getMessages(chatId).length && messenger.isChatLoaded(chatId) ?
+      {!this.messages.length && messenger.isChatLoaded(chatId) ?
         <EmptyList title = {'You have no messages yet...'}/> : this.renderMessagesList()}
 
       <KeyboardAvoidingView
@@ -97,13 +110,13 @@ class Chat extends Component {
       >
         <View style = {styles.controlContainer}>
 
-          {this.props.attachmentsList.length ? <AttachmentsList attachments = {this.props.attachmentsList}/> : null}
+          {this.tempAttachments.length ? <AttachmentsList attachments = {this.tempAttachments}/> : null}
 
           <View style = {styles.sendControlContainer}>
             <ChatButton
               icon = 'ios-attach'
               onPress = {this.attachHandler}
-              isActive = {this.props.attachmentsList.length < 10}
+              isActive = {this.tempAttachments.length < 10}
             />
             <View style = {styles.sendMessageContainer}>
               <TextInput
@@ -120,7 +133,7 @@ class Chat extends Component {
             <ChatButton
               icon = 'ios-send'
               onPress = {this.sendMessageHandler}
-              isActive = {this.message /*|| this.list.length && this.list.every(file => file.loaded)*/}/>
+              isActive = {this.message /*|| this.tempAttachments.length && this.tempAttachments.every(file => file.loaded)*/}/>
           </View>
 
         </View>
@@ -131,9 +144,8 @@ class Chat extends Component {
   setTextInputRef = ref => this.textInput = ref
 
   sendMessageHandler = () => {
-    this.props.messenger.sendMessage(this.message, this.props.chatId, this.props.attachmentsObject, this.props.attachmentsList)
+    this.props.messenger.sendMessage(this.message, this.props.chatId)
     this.setMessage('')
-    this.props.clearAttachments()
   }
 
   attachHandler = () => {
@@ -143,10 +155,10 @@ class Chat extends Component {
       },
       (buttonIndex) => {
         if (buttonIndex === 1) {
-          this.props.attachImageHandler()
+          this.props.messenger.attachImageHandler(this.props.chatId)
         }
         if (buttonIndex === 2) {
-          this.props.attachPhotoHandler()
+          this.props.messenger.attachPhotoHandler(this.props.chatId)
         }
 
       }

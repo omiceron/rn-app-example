@@ -1,17 +1,3 @@
-import {action, computed, observable} from 'mobx'
-import firebase from 'firebase/app'
-import EntitiesStore from './entities-store'
-import {
-  ATTACHMENTS_STORE,
-  AVATAR_STORE, CACHE_DIR, CHATS_CHUNK_LENGTH, CHATS_REFERENCE, MESSAGES_CHUNK_LENGTH, MESSAGES_REFERENCE,
-  PEOPLE_REFERENCE,
-  PEOPLE_STORE
-} from '../constants'
-import {toJS} from 'mobx'
-import {urlToBlob} from './utils'
-import {FileSystem} from 'expo'
-import path from 'path'
-import co from 'co'
 // chat structure:
 //
 // [chatId]: {
@@ -30,6 +16,22 @@ import co from 'co'
 //   loading: bool
 // }
 
+import {action, computed, observable} from 'mobx'
+import firebase from 'firebase/app'
+import EntitiesStore from './entities-store'
+import {
+  ATTACHMENTS_STORE,
+  CHATS_CHUNK_LENGTH,
+  CHATS_REFERENCE,
+  MESSAGES_CHUNK_LENGTH,
+  MESSAGES_REFERENCE,
+  PEOPLE_REFERENCE,
+  PEOPLE_STORE
+} from '../constants'
+import {toJS} from 'mobx'
+import withAttachments from './with-attachments'
+
+@withAttachments((store, uid) => store.entities[uid])
 class MessengerStore extends EntitiesStore {
 
   getChatReference = (chatId) => {
@@ -70,10 +72,11 @@ class MessengerStore extends EntitiesStore {
     return this.entities[chatId].loading
   }
 
+  // todo: inspect
   getMessages = (chatId) => {
     const chat = this.entities[chatId]
     if (!chat || !chat.messages) return []
-    return Object.values(chat.messages).sort((a, b) => a.timestamp < b.timestamp)
+    return Object.values(chat.messages).sort((a, b) => b.timestamp - a.timestamp)
   }
 
   getLastFetchedMessage = (chatId) => {
@@ -81,7 +84,7 @@ class MessengerStore extends EntitiesStore {
     return messages[messages.length - 1]
   }
 
-  // TODO: subscribe wrong behavior
+  // fixme: subscribe wrong behavior
   @computed
   get earliestFetchedChatTimestamp() {
     const chat = this.chats[this.chats.length - 1]
@@ -119,8 +122,6 @@ class MessengerStore extends EntitiesStore {
       console.log('SUBSCRIBE ON CHATS:', 'get data')
 
       const chat = await this.convertChat(payload)
-      // TODO EXPERIMENTAL FEATURES
-      // const {value: chat} = await this.convertChatsSequence(payload, true).next()
       await this.appendChat(chat)
 
       this.setTimestamp(payload)
@@ -328,11 +329,7 @@ class MessengerStore extends EntitiesStore {
       message.userId = message.user
 
       if (message.attachments) {
-        const attachmentsPromises = Object.values(message.attachments)
-          .map(this.getStore(ATTACHMENTS_STORE).getAttachmentLazily)
-
-        const attachments = await Promise.all(attachmentsPromises)
-        message.attachments = attachments.filter(Boolean)
+        message.attachments = await this.getStore(ATTACHMENTS_STORE).convertAttachments(message.attachments)
       }
 
       this.appendMessage(chatId, message)
@@ -433,7 +430,7 @@ class MessengerStore extends EntitiesStore {
   }
 
   // TODO: Clean this mess
-  sendMessage = (text, chatId, attachments = {}, temp = []) => {
+  sendMessage = (text, chatId) => {
     if (!text) return
 
     // https://github.com/omiceron/firebase-functions-example
@@ -447,7 +444,7 @@ class MessengerStore extends EntitiesStore {
       timestamp: Date.now(),
       userId: this.user.uid,
       pending: true,
-      attachments: temp
+      attachments: this.getTempAttachments(chatId)
     }
 
     this.appendMessage(chatId, tempMessage)
@@ -455,7 +452,7 @@ class MessengerStore extends EntitiesStore {
     const message = {
       text,
       chatId,
-      attachments,
+      attachments: this.attachmentsToDb(chatId),
       token: key
     }
 
@@ -465,6 +462,7 @@ class MessengerStore extends EntitiesStore {
       })
       .catch(console.error)
 
+    this.clearAttachments(chatId)
   }
 
   @action deleteChat = (chatId) => {

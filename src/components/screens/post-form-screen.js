@@ -10,7 +10,7 @@ class PostFormScreen extends Component {
   constructor(...args) {
     super(...args)
 
-    this.props.navigation.setParams({sendPost: this.sendPost})
+    this.props.navigation.setParams({sendPost: this.props.feed.sendPost})
   }
 
   // TODO: send post clear attachments
@@ -24,20 +24,8 @@ class PostFormScreen extends Component {
     })
   }
 
-  // TODO: maybe it's better not to use reverse data flow giving priority to decorating this screen instead of PostForm
-  getAttachmentsHelper = (attachments) => this.attachments = attachments
-  setClearAttachments = (clearAttachments) => this.clearAttachments = clearAttachments
-
-  sendPost = async () => {
-    await this.props.feed.sendPost(this.attachments)
-    this.clearAttachments()
-  }
-
   render() {
-    return <PostForm
-      getAttachmentsHelper = {this.getAttachmentsHelper}
-      setClearAttachments = {this.setClearAttachments}
-    />
+    return <PostForm/>
   }
 
 }

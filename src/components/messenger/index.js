@@ -45,6 +45,8 @@ class Messenger extends Component {
     />
   }
 
+  renderSeparator = () => <Separator leftIndent = {78}/>
+
   render() {
     const {messenger} = this.props
     const chats = messenger.chats
@@ -53,7 +55,7 @@ class Messenger extends Component {
     return <SafeAreaView style = {styles.container}>
       <FlatList
         contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}
-        ItemSeparatorComponent = {() => <Separator leftIndent = {78}/>}
+        ItemSeparatorComponent = {this.renderSeparator}
         data = {chats}
         renderItem = {this.renderChatCard}
         onEndReached = {messenger.fetchChats}

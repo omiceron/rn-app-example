@@ -26,13 +26,18 @@ import {
   FEED_CHUNK_LENGTH,
   POSTS_REFERENCE,
   LIKES_REFERENCE,
-  NAVIGATION_STORE, ATTACHMENTS_STORE, CURRENT_USER_STORE
+  NAVIGATION_STORE,
+  ATTACHMENTS_STORE,
+  CURRENT_USER_STORE
 } from '../constants'
 import loremIpsum from 'lorem-ipsum'
 import {Location} from 'expo'
 import {toJS} from 'mobx'
+import withAttachments from './with-attachments'
 
 // TODO move post form to new store?
+
+@withAttachments()
 class FeedStore extends EntitiesStore {
 
   @observable title = ''
@@ -320,11 +325,13 @@ class FeedStore extends EntitiesStore {
     return coords
   }
 
-  @action sendPost = async (attachments = {}) => {
+  @action sendPost = async () => {
     if (!this.title || !this.text) {
       alert('No text or title!')
       return
     }
+
+    const attachments = this.attachmentsToDb()
 
     const newPost = {
       title: this.title,
@@ -343,6 +350,7 @@ class FeedStore extends EntitiesStore {
     this.refreshPost(key)
     this.getStore(NAVIGATION_STORE).goBack()
     this.clearPostForm()
+    this.clearAttachments()
     this.clearLocationForm()
   }
 

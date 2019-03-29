@@ -59,7 +59,7 @@ class PeopleStore extends EntitiesStore {
   @action refreshUser = async (userId) => {
     console.log('PEOPLE:', 'refresh user')
     const callback = async (snapshot) => {
-      // TODO FIX THIS. Problem caused by posts linked to deleted user
+      // fixme. Problem caused by posts linked to deleted user
       // if (!snapshot.val()) return false
       return await
         this.convertUser({[userId]: snapshot.val()})
