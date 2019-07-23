@@ -38,6 +38,7 @@ export const OFFLINE_COLOR = '#7f7f7f'
 // export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
 
 export const WHITE_TRANSPARENT_BACKGROUND_COLOR = 'rgba(255, 255, 253, 0.8)'
+export const TABLE_VIEW_BORDER_COLOR = 'rgba(192, 192, 192, 0.5)'
 
 export const WHITE_BACKGROUND_COLOR = '#fffffd'
 export const INACTIVE_BACKGROUND_COLOR = '#ebebef'
