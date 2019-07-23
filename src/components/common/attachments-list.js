@@ -2,34 +2,45 @@ import React, {Component} from 'react'
 import {
   View,
   StyleSheet,
-  FlatList,
+  FlatList
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Attachment from './attachment'
+import {IMAGE_DIVIDER} from '../../constants'
 
 class AttachmentsList extends Component {
   static propTypes = {
     attachments: PropTypes.array.isRequired
   }
 
-  renderItem = ({item}) => <Attachment {...item} size = {50}/>
+  renderItem = ({item}) => (
+    <Attachment
+      {...item}
+      height = {50}
+      width = {50}
+    />
+  )
+
+  renderSeparator = () => <View style = {{width: IMAGE_DIVIDER}}/>
 
   render() {
-    return <View style = {styles.container}>
+    return (
       <FlatList
+        style = {styles.container}
         horizontal = {true}
+        ItemSeparatorComponent = {this.renderSeparator}
         data = {this.props.attachments}
         renderItem = {this.renderItem}
       />
-    </View>
-
+    )
   }
 
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex'
+    display: 'flex',
+    padding: IMAGE_DIVIDER
   }
 })
 

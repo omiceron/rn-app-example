@@ -11,35 +11,31 @@ class Attachment extends Component {
   static propTypes = {
     uri: PropTypes.string,
     loading: PropTypes.any,
-    size: PropTypes.number
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
   }
 
   render() {
-    const {uri, loading, size = 50} = this.props
-    const thumbnailSize = {width: size, height: size}
+    const {uri, loading, width, height} = this.props
+    const containerStyle = StyleSheet.compose(styles.container, {width, height})
 
-    return <View style = {[styles.container]}>
-      <View style = {[styles.thumbnail, thumbnailSize]}>
+    return (
+      <View style = {containerStyle}>
         <ImageBackground
           source = {{uri}}
           style = {styles.content}
-          imageStyle = {[styles.thumbnail, thumbnailSize]}
+          imageStyle = {containerStyle}
         >
           {loading ? <ActivityIndicator/> : null}
         </ImageBackground>
       </View>
-    </View>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    padding: 10
-  },
-  thumbnail: {
-    borderRadius: 12
+    borderRadius: 6
   },
   content: {
     justifyContent: 'center',

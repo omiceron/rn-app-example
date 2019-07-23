@@ -16,6 +16,16 @@ export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-dig
 export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
+export const IMAGE_DIVIDER = 4
+export const MESSAGE_IMAGE_MAX_SIZE = 300
+
+export const MESSAGE_CONTAINER_WIDTH = WINDOW_WIDTH - WINDOW_WIDTH / 5
+export const MESSAGE_MAGE_SIZE_RELATIVE = MESSAGE_CONTAINER_WIDTH - IMAGE_DIVIDER * 2
+export const MESSAGE_IMAGE_SIZE = MESSAGE_MAGE_SIZE_RELATIVE > MESSAGE_IMAGE_MAX_SIZE ? MESSAGE_IMAGE_MAX_SIZE : MESSAGE_MAGE_SIZE_RELATIVE
+export const POST_IMAGE_SIZE = WINDOW_WIDTH - 32 // margins and paddings
+
+export const MESSAGE_BORDER_RADIUS = 12
+
 export const DEFAULT_HEADER_COLOR = '#7a839e'
 export const ACTIVE_TINT_COLOR = '#423c6d'
 export const USER_MESSAGE_COLOR = '#423c6d'
@@ -28,7 +38,6 @@ export const OFFLINE_COLOR = '#7f7f7f'
 // export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
 
 export const WHITE_TRANSPARENT_BACKGROUND_COLOR = 'rgba(255, 255, 253, 0.8)'
-
 
 export const WHITE_BACKGROUND_COLOR = '#fffffd'
 export const INACTIVE_BACKGROUND_COLOR = '#ebebef'

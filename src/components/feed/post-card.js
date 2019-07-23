@@ -7,7 +7,7 @@ import {computed} from 'mobx'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
 import {
   NAVIGATION_STORE, WHITE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR,
-  BLACK_TEXT_COLOR
+  BLACK_TEXT_COLOR, POST_IMAGE_SIZE
 } from '../../constants'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
@@ -34,55 +34,61 @@ class PostCard extends Component {
     return this.props.feed.isPostLiked(this.props.uid)
   }
 
+  setLike = () => {
+    this.props.feed.setLike(this.props.uid)
+  }
+
   render() {
     console.log('render')
     const {title, text, location, uid, navigation, feed, coords, attachments} = this.props
 
-    return <View style = {[styles.container]}>
-      <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
+    return (
+      <View style = {[styles.container]}>
+        <TouchableOpacity onPress = {() => navigation.navigate('postScreen', {postId: uid})}>
 
-        <View style = {styles.row}>
-          <Text numberOfLines = {1} style = {styles.title}>
-            {title}
-          </Text>
-        </View>
+          <View style = {styles.row}>
+            <Text numberOfLines = {1} style = {styles.title}>
+              {title}
+            </Text>
+          </View>
+
+          <Separator/>
+
+          <View style = {styles.row}>
+            <Text numberOfLines = {10} style = {styles.text}>
+              {text}
+            </Text>
+          </View>
+
+        </TouchableOpacity>
+
+        {attachments && <Attachments maxSize = {POST_IMAGE_SIZE} attachments = {attachments}/>}
+
+        {location &&
+        <AttachedLocation
+          location = {location}
+          style = {{marginBottom: 8}}
+          onPress = {() => navigation.navigate('mapScreen', {coords})}
+        />}
 
         <Separator/>
 
-        <View style = {styles.row}>
-          <Text numberOfLines = {10} style = {styles.text}>
-            {text}
-          </Text>
-        </View>
+        <PostControlRow
+          isLiked = {this.isLiked}
+          likesNumber = {this.likesNumber}
+          onLikePress = {this.setLike}
+          onCounterPress = {() => navigation.push('likesList', {postId: uid})}
+        />
 
-      </TouchableOpacity>
-
-      {attachments && <Attachments attachments = {attachments}/>}
-
-      {location &&
-      <AttachedLocation
-        location = {location}
-        style = {{marginBottom: 8}}
-        onPress = {() => navigation.navigate('mapScreen', {coords})}
-      />}
-
-      <Separator/>
-
-      <PostControlRow
-        isLiked = {this.isLiked}
-        likesNumber = {this.likesNumber}
-        onLikePress = {() => feed.setLike(uid)}
-        onCounterPress = {() => navigation.push('likesList', {postId: uid})}
-      />
-
-    </View>
+      </View>
+    )
   }
-
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    display: 'flex',
     backgroundColor: WHITE_BACKGROUND_COLOR,
     paddingHorizontal: 8,
     borderColor: 'rgba(192,192,192,0.5)',
