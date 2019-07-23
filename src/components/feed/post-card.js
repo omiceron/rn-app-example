@@ -83,7 +83,6 @@ class PostCard extends Component {
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
