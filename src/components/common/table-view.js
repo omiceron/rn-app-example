@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, ScrollView, Text} from 'react-native'
 import PropTypes from 'prop-types'
-import {WHITE_BACKGROUND_COLOR} from '../../constants'
+import {TABLE_VIEW_BORDER_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 class TableView extends Component {
   static propTypes = {
@@ -44,24 +44,11 @@ class TableView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: WHITE_BACKGROUND_COLOR,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(192,192,192,0.5)'
+    borderColor: TABLE_VIEW_BORDER_COLOR
 
-  },
-  headerText: {
-    fontWeight: '100',
-    color: 'grey',
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 8
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    minHeight: 30
   }
 })
 
