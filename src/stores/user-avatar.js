@@ -2,7 +2,8 @@ import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
 import EntitiesStore from './entities-store'
-import {FileSystem, ImageManipulator, MediaLibrary} from 'expo'
+import * as FileSystem from 'expo-file-system'
+import {ImageManipulator, MediaLibrary} from 'expo'
 import {
   USER_AVATAR_REFERENCE, CACHE_DIR, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE,
   NAVIGATION_STORE
