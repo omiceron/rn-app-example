@@ -1,6 +1,6 @@
 import {toJS} from 'mobx'
 import {SHORT_DATE_FORMAT, DATE_FORMAT, LOCALE, TIME_FORMAT} from '../constants'
-import {FileSystem} from 'expo'
+import * as FileSystem from 'expo-file-system'
 import path from 'path'
 
 export function entitiesFromFB(data) {

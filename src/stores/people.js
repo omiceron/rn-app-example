@@ -4,7 +4,7 @@ import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
 import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, CURRENT_USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
 import path from 'path'
-import {FileSystem} from 'expo'
+import * as FileSystem from 'expo-file-system'
 import {alphabetic, urlToBlob} from './utils'
 import {toJS} from 'mobx'
 

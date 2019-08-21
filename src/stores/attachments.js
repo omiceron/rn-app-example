@@ -6,7 +6,7 @@ import {
   ATTACHMENTS_STORAGE_REFERENCE
 } from '../constants'
 import path from 'path'
-import {FileSystem} from 'expo'
+import * as FileSystem from 'expo-file-system'
 import {alphabetic, copyFile, urlToBlob} from './utils'
 import {toJS} from 'mobx'
 

@@ -4,7 +4,7 @@
     "name": "Meowchat",
     "slug": "meowchat",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "34.0.0",
     "orientation": "portrait",
     "facebookScheme": "fb1943342692364166",
     "facebookAppId": "1943342692364166",
