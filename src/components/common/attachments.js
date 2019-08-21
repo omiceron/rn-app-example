@@ -7,6 +7,9 @@ import PropTypes from 'prop-types'
 import Attachment from './attachment'
 import {IMAGE_DIVIDER} from '../../constants'
 import {chunk} from 'lodash'
+import BasicColumn from './basic-column'
+import Separator from './separator'
+import BasicRow from './basic-row'
 
 class Attachments extends Component {
   static propTypes = {
@@ -14,6 +17,10 @@ class Attachments extends Component {
     maxSize: PropTypes.number.isRequired,
     lastRowBottomBorder: PropTypes.number
   }
+
+  renderRowSeparator = () => <Separator size = {IMAGE_DIVIDER / 2} empty vertical/>
+
+  renderColumnSeparator = () => <Separator size = {IMAGE_DIVIDER / 2} empty/>
 
   renderImagesRow = (rowImages, rowIndex, {length: rowsLength}) => {
     const {maxSize, attachments: {length}, lastRowBottomBorder} = this.props
@@ -32,17 +39,21 @@ class Attachments extends Component {
     }
 
     return (
-      <View style = {[styles.row, lastRowBottomBorder && borderRadius]} key = {rowIndex}>
+      <BasicRow
+        separator = {this.renderRowSeparator}
+        style = {lastRowBottomBorder && borderRadius}
+        key = {rowIndex}
+      >
         {rowImages.map((image, imageIndex) => {
 
-          const dividerStyle = {
-            marginLeft: imageIndex === 1 ? IMAGE_DIVIDER : 0,
-            marginTop: rowIndex === 0 ? 0 : IMAGE_DIVIDER
-          }
+            // const dividerStyle = {
+            //   marginLeft: imageIndex === 1 ? IMAGE_DIVIDER : 0,
+            //   marginTop: rowIndex === 0 ? 0 : IMAGE_DIVIDER
+            // }
 
-          // TODO: Create universal wrappers for rows and cols with separator element
+            // TODO: Create universal wrappers for rows and cols with separator element
             return (
-              <View style = {dividerStyle} key = {rowIndex + '_' + imageIndex}>
+              <View key = {rowIndex + '_' + imageIndex}>
                 <Attachment
                   {...image}
                   width = {isOnlyImageInRow ? maxSize : halfSize}
@@ -52,31 +63,20 @@ class Attachments extends Component {
             )
           }
         )}
-      </View>
+      </BasicRow>
     )
   }
 
+  // TODO: Move to utils
   renderImages = (images) => chunk(images, 2).map(this.renderImagesRow)
 
   render() {
     const {attachments} = this.props
 
-    return <View style = {styles.container}>
+    return <BasicColumn separator = {this.renderColumnSeparator}>
       {this.renderImages(attachments)}
-    </View>
+    </BasicColumn>
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flex: 1
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    overflow: 'hidden'
-  }
-})
 
 export default Attachments
