@@ -2,7 +2,9 @@ import {configure, observable, action} from 'mobx'
 import {Provider, observer} from 'mobx-react'
 import React from 'react'
 import {StatusBar, AsyncStorage} from 'react-native'
-import {ScreenOrientation, AppLoading, Font, Asset} from 'expo'
+import {ScreenOrientation, AppLoading} from 'expo'
+import * as Font from 'expo-font'
+import {Asset} from 'expo-asset'
 import {config} from './src/config'
 import AppNavigator from './src/components/app-navigator'
 import stores from './src/stores'
@@ -17,7 +19,7 @@ export default class App extends React.Component {
 
   @action _loadAssetsAsync = async () => {
     StatusBar.setBarStyle('light-content', true)
-    await ScreenOrientation.allowAsync(Expo.ScreenOrientation.Orientation.PORTRAIT_UP)
+    await ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT_UP)
     await Font.loadAsync({
       'Meowchat': require('./assets/fonts/meowchat-icons.ttf')
     })

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {MediaLibrary} from 'expo'
+import * as MediaLibrary from 'expo-media-library'
 import {observable, action, toJS} from 'mobx'
 import {observer} from 'mobx-react'
 import {SafeAreaView, View, Image, FlatList} from 'react-native'

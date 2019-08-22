@@ -1,5 +1,5 @@
 import {Dimensions, Easing} from 'react-native'
-import Constants from 'expo-constants';
+import Constants from 'expo-constants'
 import * as FileSystem from 'expo-file-system'
 
 export const CACHE_DIR = FileSystem.cacheDirectory

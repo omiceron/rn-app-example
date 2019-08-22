@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet} from 'react-native'
-import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
+import * as Location from 'expo-location'
+import MapView from 'react-native-maps'
 import {REGION_DELTAS} from '../../constants'
 import PropTypes from 'prop-types'
 

@@ -1,7 +1,7 @@
 import {observable, action} from 'mobx'
 import {ATTACHMENTS_STORE} from '../constants'
 import {StatusBar} from 'react-native'
-import {ImagePicker} from 'expo'
+import * as ImagePicker from 'expo-image-picker'
 
 const withAttachments = (extractor) => (Store) =>
   class WithAttachments extends Store {

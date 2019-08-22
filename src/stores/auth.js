@@ -11,7 +11,9 @@ import {
   MESSENGER_STORE,
   NAVIGATION_STORE
 } from '../constants'
-import {Facebook, Google, MediaLibrary} from 'expo'
+import * as Facebook from 'expo-facebook'
+import * as Google from 'expo-google-app-auth'
+import * as MediaLibrary from 'expo-media-library'
 import {facebookAppId, googleClientId} from '../config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'

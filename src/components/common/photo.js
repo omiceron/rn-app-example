@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, Image} from 'react-native'
-import {Camera, Permissions} from 'expo'
+import {Camera} from 'expo-camera'
+import * as Permissions from 'expo-permissions'
 import {observable, action} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
