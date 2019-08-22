@@ -31,7 +31,7 @@ import {
   CURRENT_USER_STORE
 } from '../constants'
 import loremIpsum from 'lorem-ipsum'
-import {Location} from 'expo'
+import * as Location from 'expo-location'
 import {toJS} from 'mobx'
 import withAttachments from './with-attachments'
 

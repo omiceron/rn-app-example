@@ -12,7 +12,7 @@ import {
   WARNING_COLOR
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
-import {ImagePicker} from 'expo'
+import * as ImagePicker from 'expo-image-picker'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)

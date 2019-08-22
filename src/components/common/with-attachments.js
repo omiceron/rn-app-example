@@ -4,7 +4,7 @@ import * as React from 'react'
 import {observable, action, computed} from 'mobx'
 import {inject, observer} from 'mobx-react'
 import {StatusBar} from 'react-native'
-import {ImagePicker} from 'expo'
+import * as ImagePicker from 'expo-image-picker'
 import {ATTACHMENTS_STORE} from '../../constants'
 
 @inject(ATTACHMENTS_STORE)

@@ -3,7 +3,8 @@ import firebase from 'firebase/app'
 import BasicStore from './basic-store'
 import EntitiesStore from './entities-store'
 import * as FileSystem from 'expo-file-system'
-import {ImageManipulator, MediaLibrary} from 'expo'
+import * as ImageManipulator from 'expo-image-manipulator'
+import * as MediaLibrary from 'expo-media-library'
 import {
   USER_AVATAR_REFERENCE, CACHE_DIR, PEOPLE_REFERENCE, AVATARS_STORAGE_REFERENCE,
   NAVIGATION_STORE
@@ -32,7 +33,7 @@ class UserAvatarStore extends EntitiesStore {
       .ref(PEOPLE_REFERENCE)
       .child(this.user.uid)
   }
-  
+
   get currentUserAvatarStorageReference() {
     return firebase.storage()
       .ref(AVATARS_STORAGE_REFERENCE)

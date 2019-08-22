@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
-import MapView from 'react-native-maps';
+import MapView from 'react-native-maps'
 import {REGION_DELTAS} from '../../constants'
 
 class AttachedMap extends Component {
