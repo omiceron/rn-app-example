@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
 import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
 import PersonCard from './person-card'
-import Separator from '../common/separator'
 import Loader from '../common/loader'
 import {INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {shape, bool, func, array} from 'prop-types'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(PEOPLE_STORE)
 @observer
@@ -40,9 +40,9 @@ class PeopleList extends Component {
 
     const {people} = this.props
     const SectionSeparatorComponent = ({trailingItem, trailingSection}) =>
-      trailingSection && !trailingItem ? <Separator topIndent = {8}/> : null
+      trailingSection && !trailingItem ? <LinedSeparator style = {styles.sectionSeparator}/> : null
 
-    const ItemSeparatorComponent = () => <Separator leftIndent = {48}/>
+    const ItemSeparatorComponent = () => <LinedSeparator style = {styles.itemSeparator}/>
 
     return <SafeAreaView style = {styles.container}>
       <SectionList
@@ -70,8 +70,13 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     fontWeight: '600'
+  },
+  sectionSeparator: {
+    marginTop: 8
+  },
+  itemSeparator: {
+    marginLeft: 48
   }
-
 })
 
 export default PeopleList

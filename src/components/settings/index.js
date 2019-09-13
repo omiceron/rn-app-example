@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
 import {observer, inject} from 'mobx-react'
-import Separator from '../common/separator'
 import CurrentUserAvatar from './current-user-avatar'
 import TableSeparator from '../common/table-separator'
 import TableRow from '../common/table-row'
@@ -13,6 +12,8 @@ import {
 } from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
 import * as ImagePicker from 'expo-image-picker'
+import * as Permissions from 'expo-permissions'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
@@ -72,7 +73,7 @@ class Settings extends Component {
             onBlur = {currentUser.updateUserData}
           />
 
-          <Separator leftIndent = {0}/>
+          <LinedSeparator noMargins />
 
           <TextInput
             ref = {this.setLastNameRef}
@@ -145,6 +146,7 @@ class Settings extends Component {
       },
       async (buttonIndex) => {
         if (buttonIndex === 1) {
+          await Permissions.askAsync(Permissions.CAMERA_ROLL)
           StatusBar.setHidden(true, 'slide')
 
           const photo = await ImagePicker.launchImageLibraryAsync()
@@ -157,6 +159,7 @@ class Settings extends Component {
 
         }
         if (buttonIndex === 2) {
+          await Permissions.askAsync(Permissions.CAMERA)
           StatusBar.setHidden(true, 'slide')
 
           const photo = await ImagePicker.launchCameraAsync()

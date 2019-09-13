@@ -1,7 +1,6 @@
 import React, {Component, PureComponent} from 'react'
 import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing, Image} from 'react-native'
 import PropTypes from 'prop-types'
-import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {computed} from 'mobx'
 import {FEED_STORE, HIT_SLOP} from '../../constants/index'
@@ -12,6 +11,7 @@ import {
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
 import Attachments from '../common/attachments'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -52,7 +52,7 @@ class PostCard extends Component {
             </Text>
           </View>
 
-          <Separator/>
+          <LinedSeparator/>
 
           <View style = {styles.row}>
             <Text numberOfLines = {10} style = {styles.text}>
@@ -71,7 +71,7 @@ class PostCard extends Component {
           onPress = {() => navigation.navigate('mapScreen', {coords})}
         />}
 
-        <Separator/>
+        <LinedSeparator/>
 
         <PostControlRow
           isLiked = {this.isLiked}

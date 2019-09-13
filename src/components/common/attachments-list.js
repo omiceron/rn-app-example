@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Attachment from './attachment'
-import {IMAGE_DIVIDER} from '../../constants'
+import {IMAGE_SEPARATOR_SIZE} from '../../constants'
 
 class AttachmentsList extends Component {
   static propTypes = {
@@ -21,7 +21,7 @@ class AttachmentsList extends Component {
     />
   )
 
-  renderSeparator = () => <View style = {{width: IMAGE_DIVIDER}}/>
+  renderSeparator = () => <View style = {{width: IMAGE_SEPARATOR_SIZE}}/>
 
   render() {
     return (
@@ -39,8 +39,8 @@ class AttachmentsList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    padding: IMAGE_DIVIDER
+    // display: 'flex',
+    padding: IMAGE_SEPARATOR_SIZE
   }
 })
 

@@ -10,13 +10,13 @@ import {
 import {string, object, number, bool, shape} from 'prop-types'
 import AttachedMap from './attached-map'
 import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR} from '../../constants'
-import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {computed} from 'mobx'
 import BasicAvatar from '../common/basic-avatar'
 import {getDate} from '../../stores/utils'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(FEED_STORE)
 @inject(NAVIGATION_STORE)
@@ -48,8 +48,6 @@ class Post extends Component {
     size = {20}
     uri = {this.props.user.avatar}
   />
-
-  renderSeparator = () => <Separator style = {styles.postSeparator}/>
 
   // TODO: user object
   renderPostInfo = () => {
@@ -112,13 +110,9 @@ class Post extends Component {
             {title}
           </Text>
         </View>
-
-        {this.renderSeparator()}
-
+        <LinedSeparator noMargins/>
         {this.renderPostInfo()}
-
-        {this.renderSeparator()}
-
+        <LinedSeparator noMargins/>
         <View style = {styles.row}>
           <Text style = {styles.text}>
             {text}
@@ -138,8 +132,7 @@ class Post extends Component {
 
         />}
 
-        {this.renderSeparator()}
-
+        <LinedSeparator noMargins/>
         <PostControlRow
           isLiked = {this.isLiked}
           likesNumber = {this.likesNumber}
@@ -203,9 +196,6 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginLeft: 3
-  },
-  postSeparator: {
-    marginHorizontal: 0
   }
 })
 

@@ -8,7 +8,7 @@ import {
   BLACK_TEXT_COLOR,
   USER_MESSAGE_COLOR,
   WHITE_BACKGROUND_COLOR,
-  IMAGE_DIVIDER,
+  IMAGE_SEPARATOR_SIZE,
   MESSAGE_IMAGE_SIZE,
   MESSAGE_BORDER_RADIUS,
   MESSAGE_CONTAINER_WIDTH
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   attachmentContainer: {
     display: 'flex',
-    padding: IMAGE_DIVIDER
+    padding: IMAGE_SEPARATOR_SIZE
   },
   text: {
     fontSize: 16,

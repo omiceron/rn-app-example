@@ -4,11 +4,11 @@ import {
 } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
-import Separator from '../common/separator'
 import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
 import EmptyList from '../common/empty-list'
 import ListLoader from '../common/list-loader'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)
@@ -45,7 +45,7 @@ class Messenger extends Component {
     />
   }
 
-  renderSeparator = () => <Separator leftIndent = {78}/>
+  renderSeparator = () => <LinedSeparator style = {styles.messengerSeparator}/>
 
   render() {
     const {messenger} = this.props
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: INACTIVE_BACKGROUND_COLOR
+  },
+  messengerSeparator: {
+    marginLeft: 78,
   }
 })
 

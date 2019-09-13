@@ -1,9 +1,9 @@
 import React, {Component, PureComponent} from 'react'
 import {Text, StyleSheet, SectionList, Animated, TouchableHighlight, View, PixelRatio} from 'react-native'
 import EventCard from './event-card'
-import Separator from '../common/separator'
 import {inject, observer} from 'mobx-react'
 import {EVENTS_STORE} from '../../constants'
+import LinedSeparator from '../common/separator/lined-separator'
 
 const sectionsFixtures = 'abcdefghijklmnopqrstuvwxyz'.split('').map(letter => ({
   title: letter,
@@ -31,7 +31,7 @@ class EventList extends Component {
       initialNumToRender = {Number.MAX_SAFE_INTEGER}
       automaticallyAdjustContentInsets = {false}
 
-      ItemSeparatorComponent = {Separator}
+      ItemSeparatorComponent = {LinedSeparator}
       style = {styles.container}
       sections = {events.sections}
       renderSectionHeader = {({section}) => <Text style = {styles.header}>{section.title}</Text>}
