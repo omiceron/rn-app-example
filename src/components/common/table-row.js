@@ -54,7 +54,6 @@ class TableRow extends Component {
         {title ? <Text style = {[styles.title, titleStyle]}>{title}</Text> : children}
         {caption && <Text style = {[styles.caption, captionStyle]}>{caption}</Text>}
       </SegmentedCard>
-      {!trailingItem && !disableSeparator && <LinedSeparator/>}
     </React.Fragment>
   }
 }

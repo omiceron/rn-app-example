@@ -5,7 +5,7 @@ import CurrentUserAvatar from './current-user-avatar'
 import TableSeparator from '../common/table-separator'
 import TableRow from '../common/table-row'
 import SegmentedCard from '../common/segmented-card'
-import TableView from '../common/table-view'
+import TableBlock from '../common/table-block'
 import {
   AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE,
   WARNING_COLOR
@@ -58,7 +58,7 @@ class Settings extends Component {
       />
 
     return <ScrollView style = {styles.container}>
-      <TableView>
+      <TableBlock hint = 'Enter your name and add photo here'>
         <SegmentedCard
           mainContainerStyle = {styles.textView}
           LeftComponent = {LeftComponent}>
@@ -87,9 +87,7 @@ class Settings extends Component {
             onBlur = {currentUser.updateUserData}
           />
         </SegmentedCard>
-      </TableView>
-
-      <TableSeparator hint = 'Enter your name and add photo here'/>
+      </TableBlock>
 
       {/*      <View style = {styles.simpleRow}>
         <TextInput
@@ -103,7 +101,7 @@ class Settings extends Component {
           onBlur = {updateUserData}/>
       </View>*/}
 
-      <TableView>
+      <TableBlock hint = 'Enter your additional information here, like your bio, age or something like that'>
         <TableRow>
           <TextInput
             ref = {this.setInfoRef}
@@ -115,9 +113,7 @@ class Settings extends Component {
             onBlur = {currentUser.updateUserData}
           />
         </TableRow>
-      </TableView>
-
-      <TableSeparator hint = 'Enter your additional information here, like your bio, age or something like that'/>
+      </TableBlock>
 
       {/*<TableView>
         <TableRow title = 'Dark Theme' onValueChange = {() => alert('Not ready yet!')}/>
@@ -126,13 +122,11 @@ class Settings extends Component {
 
       <TableSeparator/>*/}
 
-      <TableView>
+      <TableBlock hint = 'Press button to log out'>
         <TableRow title = 'Sign out'
                   titleStyle = {styles.redButton}
                   onPress = {this.handleSignOut}/>
-      </TableView>
-
-      <TableSeparator hint = 'Press button to log out'/>
+      </TableBlock>
 
     </ScrollView>
   }

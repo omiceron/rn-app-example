@@ -9,7 +9,7 @@ import {KEYBOARD, FEED_STORE, BLACK_TEXT_COLOR, WHITE_BACKGROUND_COLOR, NAVIGATI
 
 import withAnimation from '../common/with-animation'
 
-import TableView from '../common/table-view'
+import TableBlock from '../common/table-block'
 import TableRow from '../common/table-row'
 import AttachmentsList from '../common/attachments-list'
 import AttachedLocation from './attached-location'
@@ -73,7 +73,7 @@ class PostForm extends Component {
     const {height} = this.props.layouts[KEYBOARD]
 
     return <SafeAreaView style = {styles.container}>
-      <TableView style = {styles.container}>
+      <TableBlock disableSeparator style = {styles.container}>
 
         <TableRow>
           <TextInput
@@ -105,13 +105,14 @@ class PostForm extends Component {
         </TableRow> : null}
 
         <PostFormControlRow
+          disableSeparator
           attachImageHandler = {() => this.props.feed.attachImageHandler()}
           attachPhotoHandler = {() => this.props.feed.attachPhotoHandler()}
         />
 
         <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>
 
-      </TableView>
+      </TableBlock>
     </SafeAreaView>
 
   }

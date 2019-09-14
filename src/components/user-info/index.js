@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 import SegmentedCard from '../common/segmented-card'
 import TableRow from '../common/table-row'
 import TableSeparator from '../common/table-separator'
-import TableView from '../common/table-view'
+import TableBlock from '../common/table-block'
 import {
   INACTIVE_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
   BLACK_TEXT_COLOR,
@@ -53,27 +53,22 @@ class UserInfo extends Component {
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
 
-    const renderLikedPosts = () =>
-      <TableView>
-        {this.likes.length
+    // TODO: make empty row condition
+    const renderLikedPosts = () => this.likes.length
           ? this.likes.map(({postId, title}) =>
             <TouchableOpacity key = {postId}
                               onPress = {() => openPostScreen(postId)}>
               <TableRow title = {title}/>
             </TouchableOpacity>)
-          : <TableRow title = 'No liked posts'/>}
-      </TableView>
+          : <TableRow title = 'No liked posts'/>
 
-    const renderPosts = () =>
-      <TableView>
-        {this.posts.length
+    const renderPosts = () => this.posts.length
           ? this.posts.map(({postId, title}) =>
             <TouchableOpacity key = {postId}
                               onPress = {() => openPostScreen(postId)}>
               <TableRow title = {title}/>
             </TouchableOpacity>)
-          : <TableRow title = 'No posts'/>}
-      </TableView>
+          : <TableRow title = 'No posts'/>
 
     const Status = () => {
       if (!online) return null
@@ -96,7 +91,7 @@ class UserInfo extends Component {
 
     return <ScrollView style = {styles.container}>
 
-      <TableView>
+      <TableBlock>
         <SegmentedCard
           mainContainerStyle = {styles.textView}
           LeftComponent = {this.LeftComponent}>
@@ -112,32 +107,27 @@ class UserInfo extends Component {
           </View>
 
         </SegmentedCard>
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator/>
-
-      <TableView>
+      <TableBlock>
         {userInfo && <TableRow title = {userInfo} caption = "user info"/>}
         {email && <TableRow title = {email} caption = "user e-mail"/>}
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator/>
-
-      <TableView>
+      <TableBlock>
         <TableRow
           title = 'Send message'
           titleStyle = {styles.blueButton}
           onPress = {openChatWithUser}/>
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator header = 'Liked posts'/>
+      <TableBlock header = 'Liked posts'>
+        {this.likes ? renderLikedPosts() : <Loader/>}
+      </TableBlock>
 
-      {this.likes ? renderLikedPosts() : <Loader/>}
-
-      <TableSeparator header = 'User posts'/>
-
-      {this.posts ? renderPosts() : <Loader/>}
-
+      <TableBlock header = 'User posts'>
+        {this.posts ? renderPosts() : <Loader/>}
+      </TableBlock>
     </ScrollView>
   }
 

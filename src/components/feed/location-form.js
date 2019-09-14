@@ -4,7 +4,7 @@ import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 import MapView from 'react-native-maps'
-import TableView from '../common/table-view'
+import TableBlock from '../common/table-block'
 import TableRow from '../common/table-row'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {observer, inject} from 'mobx-react'
@@ -79,7 +79,7 @@ class LocationForm extends Component {
 
     if (!coords) return <Loader/>
 
-    return <TableView style = {styles.container}>
+    return <TableBlock disableSeparator style = {styles.container}>
 
       <TableRow>
         <TextInput
@@ -113,7 +113,7 @@ class LocationForm extends Component {
         </MapView>
       </KeyboardAvoidingView>
 
-    </TableView>
+    </TableBlock>
   }
 }
 
