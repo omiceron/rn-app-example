@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react'
 import {View, StyleSheet, Text} from 'react-native'
 import PropTypes from 'prop-types'
 import {INACTIVE_TEXT_COLOR} from '../../constants'
+import BasicSeparator from './separator/basic-separator'
 
 class RowSeparator extends PureComponent {
   static propTypes = {
@@ -11,37 +12,29 @@ class RowSeparator extends PureComponent {
 
   render() {
     const {hint, header} = this.props
-    return <View style = {styles.container}>
-      {hint && <Text style = {[styles.text, styles.hint]}>{hint}</Text>}
-      <View style = {styles.separator}/>
-      {header && <Text style = {[styles.text, styles.header]}>{header}</Text>}
-    </View>
+    return (
+      <BasicSeparator style = {styles.container}>
+        {hint && <Text style = {[styles.text, styles.hint]}>{hint}</Text>}
+        <BasicSeparator size = {40}/>
+        {header && <Text style = {[styles.text, styles.header]}>{header}</Text>}
+      </BasicSeparator>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-    // display: 'flex',
-    // justifyContent: 'flex-start',
-    // alignItems: 'center'
-  },
-  separator: {
-    display: 'flex',
-    height: 40,
+    margin: 8
   },
   text: {
     fontWeight: '100',
     color: INACTIVE_TEXT_COLOR,
-    margin: 8
   },
   hint: {
     alignSelf: 'center',
-    marginBottom: 0
   },
   header: {
     alignSelf: 'flex-start',
-    marginTop: 0
   }
 })
 

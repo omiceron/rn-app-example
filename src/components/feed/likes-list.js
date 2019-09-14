@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import {StyleSheet, FlatList, SafeAreaView} from 'react-native'
+import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native'
 import {array, string, func, shape, objectOf, number} from 'prop-types'
 import PersonCard from '../people/person-card'
-import Separator from '../common/separator'
 import {INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import LinedSeparator from '../common/separator/lined-separator'
 
 class LikesList extends Component {
   static propTypes = {
@@ -22,7 +22,7 @@ class LikesList extends Component {
     return <SafeAreaView style = {styles.container}>
     <FlatList
       contentContainerStyle = {{backgroundColor: WHITE_BACKGROUND_COLOR}}
-      ItemSeparatorComponent = {() => <Separator leftIndent = {48}/>}
+      ItemSeparatorComponent = {() => <LinedSeparator style = {styles.separator}/>}
       data = {this.props.likes}
       renderItem = {this.renderLike}
     />
@@ -35,6 +35,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: INACTIVE_BACKGROUND_COLOR,
   },
+  separator: {
+    marginLeft: 48,
+  }
 })
 
 export default LikesList

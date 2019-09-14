@@ -17,11 +17,11 @@ export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-dig
 export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
-export const IMAGE_DIVIDER = 4
+export const IMAGE_SEPARATOR_SIZE = 4
 export const MESSAGE_IMAGE_MAX_SIZE = 300
 
 export const MESSAGE_CONTAINER_WIDTH = WINDOW_WIDTH - WINDOW_WIDTH / 5
-export const MESSAGE_MAGE_SIZE_RELATIVE = MESSAGE_CONTAINER_WIDTH - IMAGE_DIVIDER * 2
+export const MESSAGE_MAGE_SIZE_RELATIVE = MESSAGE_CONTAINER_WIDTH - IMAGE_SEPARATOR_SIZE * 2
 export const MESSAGE_IMAGE_SIZE = MESSAGE_MAGE_SIZE_RELATIVE > MESSAGE_IMAGE_MAX_SIZE ? MESSAGE_IMAGE_MAX_SIZE : MESSAGE_MAGE_SIZE_RELATIVE
 export const POST_IMAGE_SIZE = WINDOW_WIDTH - 32 // margins and paddings
 
@@ -40,6 +40,9 @@ export const OFFLINE_COLOR = '#7f7f7f'
 
 export const WHITE_TRANSPARENT_BACKGROUND_COLOR = 'rgba(255, 255, 253, 0.8)'
 export const TABLE_VIEW_BORDER_COLOR = 'rgba(192, 192, 192, 0.5)'
+
+export const SEPARATOR_LINE_COLOR = 'rgba(192, 192, 192, 0.5)'
+export const SEPARATOR_DEFAULT_MARGIN = 8
 
 export const WHITE_BACKGROUND_COLOR = '#fffffd'
 export const INACTIVE_BACKGROUND_COLOR = '#ebebef'

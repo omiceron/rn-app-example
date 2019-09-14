@@ -1,10 +1,11 @@
+import React from 'react'
 import {
-  createStackNavigator,
-  createBottomTabNavigator,
   createSwitchNavigator,
   getActiveChildNavigationOptions,
   createAppContainer
 } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
+import { createBottomTabNavigator } from 'react-navigation-tabs'
 import AuthScreen from './screens/auth-screen'
 import SignUpScreen from './screens/sign-up-screen'
 import PeopleScreen from './screens/people-screen'
@@ -16,7 +17,6 @@ import UserInfo from './screens/user-screen'
 import UserAvatarsScreen from './screens/user-avatars-screen'
 import SettingsScreen from './screens/settings-screen'
 import Icon from 'react-native-vector-icons/Ionicons'
-import React, {Component} from 'react'
 import FeedScreen from './screens/feed-screen'
 import PostFormScreen from './screens/post-form-screen'
 import LocationFormScreen from './screens/location-form-screen'
@@ -30,7 +30,9 @@ import {
 } from '../constants'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
-  <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
+  <Icon name = {`ios-${name}`}
+        // TODO: make custom font
+  // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
         size = {30}
         style = {{color: tintColor}}
   />
