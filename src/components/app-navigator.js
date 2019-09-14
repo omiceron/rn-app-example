@@ -30,7 +30,9 @@ import {
 } from '../constants'
 
 const renderTabBarIcon = (name) => ({tintColor, focused}) =>
-  <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
+  <Icon name = {`ios-${name}`}
+        // TODO: make custom font
+  // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
         size = {30}
         style = {{color: tintColor}}
   />

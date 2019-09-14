@@ -19,7 +19,7 @@ export default class App extends React.Component {
 
   @action _loadAssetsAsync = async () => {
     StatusBar.setBarStyle('light-content', true)
-    await ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT_UP)
+    await ScreenOrientation.lockAsync(ScreenOrientation.Orientation.PORTRAIT_UP)
     await Font.loadAsync({
       'Meowchat': require('./assets/fonts/meowchat-icons.ttf')
     })

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, ScrollView, Text} from 'react-native'
+import {StyleSheet, View, ScrollView} from 'react-native'
 import PropTypes from 'prop-types'
 import {TABLE_VIEW_BORDER_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
@@ -15,14 +15,17 @@ class TableView extends Component {
     const childrenArray = React.Children.toArray(children)
     const ViewComponent = scrollable ? ScrollView : View
 
-    return <ViewComponent {...rest} style = {[styles.container, style]}>
-        {childrenArray.map((child, index) => {
-          return React.cloneElement(child, {
-            leadingItem: index === 0,
-            trailingItem: index === childrenArray.length - 1
-          })
-        })}
+    return (
+      <ViewComponent {...rest} style = {[styles.container, style]}>
+        {childrenArray.map((child, index) => (
+            React.cloneElement(child, {
+              leadingItem: index === 0,
+              trailingItem: index === childrenArray.length - 1
+            })
+          )
+        )}
       </ViewComponent>
+    )
 
     /*return <View>
           <View style = {styles.header}><Text style = {styles.headerText}>HEADER</Text></View>
