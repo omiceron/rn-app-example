@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
 import {observer, inject} from 'mobx-react'
 import CurrentUserAvatar from './current-user-avatar'
-import TableSeparator from '../common/table-separator'
-import TableRow from '../common/table-row'
+import TableRow from '../common/table/table-row'
 import SegmentedCard from '../common/segmented-card'
-import TableBlock from '../common/table-block'
+import TableBlock from '../common/table/table-block'
 import {
   AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE,
   WARNING_COLOR
@@ -14,7 +13,7 @@ import {string, func, shape, bool} from 'prop-types'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import LinedSeparator from '../common/separator/lined-separator'
-import Table from '../table'
+import Table from '../common/table/table'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
@@ -59,7 +58,7 @@ class Settings extends Component {
       />
 
     return (
-      <Table scrollable style={styles.container}>
+      <Table scrollable>
         <TableBlock hint='Enter your name and add photo here'>
           <SegmentedCard
             mainContainerStyle={styles.textView}
@@ -198,10 +197,6 @@ class Settings extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: INACTIVE_BACKGROUND_COLOR
-  },
   text: {
     fontSize: 16,
     fontWeight: '100',

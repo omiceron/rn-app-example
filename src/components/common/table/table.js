@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import { StyleSheet, View, ScrollView, Text } from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../constants'
-import BasicSeparator from './common/separator/basic-separator'
-import BasicList from './common/basic-list'
+import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../../../constants'
+import BasicSeparator from '../separator/basic-separator'
+import BasicList from '../grid/basic-list'
 
 class Table extends Component {
   static propTypes = {
@@ -17,7 +17,7 @@ class Table extends Component {
   render() {
     const {children, style, ...rest} = this.props
     return (
-      <BasicList {...rest} separator = {this.renderSeparator} style = {style}>
+      <BasicList {...rest} separator = {this.renderSeparator} style = {[styles.container, style]}>
         {children}
       </BasicList>
     )
@@ -27,7 +27,8 @@ class Table extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: WHITE_BACKGROUND_COLOR,
+    flex: 1,
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
   }
 })
 

@@ -5,15 +5,15 @@ import {observer, inject} from 'mobx-react'
 import Avatar from '../common/touchable-avatar'
 import PropTypes from 'prop-types'
 import SegmentedCard from '../common/segmented-card'
-import TableRow from '../common/table-row'
-import TableBlock from '../common/table-block'
+import TableRow from '../common/table/table-row'
+import TableBlock from '../common/table/table-block'
 import {
   INACTIVE_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
   BLACK_TEXT_COLOR,
   WHITE_BACKGROUND_COLOR
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
-import Table from '../table'
+import Table from '../common/table/table'
 
 @inject(FEED_STORE)
 @observer
@@ -84,7 +84,7 @@ class UserInfo extends Component {
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const { likes, posts, props: {openChatWithUser} } = this
 
-    return <Table scrollable style = {styles.container}>
+    return <Table scrollable>
 
       <TableBlock>
         <SegmentedCard
@@ -129,10 +129,6 @@ class UserInfo extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: INACTIVE_BACKGROUND_COLOR
-  },
   simpleRow: {
     display: 'flex',
     justifyContent: 'space-between',

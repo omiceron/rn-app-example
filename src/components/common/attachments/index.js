@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Attachment from '../attachment'
+import Attachment from './attachment'
 import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 import {chunk} from 'lodash'
-import BasicList from '../basic-list'
-import BasicRow from '../basic-row'
+import BasicList from '../grid/basic-list'
+import BasicRow from '../grid/basic-row'
 import RowSeparator from './row-separator'
 import ColumnSeparator from './column-separator'
 

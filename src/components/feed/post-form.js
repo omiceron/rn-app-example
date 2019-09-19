@@ -9,12 +9,12 @@ import {KEYBOARD, FEED_STORE, BLACK_TEXT_COLOR, WHITE_BACKGROUND_COLOR, NAVIGATI
 
 import withAnimation from '../common/with-animation'
 
-import TableBlock from '../common/table-block'
-import TableRow from '../common/table-row'
-import AttachmentsList from '../common/attachments-list'
+import TableBlock from '../common/table/table-block'
+import TableRow from '../common/table/table-row'
+import AttachmentsRow from '../common/attachments/attachments-row'
 import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
-import Table from '../table'
+import Table from '../common/table/table'
 
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
@@ -101,7 +101,7 @@ class PostForm extends Component {
 
           {this.tempAttachments.length ?
             <TableRow style={{ paddingHorizontal: 8 }}>
-              <AttachmentsList attachments={this.tempAttachments}/>
+              <AttachmentsRow attachments={this.tempAttachments}/>
             </TableRow> : null}
 
           {feed.attachedLocation ?

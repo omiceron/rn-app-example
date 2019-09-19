@@ -4,8 +4,8 @@ import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 import MapView from 'react-native-maps'
-import TableBlock from '../common/table-block'
-import TableRow from '../common/table-row'
+import TableBlock from '../common/table/table-block'
+import TableRow from '../common/table/table-row'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {observer, inject} from 'mobx-react'
 import {
@@ -14,6 +14,7 @@ import {
 } from '../../constants'
 import {observable, action} from 'mobx'
 import Loader from '../common/loader'
+import Table from '../common/table/table'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -75,45 +76,49 @@ class LocationForm extends Component {
   setMapRef = ref => this.map = ref
 
   render() {
-    const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
+    const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
 
     if (!coords) return <Loader/>
 
-    return <TableBlock disableSeparator style = {styles.container}>
+    return (
+      <Table>
+        <TableBlock disableSeparator style={styles.container}>
 
-      <TableRow>
-        <TextInput
-          style = {[styles.text]}
-          placeholder = 'Type your address here'
-          returnKeyType = 'search'
-          value = {address}
-          onChangeText = {setAddress}
-          blurOnSubmit
-          onSubmitEditing = {this.handleSubmit}
-          // onSubmitEditing = {getCoordsFromAddress}
-        />
-      </TableRow>
+          <TableRow>
+            <TextInput
+              style={[styles.text]}
+              placeholder='Type your address here'
+              returnKeyType='search'
+              value={address}
+              onChangeText={setAddress}
+              blurOnSubmit
+              onSubmitEditing={this.handleSubmit}
+              // onSubmitEditing = {getCoordsFromAddress}
+            />
+          </TableRow>
 
-      <KeyboardAvoidingView
-        style = {styles.container}
-        behavior = 'padding'
-        enabled
-      >
-        <MapView
-          ref = {this.setMapRef}
-          style = {styles.container}
-          initialRegion = {{...coords, ...REGION_DELTAS}}
-          // region = {{...coords, ...REGION_DELTAS}}
-        >
-          <MapView.Marker
-            draggable
-            coordinate = {{...coords}}
-            onDragEnd = {(e) => setCoords(e.nativeEvent.coordinate)}
-          />
-        </MapView>
-      </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior='padding'
+            enabled
+          >
+            <MapView
+              ref={this.setMapRef}
+              style={styles.container}
+              initialRegion={{ ...coords, ...REGION_DELTAS }}
+              // region = {{...coords, ...REGION_DELTAS}}
+            >
+              <MapView.Marker
+                draggable
+                coordinate={{ ...coords }}
+                onDragEnd={(e) => setCoords(e.nativeEvent.coordinate)}
+              />
+            </MapView>
+          </KeyboardAvoidingView>
 
-    </TableBlock>
+        </TableBlock>
+      </Table>
+    )
   }
 }
 

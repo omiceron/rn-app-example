@@ -268,7 +268,7 @@ class MessengerStore extends EntitiesStore {
   getChatWith = async (userId, user) => {
     console.log('GET CHAT:', 'checking chat')
 
-    // const localChat = this.list.find(chat => chat.userId === userId)
+    // const localChat = this.grid.find(chat => chat.userId === userId)
     // if (localChat) return localChat.chatId
 
     const callback = async (snapshot) => {

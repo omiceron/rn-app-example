@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import PostButton from './post-button'
 import {inject} from 'mobx-react'
 import {NAVIGATION_STORE} from '../../constants'
-import TableRow from '../common/table-row'
+import TableRow from '../common/table/table-row'
 import BasicCard from '../common/basic-card'
-import BasicList from '../common/basic-list'
-import BasicRow from '../common/basic-row'
+import BasicList from '../common/grid/basic-list'
+import BasicRow from '../common/grid/basic-row'
 
 @inject(NAVIGATION_STORE)
 class PostFormControlRow extends Component {

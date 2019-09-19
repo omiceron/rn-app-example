@@ -6,9 +6,9 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Attachment from './attachment'
-import {IMAGE_SEPARATOR_SIZE} from '../../constants'
+import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 
-class AttachmentsList extends Component {
+class AttachmentsRow extends Component {
   static propTypes = {
     attachments: PropTypes.array.isRequired
   }
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AttachmentsList
+export default AttachmentsRow
