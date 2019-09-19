@@ -14,6 +14,7 @@ import TableRow from '../common/table-row'
 import AttachmentsList from '../common/attachments-list'
 import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
+import Table from '../table'
 
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
@@ -69,52 +70,55 @@ class PostForm extends Component {
   setTextInputRef = ref => this.textInput = ref
 
   render() {
-    const {feed} = this.props
-    const {height} = this.props.layouts[KEYBOARD]
+    const { feed } = this.props
+    const { height } = this.props.layouts[KEYBOARD]
 
-    return <SafeAreaView style = {styles.container}>
-      <TableBlock disableSeparator style = {styles.container}>
+    return (
+      <Table style={styles.container}>
+        <TableBlock style={{ flex: 1 }}>
+          <TableRow>
+            <TextInput
+              autoFocus
+              style={styles.text}
+              placeholder='Enter title here...'
+              returnKeyType='next'
+              value={feed.title}
+              onChangeText={feed.setTitle}
+              onSubmitEditing={() => this.textInput.focus()}
+            />
+          </TableRow>
 
-        <TableRow>
-          <TextInput
-            autoFocus
-            style = {styles.text}
-            placeholder = 'Enter title here...'
-            returnKeyType = 'next'
-            value = {feed.title}
-            onChangeText = {feed.setTitle}
-            onSubmitEditing = {() => this.textInput.focus()}
+          <TableRow style={styles.textRow}>
+            <TextInput
+              value={feed.text}
+              onChangeText={feed.setText}
+              ref={this.setTextInputRef}
+              style={styles.text}
+              placeholder='Enter text here...'
+              multiline
+            />
+          </TableRow>
+
+          {this.tempAttachments.length ?
+            <TableRow style={{ paddingHorizontal: 8 }}>
+              <AttachmentsList attachments={this.tempAttachments}/>
+            </TableRow> : null}
+
+          {feed.attachedLocation ?
+            <TableRow>
+              <AttachedLocation disableIcon location={feed.attachedLocation}/>
+            </TableRow> : null}
+
+          <PostFormControlRow
+            attachImageHandler={this.props.feed.attachImageHandler}
+            attachPhotoHandler={this.props.feed.attachPhotoHandler}
           />
-        </TableRow>
 
-        <TableRow style = {styles.textRow}>
-          <TextInput
-            value = {feed.text}
-            onChangeText = {feed.setText}
-            ref = {this.setTextInputRef}
-            style = {styles.text}
-            placeholder = 'Enter text here...'
-            multiline
-          />
-        </TableRow>
+          <View style={{ height: height - (isIphoneX() && getBottomSpace()) }}/>
 
-        {this.tempAttachments.length ? <AttachmentsList attachments = {this.tempAttachments}/> : null}
-
-        {feed.attachedLocation ? <TableRow>
-          <AttachedLocation disableIcon location = {feed.attachedLocation}/>
-        </TableRow> : null}
-
-        <PostFormControlRow
-          disableSeparator
-          attachImageHandler = {() => this.props.feed.attachImageHandler()}
-          attachPhotoHandler = {() => this.props.feed.attachPhotoHandler()}
-        />
-
-        <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>
-
-      </TableBlock>
-    </SafeAreaView>
-
+        </TableBlock>
+      </Table>
+    )
   }
 }
 

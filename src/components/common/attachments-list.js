@@ -40,7 +40,7 @@ class AttachmentsList extends Component {
 const styles = StyleSheet.create({
   container: {
     // display: 'flex',
-    padding: IMAGE_SEPARATOR_SIZE
+    // padding: IMAGE_SEPARATOR_SIZE
   }
 })
 

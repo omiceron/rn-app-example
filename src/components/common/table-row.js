@@ -44,7 +44,7 @@ class TableRow extends Component {
 
     const SwitchComponent = () => <Switch value = {value} onValueChange = {onValueChange}/>
 
-    return <React.Fragment>
+    return (
       <SegmentedCard
         RightComponent = {RightComponent || onValueChange && SwitchComponent}
         mainContainerStyle = {styles.textView}
@@ -54,7 +54,7 @@ class TableRow extends Component {
         {title ? <Text style = {[styles.title, titleStyle]}>{title}</Text> : children}
         {caption && <Text style = {[styles.caption, captionStyle]}>{caption}</Text>}
       </SegmentedCard>
-    </React.Fragment>
+    )
   }
 }
 

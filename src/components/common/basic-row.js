@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
-import BasicColumn from './basic-column'
+import BasicList from './basic-list'
 
 class BasicRow extends Component {
   static propTypes = {
@@ -13,9 +13,9 @@ class BasicRow extends Component {
     const {style, children, ...rest} = this.props
 
     return (
-      <BasicColumn {...rest} style = {[styles.container, style]}>
+      <BasicList {...rest} style = {[styles.container, style]}>
         {children}
-      </BasicColumn>
+      </BasicList>
     )
   }
 }

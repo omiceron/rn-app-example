@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Attachment from '../attachment'
 import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 import {chunk} from 'lodash'
-import BasicColumn from '../basic-column'
+import BasicList from '../basic-list'
 import BasicRow from '../basic-row'
 import RowSeparator from './row-separator'
 import ColumnSeparator from './column-separator'
@@ -29,7 +29,7 @@ class Attachments extends Component {
     const rows = chunk(attachments, COLUMNS_NUMBER)
 
     return (
-      <BasicColumn separator = {ColumnSeparator}>
+      <BasicList separator = {ColumnSeparator}>
         {rows.map((imagesRow, rowIndex) => {
           const isOnlyImageInRow = imagesRow.length === 1
           const attachmentWidth = isOnlyImageInRow ? maxSize : halfSize
@@ -55,7 +55,7 @@ class Attachments extends Component {
             </BasicRow>
           )
         })}
-      </BasicColumn>
+      </BasicList>
     )
   }
 }
