@@ -18,14 +18,12 @@ class PostFormControlRow extends Component {
 
   render() {
     return (
-      <TableRow disableSeparator style={styles.container}>
-        <BasicRow style={{ justifyContent: 'space-around' }}>
-          <PostButton icon='ios-photos' onPress={this.props.attachImageHandler}/>
-          <PostButton icon='ios-pin' onPress={() => this.props.navigation.navigate('locationForm')}/>
-          <PostButton icon='ios-person' onPress={() => ({})}/>
-          <PostButton icon='ios-camera' onPress={this.props.attachPhotoHandler}/>
-        </BasicRow>
-      </TableRow>
+      <BasicRow style={styles.container}>
+        <PostButton icon='ios-photos' onPress={this.props.attachImageHandler}/>
+        <PostButton icon='ios-pin' onPress={() => this.props.navigation.navigate('locationForm')}/>
+        <PostButton icon='ios-person' onPress={() => ({})}/>
+        <PostButton icon='ios-camera' onPress={this.props.attachPhotoHandler}/>
+      </BasicRow>
     )
   }
 }
@@ -33,7 +31,8 @@ class PostFormControlRow extends Component {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 0,
-    paddingHorizontal: 0
+    paddingHorizontal: 0,
+    justifyContent: 'space-around'
   },
 })
 

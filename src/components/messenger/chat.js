@@ -25,7 +25,7 @@ import {
 } from '../../constants'
 
 import ListLoader from '../common/list-loader'
-import AttachmentsRow from '../common/attachments/attachments-row'
+import AttachedImagesRow from '../common/attachments/attached-images-row'
 import ChatButton from './chat-button'
 
 // TODO: redesign the chat
@@ -112,7 +112,7 @@ class Chat extends Component {
 
           {this.tempAttachments.length ? (
             <View style={{ padding: 8 }}>
-              <AttachmentsRow attachments={this.tempAttachments}/>
+              <AttachedImagesRow attachments={this.tempAttachments}/>
             </View>
           ) : null}
 

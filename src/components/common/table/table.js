@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, ScrollView, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../../../constants'
+import { INACTIVE_BACKGROUND_COLOR } from '../../../constants'
 import BasicSeparator from '../separator/basic-separator'
 import BasicList from '../grid/basic-list'
 

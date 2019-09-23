@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Attachment from './attachment'
+import AttachedImage from './attached-image'
 import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 import {chunk} from 'lodash'
 import BasicList from '../grid/basic-list'
@@ -45,7 +45,7 @@ class Attachments extends Component {
           return (
             <BasicRow key = {`row-${rowIndex}`} separator = {RowSeparator} style = {style}>
               {imagesRow.map((image) => (
-                  <Attachment
+                  <AttachedImage
                     {...image}
                     width = {attachmentWidth}
                     height = {attachmentHeight}
