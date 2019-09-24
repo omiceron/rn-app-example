@@ -1,20 +1,19 @@
 import React, {Component} from 'react'
-import {Text, TouchableOpacity, StyleSheet, ScrollView, View} from 'react-native'
+import {Text, ActivityIndicator, StyleSheet, ScrollView, View} from 'react-native'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
-import Loader from '../common/loader'
 import Avatar from '../common/touchable-avatar'
 import PropTypes from 'prop-types'
 import SegmentedCard from '../common/segmented-card'
-import TableRow from '../common/table-row'
-import TableSeparator from '../common/table-separator'
-import TableView from '../common/table-view'
+import TableRow from '../common/table/table-row'
+import TableBlock from '../common/table/table-block'
 import {
   INACTIVE_BACKGROUND_COLOR, DEFAULT_HEADER_COLOR, FEED_STORE, HIGHLIGHTED_TEXT_COLOR, OFFLINE_COLOR,
   BLACK_TEXT_COLOR,
   WHITE_BACKGROUND_COLOR
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
+import Table from '../common/table/table'
 
 @inject(FEED_STORE)
 @observer
@@ -38,68 +37,59 @@ class UserInfo extends Component {
   async componentDidMount() {
     this.likes = await this.props.feed.getUserLikedPosts(this.props.user.uid)
     this.posts = await this.props.feed.getUserPosts(this.props.user.uid)
-
   }
 
-  LeftComponent = () => <Avatar
+  renderAvatar = () => <Avatar
     size = {60}
     onPress = {this.props.openUserAvatarsScreen}
     uri = {this.props.user.avatar}
   />
 
+  handleOpenPostScreen = (postId) => () => this.props.openPostScreen(postId)
+
+  renderLoadingRow = () => (
+    <TableRow>
+      <ActivityIndicator/>
+    </TableRow>
+  )
+
+  renderPostsList = (items) => items.map(({ postId, title }) => (
+    <TableRow
+      key={postId}
+      title={title}
+      onPress={this.handleOpenPostScreen(postId)}
+    />
+  ))
+
+  renderOnlineStatus = () => <Text style={[styles.text, styles.online]}>online</Text>
+
+  renderLastSeenStatus = () => {
+    const { online: timestamp } = this.props.user
+
+    const date = getDate(timestamp, { short: true })
+    const time = getTime(timestamp)
+
+    return (
+      <Text style={[styles.text, styles.offline]}>
+        last seen {date} at {time}
+      </Text>
+    )
+  }
+
+  renderStatus = () => typeof this.props.user.online === 'number'
+    ? this.renderLastSeenStatus()
+    : this.renderOnlineStatus()
 
   render() {
-
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
-    const {openChatWithUser, openUserAvatarsScreen, openPostScreen} = this.props
+    const { likes, posts, props: {openChatWithUser} } = this
 
-    const renderLikedPosts = () =>
-      <TableView>
-        {this.likes.length
-          ? this.likes.map(({postId, title}) =>
-            <TouchableOpacity key = {postId}
-                              onPress = {() => openPostScreen(postId)}>
-              <TableRow title = {title}/>
-            </TouchableOpacity>)
-          : <TableRow title = 'No liked posts'/>}
-      </TableView>
+    return <Table scrollable>
 
-    const renderPosts = () =>
-      <TableView>
-        {this.posts.length
-          ? this.posts.map(({postId, title}) =>
-            <TouchableOpacity key = {postId}
-                              onPress = {() => openPostScreen(postId)}>
-              <TableRow title = {title}/>
-            </TouchableOpacity>)
-          : <TableRow title = 'No posts'/>}
-      </TableView>
-
-    const Status = () => {
-      if (!online) return null
-
-      let status = ''
-      let style
-
-      if (typeof online === 'number') {
-        status = 'last seen ' + getDate(online, {short: true}) + ' at ' + getTime(online)
-        style = styles.offline
-      } else {
-        status = 'online'
-        style = styles.online
-      }
-
-      return <Text style = {[styles.text, style]}>
-        {status}
-      </Text>
-    }
-
-    return <ScrollView style = {styles.container}>
-
-      <TableView>
+      <TableBlock>
         <SegmentedCard
           mainContainerStyle = {styles.textView}
-          LeftComponent = {this.LeftComponent}>
+          LeftComponent = {this.renderAvatar}>
 
           <View>
             <Text style = {styles.text}>
@@ -108,46 +98,37 @@ class UserInfo extends Component {
           </View>
 
           <View>
-            <Status/>
+            {online && this.renderStatus()}
           </View>
 
         </SegmentedCard>
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator/>
-
-      <TableView>
+      <TableBlock>
         {userInfo && <TableRow title = {userInfo} caption = "user info"/>}
         {email && <TableRow title = {email} caption = "user e-mail"/>}
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator/>
-
-      <TableView>
+      <TableBlock>
         <TableRow
           title = 'Send message'
           titleStyle = {styles.blueButton}
           onPress = {openChatWithUser}/>
-      </TableView>
+      </TableBlock>
 
-      <TableSeparator header = 'Liked posts'/>
+      <TableBlock header = 'Liked posts' emptyBlockTitle = 'User have not liked any posts'>
+        {likes ? this.renderPostsList(likes) : this.renderLoadingRow()}
+      </TableBlock>
 
-      {this.likes ? renderLikedPosts() : <Loader/>}
-
-      <TableSeparator header = 'User posts'/>
-
-      {this.posts ? renderPosts() : <Loader/>}
-
-    </ScrollView>
+      <TableBlock header = 'User posts' emptyBlockTitle = 'User have no posts'>
+        {posts ? this.renderPostsList(posts) : this.renderLoadingRow()}
+      </TableBlock>
+    </Table>
   }
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: INACTIVE_BACKGROUND_COLOR
-  },
   simpleRow: {
     display: 'flex',
     justifyContent: 'space-between',

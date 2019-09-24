@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {View, Text, TextInput, TouchableOpacity, Platform, Switch, StyleSheet} from 'react-native'
-import SegmentedCard from './segmented-card'
+import SegmentedCard from '../segmented-card'
 import PropTypes from 'prop-types'
-import {INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR} from '../../constants'
-import LinedSeparator from './separator/lined-separator'
+import {INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR} from '../../../constants'
+import LinedSeparator from '../separator/lined-separator'
 
 // TODO divide table row and settings row
 class TableRow extends Component {
@@ -44,7 +44,7 @@ class TableRow extends Component {
 
     const SwitchComponent = () => <Switch value = {value} onValueChange = {onValueChange}/>
 
-    return <React.Fragment>
+    return (
       <SegmentedCard
         RightComponent = {RightComponent || onValueChange && SwitchComponent}
         mainContainerStyle = {styles.textView}
@@ -54,8 +54,7 @@ class TableRow extends Component {
         {title ? <Text style = {[styles.title, titleStyle]}>{title}</Text> : children}
         {caption && <Text style = {[styles.caption, captionStyle]}>{caption}</Text>}
       </SegmentedCard>
-      {!trailingItem && !disableSeparator && <LinedSeparator/>}
-    </React.Fragment>
+    )
   }
 }
 

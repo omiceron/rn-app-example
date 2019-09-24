@@ -1,19 +1,15 @@
 import React, {Component} from 'react'
 import {reaction, computed} from 'mobx'
 import {observer, inject} from 'mobx-react'
-import {View, StyleSheet, TextInput, SafeAreaView, LayoutAnimation} from 'react-native'
-import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
+import {StyleSheet, LayoutAnimation} from 'react-native'
 import {bool, string, func, shape, objectOf, number, array} from 'prop-types'
-
-import {KEYBOARD, FEED_STORE, BLACK_TEXT_COLOR, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE} from '../../constants/'
-
+import {KEYBOARD, FEED_STORE, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE} from '../../constants/'
 import withAnimation from '../common/with-animation'
-
-import TableView from '../common/table-view'
-import TableRow from '../common/table-row'
-import AttachmentsList from '../common/attachments-list'
-import AttachedLocation from './attached-location'
 import PostFormControlRow from './post-form-control-row'
+import Form from '../common/form/form'
+import FormInputs from '../common/form/form-inputs'
+import FormAttachments from '../common/form/form-attachments'
+import LinedSeparator from '../common/separator/lined-separator'
 
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
@@ -50,7 +46,7 @@ class PostForm extends Component {
     )
 
     this.stopReactionOnAttachments = reaction(
-      () => this.tempAttachments.length,
+      () => this.attachedImages.length,
       () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     )
   }
@@ -62,74 +58,68 @@ class PostForm extends Component {
   }
 
   @computed
-  get tempAttachments() {
+  get attachedImages() {
     return this.props.feed.getTempAttachments()
   }
 
-  setTextInputRef = ref => this.textInput = ref
-
   render() {
-    const {feed} = this.props
-    const {height} = this.props.layouts[KEYBOARD]
+    const {
+      feed: {
+        attachedLocation,
+        attachImageHandler,
+        attachPhotoHandler,
+        title,
+        text,
+        setTitle,
+        setText
+      },
+      layouts: {
+        [KEYBOARD]: { height }
+      }
+    } = this.props
 
-    return <SafeAreaView style = {styles.container}>
-      <TableView style = {styles.container}>
+    const formData = [
+      {
+        placeholder: 'Enter title here...',
+        value: title,
+        onChangeText: setTitle
+      },
+      {
+        placeholder: 'Enter text here...',
+        value: text,
+        onChangeText: setText,
+        multiline: true,
+        stretch: true
+      }
+    ]
 
-        <TableRow>
-          <TextInput
-            autoFocus
-            style = {styles.text}
-            placeholder = 'Enter title here...'
-            returnKeyType = 'next'
-            value = {feed.title}
-            onChangeText = {feed.setTitle}
-            onSubmitEditing = {() => this.textInput.focus()}
-          />
-        </TableRow>
+    // FIXME: attached images render only once
+    return (
+      <Form keyboardHeight = {height} style={styles.container}>
+        <FormInputs data={formData}/>
 
-        <TableRow style = {styles.textRow}>
-          <TextInput
-            value = {feed.text}
-            onChangeText = {feed.setText}
-            ref = {this.setTextInputRef}
-            style = {styles.text}
-            placeholder = 'Enter text here...'
-            multiline
-          />
-        </TableRow>
+        <LinedSeparator noMargins/>
 
-        {this.tempAttachments.length ? <AttachmentsList attachments = {this.tempAttachments}/> : null}
-
-        {feed.attachedLocation ? <TableRow>
-          <AttachedLocation disableIcon location = {feed.attachedLocation}/>
-        </TableRow> : null}
-
-        <PostFormControlRow
-          attachImageHandler = {() => this.props.feed.attachImageHandler()}
-          attachPhotoHandler = {() => this.props.feed.attachPhotoHandler()}
+        <FormAttachments
+          images={this.attachedImages}
+          location={attachedLocation}
         />
 
-        <View style = {{height: height - (isIphoneX() && getBottomSpace())}}/>
+        {this.attachedImages.length || attachedLocation ? <LinedSeparator noMargins/> : null}
 
-      </TableView>
-    </SafeAreaView>
+        <PostFormControlRow
+          attachImageHandler={attachImageHandler}
+          attachPhotoHandler={attachPhotoHandler}
+        />
 
+      </Form>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: WHITE_BACKGROUND_COLOR
-  },
-  textRow: {
-    flex: 1,
-    alignItems: 'flex-start'
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '100',
-    color: BLACK_TEXT_COLOR
   }
 })
 

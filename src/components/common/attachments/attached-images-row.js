@@ -5,16 +5,16 @@ import {
   FlatList
 } from 'react-native'
 import PropTypes from 'prop-types'
-import Attachment from './attachment'
-import {IMAGE_SEPARATOR_SIZE} from '../../constants'
+import AttachedImage from './attached-image'
+import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 
-class AttachmentsList extends Component {
+class AttachedImagesRow extends Component {
   static propTypes = {
     attachments: PropTypes.array.isRequired
   }
 
   renderItem = ({item}) => (
-    <Attachment
+    <AttachedImage
       {...item}
       height = {50}
       width = {50}
@@ -40,8 +40,8 @@ class AttachmentsList extends Component {
 const styles = StyleSheet.create({
   container: {
     // display: 'flex',
-    padding: IMAGE_SEPARATOR_SIZE
+    // padding: IMAGE_SEPARATOR_SIZE
   }
 })
 
-export default AttachmentsList
+export default AttachedImagesRow

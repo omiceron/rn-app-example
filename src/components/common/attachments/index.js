@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Attachment from '../attachment'
+import AttachedImage from './attached-image'
 import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 import {chunk} from 'lodash'
-import BasicColumn from '../basic-column'
-import BasicRow from '../basic-row'
+import BasicList from '../grid/basic-list'
+import BasicRow from '../grid/basic-row'
 import RowSeparator from './row-separator'
 import ColumnSeparator from './column-separator'
 
@@ -29,7 +29,7 @@ class Attachments extends Component {
     const rows = chunk(attachments, COLUMNS_NUMBER)
 
     return (
-      <BasicColumn separator = {ColumnSeparator}>
+      <BasicList separator = {ColumnSeparator}>
         {rows.map((imagesRow, rowIndex) => {
           const isOnlyImageInRow = imagesRow.length === 1
           const attachmentWidth = isOnlyImageInRow ? maxSize : halfSize
@@ -45,7 +45,7 @@ class Attachments extends Component {
           return (
             <BasicRow key = {`row-${rowIndex}`} separator = {RowSeparator} style = {style}>
               {imagesRow.map((image) => (
-                  <Attachment
+                  <AttachedImage
                     {...image}
                     width = {attachmentWidth}
                     height = {attachmentHeight}
@@ -55,7 +55,7 @@ class Attachments extends Component {
             </BasicRow>
           )
         })}
-      </BasicColumn>
+      </BasicList>
     )
   }
 }

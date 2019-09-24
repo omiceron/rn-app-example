@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 
-class Attachment extends Component {
+class AttachedImage extends Component {
   static propTypes = {
     uri: PropTypes.string,
     loading: PropTypes.any,
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Attachment
+export default AttachedImage
