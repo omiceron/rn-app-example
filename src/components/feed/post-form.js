@@ -93,6 +93,7 @@ class PostForm extends Component {
       }
     ]
 
+    // FIXME: attached images render only once
     return (
       <Form keyboardHeight = {height} style={styles.container}>
         <FormInputs data={formData}/>
