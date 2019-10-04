@@ -19,28 +19,26 @@ class FormInputs extends Component {
   focus = (index) => () => this.inputs[index].focus()
 
   renderItem = ({ item, index }) => {
-    const { data } = this.props
+    const { data, addInputRef, focusOnInput, getTotalLength } = this.props
 
-    const { value, placeholder, onChangeText, stretch, multiline } = item
+    const { stretch, multiline, ...rest } = item
 
     const isFirstItem = index === 0
-    const isLastItem = index === data.length - 1
-    const onSubmitEditing = index !== data.length - 1 ? this.focus(index + 1) : undefined
+    const isLastItem = index === getTotalLength() - 1
+    const onSubmitEditing = !isLastItem ? (focusOnInput ? focusOnInput(index + 1) : this.focus(index + 1)) : undefined
     const returnKeyType = multiline ? 'default' : !isLastItem ? 'next' : 'done'
 
     return (
       <TableRow style={stretch && styles.stretchedRow}>
         <TextInput
+          {...rest}
           autoFocus={isFirstItem}
           style={styles.text}
-          placeholder={placeholder}
           returnKeyType={returnKeyType}
-          value={value}
           multiline={multiline}
-          onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
           blurOnSubmit={false}
-          ref={this.addRef}
+          ref={addInputRef || this.addRef}
         />
       </TableRow>
     )

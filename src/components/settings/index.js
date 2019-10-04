@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
+import { TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar, SectionList } from 'react-native'
 import {observer, inject} from 'mobx-react'
 import CurrentUserAvatar from './current-user-avatar'
 import TableRow from '../common/table/table-row'
@@ -14,6 +14,8 @@ import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import LinedSeparator from '../common/separator/lined-separator'
 import Table from '../common/table/table'
+import List from '../common/list/list'
+import FormInputs from '../common/form/form-inputs'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
@@ -43,95 +45,104 @@ class Settings extends Component {
     })
   }
 
-  render() {
-    const {navigate} = this.props.navigation
-    const {uri, loading} = this.props.avatar
-    const {currentUser} = this.props
-
-    const LeftComponent = () =>
-      <CurrentUserAvatar
-        size = {80}
-        onPress = {() => !loading && this.getPhoto()}
-        // onPress = {() => !loading && navigate('userPhoto')}
-        uri = {uri}
-        loading = {loading}
-      />
+  renderLeftComponent = () => {
+    const { uri, loading } = this.props.avatar
 
     return (
-      <Table scrollable>
-        <TableBlock hint='Enter your name and add photo here'>
-          <SegmentedCard
-            mainContainerStyle={styles.textView}
-            LeftComponent={LeftComponent}>
-            <TextInput
-              style={styles.text}
-              placeholder='First Name'
-              textContentType='givenName'
-              returnKeyType='next'
-              defaultValue={currentUser.firstName}
-              onChangeText={currentUser.setFirstName}
-              onSubmitEditing={() => this.lastNameRef.focus()}
-              onBlur={currentUser.updateUserData}
-            />
+      <CurrentUserAvatar
+        size={80}
+        onPress={() => !loading && this.getPhoto()}
+        // onPress = {() => !loading && navigate('userPhoto')}
+        uri={uri}
+        loading={loading}
+      />
+    )
+  }
 
-            <LinedSeparator noMargins/>
+  renderUserCard = ({focusOnInput, addInputRef, getTotalLength}) => {
+    const {currentUser} = this.props
 
-            <TextInput
-              ref={this.setLastNameRef}
-              style={styles.text}
-              placeholder='Last Name'
-              textContentType='familyName'
-              returnKeyType='next'
-              defaultValue={currentUser.lastName}
-              onChangeText={currentUser.setLastName}
-              onSubmitEditing={() => this.infoRef.focus()}
-              onBlur={currentUser.updateUserData}
-            />
-          </SegmentedCard>
-        </TableBlock>
+    const formInputs = [
+      {
+        defaultValue: currentUser.firstName,
+        onBlur: currentUser.updateUserData,
+        onChangeText: currentUser.setFirstName,
+        placeholder: 'First Name',
+        textContentType: 'givenName',
+      },
+      {
+        defaultValue: currentUser.lastName,
+        onBlur: currentUser.updateUserData,
+        onChangeText: currentUser.setLastName,
+        placeholder: 'Last Name',
+        textContentType: 'familyName',
+      }
+    ]
 
-        {/*      <View style = {styles.simpleRow}>
-          <TextInput
-            ref = {ref => this.infoRef = ref}
-            style = {styles.text}
-            placeholder = 'Info'
-            returnKeyType = 'done'
-            defaultValue = {userInfo}
-            onChangeText = {setUserInfo}
-            // onSubmitEditing = {updateUserData}
-            onBlur = {updateUserData}/>
-        </View>*/}
+    return (
+      <SegmentedCard
+        mainContainerStyle={styles.textView}
+        LeftComponent={this.renderLeftComponent}>
+        <FormInputs data={formInputs} addInputRef = {addInputRef} focusOnInput={focusOnInput} getTotalLength={getTotalLength}/>
+      </SegmentedCard>
+    )
+  }
 
-        <TableBlock hint='Enter your additional information here, like your bio, age or something like that'>
-          <TableRow>
-            <TextInput
-              ref={this.setInfoRef}
-              style={styles.text}
-              placeholder='Info'
-              returnKeyType='done'
-              defaultValue={currentUser.userInfo}
-              onChangeText={currentUser.setUserInfo}
-              onBlur={currentUser.updateUserData}
-            />
-          </TableRow>
-        </TableBlock>
+  renderBio = ({focusOnInput, addInputRef}) => {
+    const {currentUser} = this.props
 
-        {/*<TableView>
-          <TableRow title = 'Dark Theme' onValueChange = {() => alert('Not ready yet!')}/>
-          <TableRow title = 'Notifications' onPress = {() => alert('Not ready yet!')}/>
-        </TableView>
+    return (
+      <TableRow>
+        <TextInput
+          ref={addInputRef}
+          name='bio'
+          style={styles.text}
+          placeholder='Info'
+          returnKeyType='done'
+          defaultValue={currentUser.userInfo}
+          onChangeText={currentUser.setUserInfo}
+          onBlur={currentUser.updateUserData}
+        />
+      </TableRow>
+    )
+  }
 
-        <TableSeparator/>*/}
+  render() {
+    const sections = [
+      {
+        hint: 'Enter your name and add photo here',
+        data: [{ customComponent: this.renderUserCard }]
+      },
+      {
+        hint: 'Enter your additional information here, like your bio, age or something like that',
+        data: [{ customComponent: this.renderBio }]
+      },
+      {
+        data: [
+          {
+            title: 'Dark Theme',
+            onValueChange: () => alert('Not ready yet!')
+          },
+          {
+            title: 'Notifications',
+            onPress: () => alert('Not ready yet!')
+          }
+        ]
+      },
+      {
+        hint: 'Press button to log out',
+        data: [
+          {
+            title: 'Sign out',
+            titleStyle: styles.redButton,
+            onPress: this.handleSignOut
+          }
+        ]
+      }
+    ]
 
-        <TableBlock hint='Press button to log out'>
-          <TableRow
-            title='Sign out'
-            titleStyle={styles.redButton}
-            onPress={this.handleSignOut}
-          />
-        </TableBlock>
-
-      </Table>
+    return (
+      <List sections={sections}/>
     )
   }
 
