@@ -80,11 +80,13 @@ class PostForm extends Component {
 
     const formData = [
       {
+        name: 'new-post-title',
         placeholder: 'Enter title here...',
         value: title,
         onChangeText: setTitle
       },
       {
+        name: 'new-post-text',
         placeholder: 'Enter text here...',
         value: text,
         onChangeText: setText,
@@ -96,7 +98,7 @@ class PostForm extends Component {
     // FIXME: attached images render only once
     return (
       <Form keyboardHeight = {height} style={styles.container}>
-        <FormInputs data={formData}/>
+        <FormInputs data={formData} autoFocusIndex={0}/>
 
         <LinedSeparator noMargins/>
 

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { StyleSheet, SectionList, Text, View, FlatList } from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR } from '../../../constants'
+import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../../../constants'
 import BasicSeparator from '../separator/basic-separator'
 import LinedSeparator from '../separator/lined-separator'
 import TableRow from '../table/table-row'
@@ -13,63 +13,69 @@ class List extends Component {
     sections: PropTypes.array.isRequired
   }
 
-  // inputs = {}
-
-  // addInputRef = (ref) => this.inputs[ref.props.name] = ref
-
-  // focusOnInput = (name) => () => this.inputs[name].focus()
-
   inputs = []
-
-  getTotalLength = () => this.inputs.length
 
   addInputRef = (ref) => this.inputs = [...this.inputs, ref]
 
-  focusOnInput = (index) => () => this.inputs[index].focus()
+  focusNextInput = ({target}) => {
+    const nextInput = this.inputs.findIndex(({_inputRef}) => _inputRef._nativeTag === target) + 1
+
+    if (nextInput >= this.inputs.length) {
+      return
+    }
+
+    this.inputs[nextInput].focus()
+  }
 
   renderHint = (hint) => (
-    <View style = {{ padding: 8, backgroundColor: INACTIVE_BACKGROUND_COLOR }}>
+    <View style = {styles.separator}>
       <Text style = {[styles.text, styles.hint]}>
         {hint}
       </Text>
     </View>
   )
 
+  renderSectionHeader = ({ section: { header } }) => (
+    header
+      ? (
+        <View style = {styles.separator}>
+          <Text style={[styles.text, styles.header]}>
+            {header}
+          </Text>
+        </View>
+      )
+      : null
+  )
+
   renderSectionSeparatorComponent = ({leadingItem, trailingItem, section: {hint}}) => (
     <Fragment>
       {leadingItem ? <LinedSeparator noMargins/> : null}
       {!trailingItem && hint ? this.renderHint(hint) : null}
-      {trailingItem ? <LinedSeparator noMargins/> : null}
-      {!trailingItem ? <BasicSeparator style={{backgroundColor: INACTIVE_BACKGROUND_COLOR}} size={40}/> : null}
+      {trailingItem
+        ? <LinedSeparator noMargins/>
+        : <BasicSeparator style={{ backgroundColor: INACTIVE_BACKGROUND_COLOR }} size={40}/>}
     </Fragment>
   )
 
-  renderItem = ({ item: { customComponent: Component}, item }) => (
-    Component ? <Component addInputRef={this.addInputRef} focusOnInput={this.focusOnInput} getTotalLength = {this.getTotalLength}/> : <TableRow {...item}/>
-  )
-
-  renderSectionHeader = ({ section: { header } }) => (
-    header ? (
-      <View style={{ padding: 8, backgroundColor: INACTIVE_BACKGROUND_COLOR }}>
-        <Text style={[styles.text, styles.header]}>
-          {header}
-        </Text>
-      </View>
-    ) : null
+  renderItem = ({ item: { customComponent: Component }, item }) => (
+    Component
+      ? <Component addInputRef={this.addInputRef} focusNextInput={this.focusNextInput}/>
+      : <TableRow {...item}/>
   )
 
   render() {
-    const {children, style, sections, ...rest} = this.props
+    const {sections, ...rest} = this.props
 
     return (
       <SectionList
+        {...rest}
         renderSectionHeader={this.renderSectionHeader}
         style={styles.container}
-        contentContainerStyle={{backgroundColor: 'white'}}
+        contentContainerStyle={styles.section}
         renderItem={this.renderItem}
         SectionSeparatorComponent={this.renderSectionSeparatorComponent}
         ItemSeparatorComponent={LinedSeparator}
-        keyExtractor={item => item}
+        keyExtractor={item => item.name}
         stickySectionHeadersEnabled={false}
         initialNumToRender = {Number.MAX_SAFE_INTEGER}
         sections={sections}
@@ -80,7 +86,13 @@ class List extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    backgroundColor: INACTIVE_BACKGROUND_COLOR
+  },
+  section: {
+    backgroundColor: WHITE_BACKGROUND_COLOR
+  },
+  separator: {
+    padding: 8,
     backgroundColor: INACTIVE_BACKGROUND_COLOR
   },
   text: {
