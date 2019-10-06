@@ -57,9 +57,9 @@ class List extends Component {
     </Fragment>
   )
 
-  renderItem = ({ item: { customComponent: Component }, item }) => (
+  renderItem = ({ item: { customComponent: Component, props }, item }) => (
     Component
-      ? <Component addInputRef={this.addInputRef} focusNextInput={this.focusNextInput}/>
+      ? <Component {...props} addInputRef={this.addInputRef} focusNextInput={this.focusNextInput}/>
       : <TableRow {...item}/>
   )
 

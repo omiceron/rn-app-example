@@ -14,7 +14,7 @@ import {
 } from '../../constants'
 import {observable, action} from 'mobx'
 import Loader from '../common/loader'
-import Table from '../common/table/table'
+import List from '../common/list/list'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -75,13 +75,82 @@ class LocationForm extends Component {
 
   setMapRef = ref => this.map = ref
 
+  renderInput = () => {
+    const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+
+    return (
+      <TableRow>
+        <TextInput
+          style={[styles.text]}
+          placeholder='Type your address here'
+          returnKeyType='search'
+          value={address}
+          onChangeText={setAddress}
+          blurOnSubmit
+          onSubmitEditing={this.handleSubmit}
+          // onSubmitEditing = {getCoordsFromAddress}
+        />
+      </TableRow>
+
+    )
+  }
+
+  renderMap = () => {
+    const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+
+    return (
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='padding'
+        enabled
+      >
+        <MapView
+          ref={this.setMapRef}
+          style={styles.container}
+          initialRegion={{ ...coords, ...REGION_DELTAS }}
+          // region = {{...coords, ...REGION_DELTAS}}
+        >
+          <MapView.Marker
+            draggable
+            coordinate={{ ...coords }}
+            onDragEnd={(e) => setCoords(e.nativeEvent.coordinate)}
+          />
+        </MapView>
+      </KeyboardAvoidingView>
+    )
+  }
+
+  render2() {
+    const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+
+    if (!coords) return <Loader/>
+
+    const sections = [
+      {
+        data: [
+          {
+            customComponent: this.renderInput,
+            name: 'input'
+          },
+          {
+            customComponent: this.renderMap,
+            name: 'map'
+          }
+        ]
+      },
+    ]
+
+    return (
+      <List sections={sections} scrollable={false}/>
+    )
+  }
+
   render() {
     const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
 
     if (!coords) return <Loader/>
 
     return (
-      <Table>
         <TableBlock disableSeparator style={styles.container}>
 
           <TableRow>
@@ -117,7 +186,6 @@ class LocationForm extends Component {
           </KeyboardAvoidingView>
 
         </TableBlock>
-      </Table>
     )
   }
 }

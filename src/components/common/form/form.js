@@ -5,7 +5,6 @@ import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR 
 import BasicList from '../grid/basic-list'
 import LinedSeparator from '../separator/lined-separator'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
-import Table from '../table/table'
 
 class Form extends Component {
   static propTypes = {
