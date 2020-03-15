@@ -67,7 +67,8 @@ const createCommonStack = (mainScreen) => createStackNavigator({
     headerTintColor: WHITE_TEXT_COLOR
   },
   headerMode: 'float',
-  headerTransitionPreset: 'uikit'
+  // DEPRECATED!
+  // headerTransitionPreset: 'uikit'
 })
 
 const AuthNavigator = createStackNavigator({
@@ -97,14 +98,15 @@ const PostFormStack = createStackNavigator({
     headerTintColor: WHITE_TEXT_COLOR
   },
   headerMode: 'float',
-  headerTransitionPreset: 'uikit'
+  // DEPRECATED!
+  // headerTransitionPreset: 'uikit'
 })
 
 const createCommonTabRouteConfig = (mainScreen, icon) => ({
   screen: createCommonStack(mainScreen),
   navigationOptions: ({navigation, screenProps}) => ({
     ...getActiveChildNavigationOptions(navigation, screenProps),
-    header: null,
+    headerShown: false,
     tabBarIcon: renderTabBarIcon(icon)
   })
 })
@@ -145,7 +147,8 @@ const CoreNavigator = createStackNavigator({
   }
 }, {
   headerMode: 'float',
-  headerTransitionPreset: 'uikit'
+  // DEPRECATED!
+  // headerTransitionPreset: 'uikit'
 })
 
 const ModalNavigator = createStackNavigator({

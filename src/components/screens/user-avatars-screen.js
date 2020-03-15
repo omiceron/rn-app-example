@@ -10,7 +10,7 @@ import {PEOPLE_STORE} from '../../constants'
 @observer
 class UserAvatarsScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-    header: null,
+    headerShown: false,
   })
 
   @observable user = null

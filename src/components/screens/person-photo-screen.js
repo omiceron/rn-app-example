@@ -4,7 +4,7 @@ import {DEFAULT_HEADER_COLOR} from '../../constants'
 
 class PersonPhotoScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-    header: null,
+    headerShown: false,
     headerStyle: {
       backgroundColor: DEFAULT_HEADER_COLOR
     }

@@ -33,7 +33,7 @@ class ChatScreen extends Component {
 
     return ({
       title: firstName,
-      headerRight: <TouchableAvatar
+      headerRight: () => <TouchableAvatar
         size = {40}
         style = {{marginRight: 10}}
         onPress = {navigateToUserScreen}
