@@ -14,8 +14,8 @@ class LocationFormScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
       title: 'Add location',
-      headerLeft: <NavigationButton title = 'Cancel' onPress = {() => navigation.goBack()}/>,
-      headerRight: <NavigationButton title = 'Attach' onPress = {navigation.getParam('attachLocation')}/>
+      headerLeft: () => <NavigationButton title = 'Cancel' onPress = {() => navigation.goBack()}/>,
+      headerRight: () => <NavigationButton title = 'Attach' onPress = {navigation.getParam('attachLocation')}/>
     })
   }
 

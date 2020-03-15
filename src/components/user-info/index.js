@@ -14,6 +14,7 @@ import {
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
 import Table from '../common/table/table'
+import List from '../common/list/list'
 
 @inject(FEED_STORE)
 @observer
@@ -53,13 +54,13 @@ class UserInfo extends Component {
     </TableRow>
   )
 
-  renderPostsList = (items) => items.map(({ postId, title }) => (
+  renderPostsList = ({ items, emptyBlockTitle }) => items.length ? items.map(({ postId, title }) => (
     <TableRow
       key={postId}
       title={title}
       onPress={this.handleOpenPostScreen(postId)}
     />
-  ))
+  )) : <TableRow title={emptyBlockTitle}/>
 
   renderOnlineStatus = () => <Text style={[styles.text, styles.online]}>online</Text>
 
@@ -80,7 +81,92 @@ class UserInfo extends Component {
     ? this.renderLastSeenStatus()
     : this.renderOnlineStatus()
 
+  renderUserCard = () => {
+    const {lastName, firstName, online} = this.props.user
+
+    return (
+      <SegmentedCard
+        mainContainerStyle={styles.textView}
+        LeftComponent={this.renderAvatar}>
+
+        <View>
+          <Text style={styles.text}>
+            {firstName} {lastName}
+          </Text>
+        </View>
+
+        <View>
+          {online && this.renderStatus()}
+        </View>
+
+      </SegmentedCard>
+
+    )
+  }
+
   render() {
+    const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
+    const { likes, posts, props: {openChatWithUser} } = this
+
+    const sections = [
+      {
+        data: [
+          {
+            customComponent: this.renderUserCard,
+            name: 'user-card'
+          }
+        ]
+      },
+      {
+        data: [
+          {
+            name: 'user-info',
+            title: userInfo,
+            caption: 'User information'
+          },
+          {
+            name: 'user-email',
+            title: email,
+            caption: 'User e-mail'
+          }
+        ]
+      },
+      {
+        data: [
+          {
+            name: 'send-message-button',
+            title: 'Send message',
+            titleStyle: styles.blueButton,
+            onPress: openChatWithUser
+          }
+        ]
+      },
+      {
+        header: 'Liked posts',
+        data: [
+          {
+            name: 'user-liked-posts',
+            customComponent: likes ? this.renderPostsList : this.renderLoadingRow,
+            props: { items: likes, emptyBlockTitle: 'User have not liked any posts' }
+          }
+        ]
+      },
+      {
+        header: 'User posts',
+        data: [
+          {
+            name: 'user-posts',
+            customComponent: posts ? this.renderPostsList : this.renderLoadingRow,
+            props: { items: posts, emptyBlockTitle: 'User have no posts' }
+          }
+        ]
+      },
+    ]
+
+    return <List sections={sections} />
+  }
+
+  render2() {
     const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
     const { likes, posts, props: {openChatWithUser} } = this
 
@@ -113,7 +199,8 @@ class UserInfo extends Component {
         <TableRow
           title = 'Send message'
           titleStyle = {styles.blueButton}
-          onPress = {openChatWithUser}/>
+          onPress = {openChatWithUser}
+        />
       </TableBlock>
 
       <TableBlock header = 'Liked posts' emptyBlockTitle = 'User have not liked any posts'>

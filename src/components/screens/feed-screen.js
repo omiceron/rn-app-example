@@ -21,7 +21,7 @@ class FeedScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return ({
       title: 'Feed',
-      headerRight: <NavigationButton icon = 'ios-add' onPress = {() => navigation.navigate('postForm')}/>
+      headerRight: () => <NavigationButton icon = 'ios-add' onPress = {() => navigation.navigate('postForm')}/>
     })
   }
 

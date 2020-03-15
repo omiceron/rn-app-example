@@ -19,7 +19,7 @@ class UserPhotoScreen extends Component {
   }
 
   static navigationOptions = ({navigation}) => ({
-    header: null,
+    headerShown: false,
     headerStyle: {
       backgroundColor: WARNING_COLOR
     }

@@ -32,7 +32,7 @@ class TouchableCard extends Component {
 const styles = StyleSheet.create({
   container: {
     // TODO
-    backgroundColor: WHITE_BACKGROUND_COLOR
+    // backgroundColor: WHITE_BACKGROUND_COLOR
   }
 })
 

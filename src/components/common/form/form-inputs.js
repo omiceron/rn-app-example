@@ -19,28 +19,24 @@ class FormInputs extends Component {
   focus = (index) => () => this.inputs[index].focus()
 
   renderItem = ({ item, index }) => {
-    const { data } = this.props
+    const { data, addInputRef, focusNextInput, autoFocusIndex } = this.props
+    const { stretch, multiline, name, ...rest } = item
 
-    const { value, placeholder, onChangeText, stretch, multiline } = item
-
-    const isFirstItem = index === 0
     const isLastItem = index === data.length - 1
-    const onSubmitEditing = index !== data.length - 1 ? this.focus(index + 1) : undefined
-    const returnKeyType = multiline ? 'default' : !isLastItem ? 'next' : 'done'
+    const onSubmitEditing = !isLastItem ? this.focus(index + 1) : undefined
+    const returnKeyType = multiline ? 'default' : 'next'
 
     return (
       <TableRow style={stretch && styles.stretchedRow}>
         <TextInput
-          autoFocus={isFirstItem}
+          onSubmitEditing={focusNextInput || onSubmitEditing}
+          {...rest}
+          autoFocus={index === autoFocusIndex}
           style={styles.text}
-          placeholder={placeholder}
           returnKeyType={returnKeyType}
-          value={value}
           multiline={multiline}
-          onChangeText={onChangeText}
-          onSubmitEditing={onSubmitEditing}
           blurOnSubmit={false}
-          ref={this.addRef}
+          ref={addInputRef || this.addRef}
         />
       </TableRow>
     )
@@ -55,7 +51,7 @@ class FormInputs extends Component {
         ItemSeparatorComponent={LinedSeparator}
         data={data}
         scrollEnabled={scrollable}
-        keyExtractor={item => item.name}
+        keyExtractor={({name}) => name}
       />
     )
   }

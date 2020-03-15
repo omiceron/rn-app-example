@@ -19,8 +19,8 @@ class PostFormScreen extends Component {
 
     return ({
       title: 'Add post',
-      headerLeft: <NavigationButton title = 'Cancel' onPress = {() => navigation.navigate('feed')}/>,
-      headerRight: <NavigationButton title = 'Send' onPress = {sendPost}/>
+      headerLeft: () => <NavigationButton title = 'Cancel' onPress = {() => navigation.navigate('feed')}/>,
+      headerRight: () => <NavigationButton title = 'Send' onPress = {sendPost}/>
     })
   }
 

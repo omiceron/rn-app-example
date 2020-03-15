@@ -1,19 +1,22 @@
-import React, {Component} from 'react'
-import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
-import {observer, inject} from 'mobx-react'
+import React, { Component } from 'react'
+import { TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar } from 'react-native'
+import { observer, inject } from 'mobx-react'
 import CurrentUserAvatar from './current-user-avatar'
 import TableRow from '../common/table/table-row'
 import SegmentedCard from '../common/segmented-card'
-import TableBlock from '../common/table/table-block'
 import {
-  AUTH_STORE, AVATAR_STORE, INACTIVE_BACKGROUND_COLOR, NAVIGATION_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE,
+  AUTH_STORE,
+  AVATAR_STORE,
+  NAVIGATION_STORE,
+  BLACK_TEXT_COLOR,
+  CURRENT_USER_STORE,
   WARNING_COLOR
 } from '../../constants'
-import {string, func, shape, bool} from 'prop-types'
+import { string, func, shape, bool } from 'prop-types'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
-import LinedSeparator from '../common/separator/lined-separator'
-import Table from '../common/table/table'
+import List from '../common/list/list'
+import FormInputs from '../common/form/form-inputs'
 
 @inject(NAVIGATION_STORE)
 @inject(AUTH_STORE)
@@ -41,98 +44,6 @@ class Settings extends Component {
       avatar: string,
       loading: bool.isRequired
     })
-  }
-
-  render() {
-    const {navigate} = this.props.navigation
-    const {uri, loading} = this.props.avatar
-    const {currentUser} = this.props
-
-    const LeftComponent = () =>
-      <CurrentUserAvatar
-        size = {80}
-        onPress = {() => !loading && this.getPhoto()}
-        // onPress = {() => !loading && navigate('userPhoto')}
-        uri = {uri}
-        loading = {loading}
-      />
-
-    return (
-      <Table scrollable>
-        <TableBlock hint='Enter your name and add photo here'>
-          <SegmentedCard
-            mainContainerStyle={styles.textView}
-            LeftComponent={LeftComponent}>
-            <TextInput
-              style={styles.text}
-              placeholder='First Name'
-              textContentType='givenName'
-              returnKeyType='next'
-              defaultValue={currentUser.firstName}
-              onChangeText={currentUser.setFirstName}
-              onSubmitEditing={() => this.lastNameRef.focus()}
-              onBlur={currentUser.updateUserData}
-            />
-
-            <LinedSeparator noMargins/>
-
-            <TextInput
-              ref={this.setLastNameRef}
-              style={styles.text}
-              placeholder='Last Name'
-              textContentType='familyName'
-              returnKeyType='next'
-              defaultValue={currentUser.lastName}
-              onChangeText={currentUser.setLastName}
-              onSubmitEditing={() => this.infoRef.focus()}
-              onBlur={currentUser.updateUserData}
-            />
-          </SegmentedCard>
-        </TableBlock>
-
-        {/*      <View style = {styles.simpleRow}>
-          <TextInput
-            ref = {ref => this.infoRef = ref}
-            style = {styles.text}
-            placeholder = 'Info'
-            returnKeyType = 'done'
-            defaultValue = {userInfo}
-            onChangeText = {setUserInfo}
-            // onSubmitEditing = {updateUserData}
-            onBlur = {updateUserData}/>
-        </View>*/}
-
-        <TableBlock hint='Enter your additional information here, like your bio, age or something like that'>
-          <TableRow>
-            <TextInput
-              ref={this.setInfoRef}
-              style={styles.text}
-              placeholder='Info'
-              returnKeyType='done'
-              defaultValue={currentUser.userInfo}
-              onChangeText={currentUser.setUserInfo}
-              onBlur={currentUser.updateUserData}
-            />
-          </TableRow>
-        </TableBlock>
-
-        {/*<TableView>
-          <TableRow title = 'Dark Theme' onValueChange = {() => alert('Not ready yet!')}/>
-          <TableRow title = 'Notifications' onPress = {() => alert('Not ready yet!')}/>
-        </TableView>
-
-        <TableSeparator/>*/}
-
-        <TableBlock hint='Press button to log out'>
-          <TableRow
-            title='Sign out'
-            titleStyle={styles.redButton}
-            onPress={this.handleSignOut}
-          />
-        </TableBlock>
-
-      </Table>
-    )
   }
 
   getPhoto = () => {
@@ -177,9 +88,6 @@ class Settings extends Component {
     )
   }
 
-  setLastNameRef = ref => this.lastNameRef = ref
-  setInfoRef = ref => this.infoRef = ref
-
   handleSignOut = () => ActionSheetIOS.showActionSheetWithOptions(
     {
       title: 'Are you sure you want to sign out?',
@@ -194,6 +102,127 @@ class Settings extends Component {
     }
   )
 
+  renderAvatar = () => {
+    const { uri, loading } = this.props.avatar
+
+    return (
+      <CurrentUserAvatar
+        size={80}
+        onPress={() => !loading && this.getPhoto()}
+        // onPress = {() => !loading && navigate('userPhoto')}
+        uri={uri}
+        loading={loading}
+      />
+    )
+  }
+
+  renderUserCard = ({ addInputRef, focusNextInput }) => {
+    const {currentUser} = this.props
+
+    const formInputs = [
+      {
+        name: 'first-name',
+        defaultValue: currentUser.firstName,
+        onBlur: currentUser.updateUserData,
+        onChangeText: currentUser.setFirstName,
+        placeholder: 'First Name',
+        textContentType: 'givenName',
+      },
+      {
+        name: 'last-name',
+        defaultValue: currentUser.lastName,
+        onBlur: currentUser.updateUserData,
+        onChangeText: currentUser.setLastName,
+        placeholder: 'Last Name',
+        textContentType: 'familyName',
+      }
+    ]
+
+    return (
+      <SegmentedCard
+        style={styles.userCardStyle}
+        LeftComponent={this.renderAvatar}>
+        <FormInputs
+          data={formInputs}
+          autoFocusIndex={0}
+          addInputRef={addInputRef}
+          focusNextInput={focusNextInput}
+        />
+      </SegmentedCard>
+    )
+  }
+
+  renderBio = ({addInputRef}) => {
+    const {currentUser} = this.props
+
+    return (
+      <TableRow>
+        <TextInput
+          ref={addInputRef}
+          name='user-bio'
+          style={styles.text}
+          placeholder='Info'
+          returnKeyType='done'
+          defaultValue={currentUser.userInfo}
+          onChangeText={currentUser.setUserInfo}
+          onBlur={currentUser.updateUserData}
+        />
+      </TableRow>
+    )
+  }
+
+  render() {
+    const sections = [
+      {
+        hint: 'Enter your name and add photo here',
+        data: [
+          {
+            customComponent: this.renderUserCard,
+            name: 'user-card'
+          }
+        ]
+      },
+      {
+        hint: 'Enter your additional information here, like your bio, age or something like that',
+        data: [
+          {
+            customComponent: this.renderBio,
+            name: 'user-bio'
+          }
+        ]
+      },
+      {
+        data: [
+          {
+            name: 'dark-theme-toggle',
+            title: 'Dark Theme',
+            onValueChange: () => alert('Not ready yet!')
+          },
+          {
+            name: 'notifications-button',
+            title: 'Notifications',
+            onPress: () => alert('Not ready yet!')
+          }
+        ]
+      },
+      {
+        hint: 'Press button to log out',
+        data: [
+          {
+            name: 'sign-out-button',
+            title: 'Sign out',
+            titleStyle: styles.redButton,
+            onPress: this.handleSignOut
+          }
+        ]
+      }
+    ]
+
+    return (
+      <List sections={sections}/>
+    )
+  }
+
 }
 
 const styles = StyleSheet.create({
@@ -203,10 +232,11 @@ const styles = StyleSheet.create({
     color: BLACK_TEXT_COLOR
 
   },
-  textView: {
+  userCardStyle: {
     flex: 1,
-    justifyContent: 'space-around',
-    marginLeft: 10
+    padding: 0,
+    paddingLeft: 10,
+
   },
   redButton: {
     color: WARNING_COLOR,
