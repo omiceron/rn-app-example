@@ -1,10 +1,10 @@
-import {observable, computed, action} from 'mobx'
+import { observable, computed, action } from 'mobx'
 import BasicStore from './basic-store'
 import firebase from 'firebase'
-import {entitiesFromFB} from './utils'
-import {AUTH_STORE} from '../constants'
-import {AsyncStorage} from 'react-native'
-import {toJS} from 'mobx'
+import { entitiesFromFB } from './utils'
+import { AUTH_STORE } from '../constants'
+import { AsyncStorage } from 'react-native'
+import { toJS } from 'mobx'
 
 class EntitiesStore extends BasicStore {
   constructor(...args) {
@@ -51,8 +51,7 @@ class EntitiesStore extends BasicStore {
 
   @action retrieveCachedEntities = async () => {
     console.log('CACHE:', 'get entities from store', this.storeName)
-    const cachedEntities = await AsyncStorage.getItem(`meowchat:store:${this.storeName}`)
-      .then(JSON.parse)
+    const cachedEntities = await AsyncStorage.getItem(`meowchat:store:${this.storeName}`).then(JSON.parse)
 
     if (!cachedEntities) {
       console.log('CACHE:', 'no cached entities from store', this.storeName)
@@ -66,12 +65,14 @@ class EntitiesStore extends BasicStore {
 
   @observable lastEntityKey = null
 
-  @action fetchEntities = async (getReference,
-                                 setEntities,
-                                 storeChunkLength = 0,
-                                 context = this,
-                                 chunkFilter = () => true,
-                                 getLastKey = (payload) => Object.keys(payload)[0]) => {
+  @action fetchEntities = async (
+    getReference,
+    setEntities,
+    storeChunkLength = 0,
+    context = this,
+    chunkFilter = () => true,
+    getLastKey = (payload) => Object.keys(payload)[0]
+  ) => {
     if (context.loaded || context.loading || !this.user) return
 
     console.log(this.storeName.toUpperCase(), ': fetching entities', 'start')
@@ -89,7 +90,7 @@ class EntitiesStore extends BasicStore {
 
       context.lastEntityKey = getLastKey(payload, context)
 
-      !isEmpty && await setEntities(payload)
+      !isEmpty && (await setEntities(payload))
 
       context.loaded = isEmpty || currentChunkLength < chunkLength
       context.loading = false
@@ -109,7 +110,6 @@ class EntitiesStore extends BasicStore {
 
     return await ref.once('value').then(callback)
   }
-
 }
 
 export function loadAllHelper(refName) {
@@ -117,12 +117,17 @@ export function loadAllHelper(refName) {
     this.loading = true
     console.log(refName)
 
-    firebase.database().ref(refName)
-      .once('value', action(data => {
-        this.entities = entitiesFromFB(data.val())
-        this.loading = false
-        this.loaded = true
-      }))
+    firebase
+      .database()
+      .ref(refName)
+      .once(
+        'value',
+        action((data) => {
+          this.entities = entitiesFromFB(data.val())
+          this.loading = false
+          this.loaded = true
+        })
+      )
   })
 }
 

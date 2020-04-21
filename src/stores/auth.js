@@ -1,7 +1,7 @@
-import {observable, action, computed} from 'mobx'
+import { observable, action, computed } from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
-import {AsyncStorage, Alert} from 'react-native'
+import { AsyncStorage, Alert } from 'react-native'
 import validator from 'validator'
 import {
   PEOPLE_STORE,
@@ -9,12 +9,12 @@ import {
   CURRENT_USER_STORE,
   FEED_STORE,
   MESSENGER_STORE,
-  NAVIGATION_STORE
+  NAVIGATION_STORE,
 } from '../constants'
 import * as Facebook from 'expo-facebook'
 import * as Google from 'expo-google-app-auth'
 import * as MediaLibrary from 'expo-media-library'
-import {facebookAppId, googleClientId} from '../config'
+import { facebookAppId, googleClientId } from '../config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'
 // import {FileSystem} from 'expo'
@@ -23,7 +23,7 @@ import {facebookAppId, googleClientId} from '../config'
 class AuthStore extends BasicStore {
   constructor(...args) {
     super(...args)
-    firebase.auth().onAuthStateChanged(async user => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       this.setUser(user)
 
       if (user) {
@@ -39,7 +39,6 @@ class AuthStore extends BasicStore {
         await this.getStore(MESSENGER_STORE).fetchChats()
       }
     })
-
   }
 
   @observable user = null
@@ -52,13 +51,13 @@ class AuthStore extends BasicStore {
   @observable signUpPassword = ''
   @observable firstName = ''
 
-  @action setUser = user => this.user = user
-  @action setEmail = email => this.email = email
-  @action setPassword = password => this.password = password
+  @action setUser = (user) => (this.user = user)
+  @action setEmail = (email) => (this.email = email)
+  @action setPassword = (password) => (this.password = password)
 
-  @action setSignUpEmail = email => this.signUpEmail = email
-  @action setSignUpPassword = password => this.signUpPassword = password
-  @action setFirstName = firstName => this.firstName = firstName
+  @action setSignUpEmail = (email) => (this.signUpEmail = email)
+  @action setSignUpPassword = (password) => (this.signUpPassword = password)
+  @action setFirstName = (firstName) => (this.firstName = firstName)
 
   @computed
   get isEmailValid() {
@@ -116,7 +115,6 @@ class AuthStore extends BasicStore {
   }
 
   @action signUp = async () => {
-
     if (!this.isSignUpEmailValid || !this.isSignUpPasswordValid || !this.isFirstNameValid) {
       Alert.alert('Password, E-mail or first name are not valid!')
       return
@@ -126,13 +124,16 @@ class AuthStore extends BasicStore {
 
     const email = this.signUpEmail
     const password = this.signUpPassword
-    await firebase.functions().httpsCallable('createUser')({
-      email,
-      password,
-      displayName: this.firstName
-    }).catch(err => {
-      throw err
-    })
+    await firebase
+      .functions()
+      .httpsCallable('createUser')({
+        email,
+        password,
+        displayName: this.firstName,
+      })
+      .catch((err) => {
+        throw err
+      })
 
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password)
@@ -147,15 +148,14 @@ class AuthStore extends BasicStore {
   }
 
   async checkUser() {
-    const {firstName} = this || this.getStore(CURRENT_USER_STORE)
-    return firebase.functions().httpsCallable('checkUser')({firstName})
-
+    const { firstName } = this || this.getStore(CURRENT_USER_STORE)
+    return firebase.functions().httpsCallable('checkUser')({ firstName })
   }
 
   signOut = async () => {
     this.clear()
     const stores = [MESSENGER_STORE, AVATAR_STORE, CURRENT_USER_STORE, FEED_STORE, PEOPLE_STORE]
-    stores.forEach(store => this.getStore(store).off())
+    stores.forEach((store) => this.getStore(store).off())
     // AsyncStorage.removeItem('user')
     await firebase.auth().signOut()
     await AsyncStorage.clear()
@@ -165,10 +165,9 @@ class AuthStore extends BasicStore {
   @action loginWithFacebook = async () => {
     this.loading = true
 
-    const {type, token} = await Facebook.logInWithReadPermissionsAsync(
-      facebookAppId,
-      {permissions: ['public_profile', 'email']}
-    )
+    const { type, token } = await Facebook.logInWithReadPermissionsAsync(facebookAppId, {
+      permissions: ['public_profile', 'email'],
+    })
 
     console.log(type, token)
 
@@ -176,9 +175,7 @@ class AuthStore extends BasicStore {
       const credential = firebase.auth.FacebookAuthProvider.credential(token)
 
       const {
-        user: {
-          uid
-        },
+        user: { uid },
         additionalUserInfo: {
           isNewUser,
           profile: {
@@ -186,20 +183,17 @@ class AuthStore extends BasicStore {
             last_name: lastName,
             email,
             picture: {
-              data: {
-                url: avatar
-              }
-            }
-          }
-        }
+              data: { url: avatar },
+            },
+          },
+        },
       } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
       if (isNewUser) {
-        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
+        await firebase.functions().httpsCallable('checkUser')({ uid, firstName, lastName, email })
       }
 
       this.getStore(NAVIGATION_STORE).navigate('app')
-
     }
 
     this.clear()
@@ -208,40 +202,30 @@ class AuthStore extends BasicStore {
   @action loginWithGoogle = async () => {
     this.loading = true
 
-    const {type, idToken, accessToken} = await Google.logInAsync({
+    const { type, idToken, accessToken } = await Google.logInAsync({
       iosClientId: googleClientId,
-      scopes: ['profile', 'email']
+      scopes: ['profile', 'email'],
     })
 
     if (type === 'success') {
       const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
 
       const {
-        user: {
-          uid
-        },
+        user: { uid },
         additionalUserInfo: {
           isNewUser,
-          profile: {
-            family_name: lastName,
-            given_name: firstName,
-            email,
-            picture: avatar
-          }
-        }
+          profile: { family_name: lastName, given_name: firstName, email, picture: avatar },
+        },
       } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
       if (isNewUser) {
-        await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
+        await firebase.functions().httpsCallable('checkUser')({ uid, firstName, lastName, email })
       }
 
       this.getStore(NAVIGATION_STORE).navigate('app')
-
     }
     this.clear()
-
   }
-
 }
 
 export default AuthStore

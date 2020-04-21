@@ -1,18 +1,16 @@
-import {observable, action} from 'mobx'
-import {ATTACHMENTS_STORE} from '../constants'
-import {StatusBar} from 'react-native'
+import { observable, action } from 'mobx'
+import { ATTACHMENTS_STORE } from '../constants'
+import { StatusBar } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
 const withAttachments = (extractor) => (Store) =>
   class WithAttachments extends Store {
-
     constructor(...args) {
       super(...args)
 
       if (!extractor) {
         this.attachments = observable([])
       }
-
     }
 
     @action _getContext = (params) => {
@@ -40,13 +38,13 @@ const withAttachments = (extractor) => (Store) =>
       StatusBar.setBarStyle('light-content', true)
     }
 
-    @action _attachFile = async (context, {uri, cancelled}) => {
+    @action _attachFile = async (context, { uri, cancelled }) => {
       if (cancelled) return
 
       const store = this.getStore(ATTACHMENTS_STORE)
 
-      const attachFile = store.attachFileSequence({uri})
-      const {value: uid} = await attachFile.next()
+      const attachFile = store.attachFileSequence({ uri })
+      const { value: uid } = await attachFile.next()
 
       this._addAttachment(context, uid)
 
@@ -56,18 +54,19 @@ const withAttachments = (extractor) => (Store) =>
     getTempAttachments = (params) => {
       const store = this.getStore(ATTACHMENTS_STORE)
 
-      return (this._getContext(params).attachments || [])
-        .map(store.getAttachment)
+      return (this._getContext(params).attachments || []).map(store.getAttachment)
     }
 
     attachmentsToDb = (params) => {
       const store = this.getStore(ATTACHMENTS_STORE)
 
-      return (this._getContext(params).attachments || [])
-        .reduce((acc, uid) => ({...acc, [uid]: store.getAttachment(uid).url}), {})
+      return (this._getContext(params).attachments || []).reduce(
+        (acc, uid) => ({ ...acc, [uid]: store.getAttachment(uid).url }),
+        {}
+      )
     }
 
-    @action clearAttachments = (params) => this._getContext(params).attachments = []
+    @action clearAttachments = (params) => (this._getContext(params).attachments = [])
 
     @action deleteAttachments = (params) => {
       const store = this.getStore(ATTACHMENTS_STORE)
@@ -79,7 +78,6 @@ const withAttachments = (extractor) => (Store) =>
 
     attachImageHandler = (params) => this._attachHandler(params, ImagePicker.launchImageLibraryAsync)
     attachPhotoHandler = (params) => this._attachHandler(params, ImagePicker.launchCameraAsync)
-
   }
 
 export default withAttachments

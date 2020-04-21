@@ -12,8 +12,7 @@ export default class BasicStore {
     return this._storeName
   }
 
-  get constructorName () {
+  get constructorName() {
     return this.__proto__.constructor.name
   }
-
 }
