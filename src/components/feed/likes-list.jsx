@@ -6,37 +6,37 @@ import { INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR } from '../../constan
 import LinedSeparator from '../common/separator/lined-separator'
 
 class LikesList extends Component {
-  static propTypes = {
-    openUserInfoScreen: func.isRequired,
-    likes: array.isRequired,
-  }
+    static propTypes = {
+        openUserInfoScreen: func.isRequired,
+        likes: array.isRequired
+    }
 
-  renderLike = ({ item }) => {
-    return <PersonCard onPress={this.props.openUserInfoScreen.bind(null, item.user.uid)} user={item.user} />
-  }
+    renderLike = ({ item }) => {
+        return <PersonCard onPress={this.props.openUserInfoScreen.bind(null, item.user.uid)} user={item.user} />
+    }
 
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          contentContainerStyle={{ backgroundColor: WHITE_BACKGROUND_COLOR }}
-          ItemSeparatorComponent={() => <LinedSeparator style={styles.separator} />}
-          data={this.props.likes}
-          renderItem={this.renderLike}
-        />
-      </SafeAreaView>
-    )
-  }
+    render() {
+        return (
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    contentContainerStyle={{ backgroundColor: WHITE_BACKGROUND_COLOR }}
+                    ItemSeparatorComponent={() => <LinedSeparator style={styles.separator} />}
+                    data={this.props.likes}
+                    renderItem={this.renderLike}
+                />
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: INACTIVE_BACKGROUND_COLOR,
-  },
-  separator: {
-    marginLeft: 48,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: INACTIVE_BACKGROUND_COLOR
+    },
+    separator: {
+        marginLeft: 48
+    }
 })
 
 export default LikesList

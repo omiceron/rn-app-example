@@ -11,29 +11,29 @@ import BasicRow from '../common/grid/basic-row'
 
 @inject(NAVIGATION_STORE)
 class PostFormControlRow extends Component {
-  static propTypes = {
-    attachImageHandler: PropTypes.func,
-    attachPhotoHandler: PropTypes.func,
-  }
+    static propTypes = {
+        attachImageHandler: PropTypes.func,
+        attachPhotoHandler: PropTypes.func
+    }
 
-  render() {
-    return (
-      <BasicRow style={styles.container}>
-        <PostButton icon="ios-photos" onPress={this.props.attachImageHandler} />
-        <PostButton icon="ios-pin" onPress={() => this.props.navigation.navigate('locationForm')} />
-        <PostButton icon="ios-person" onPress={() => ({})} />
-        <PostButton icon="ios-camera" onPress={this.props.attachPhotoHandler} />
-      </BasicRow>
-    )
-  }
+    render() {
+        return (
+            <BasicRow style={styles.container}>
+                <PostButton icon="ios-photos" onPress={this.props.attachImageHandler} />
+                <PostButton icon="ios-pin" onPress={() => this.props.navigation.navigate('locationForm')} />
+                <PostButton icon="ios-person" onPress={() => ({})} />
+                <PostButton icon="ios-camera" onPress={this.props.attachPhotoHandler} />
+            </BasicRow>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    justifyContent: 'space-around',
-  },
+    container: {
+        paddingVertical: 0,
+        paddingHorizontal: 0,
+        justifyContent: 'space-around'
+    }
 })
 
 export default PostFormControlRow

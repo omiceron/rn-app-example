@@ -9,36 +9,36 @@ import { PEOPLE_STORE } from '../../constants'
 @inject(PEOPLE_STORE)
 @observer
 class UserAvatarsScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    headerShown: false,
-  })
+    static navigationOptions = ({ navigation }) => ({
+        headerShown: false
+    })
 
-  @observable user = null
+    @observable user = null
 
-  componentDidMount() {
-    StatusBar.setHidden(true, 'fade')
-  }
+    componentDidMount() {
+        StatusBar.setHidden(true, 'fade')
+    }
 
-  async componentDidMount() {
-    const { userId } = this.props.navigation.state.params
+    async componentDidMount() {
+        const { userId } = this.props.navigation.state.params
 
-    this.user = await this.props.people.getUserGreedily(userId)
-  }
+        this.user = await this.props.people.getUserGreedily(userId)
+    }
 
-  componentWillUnmount() {
-    StatusBar.setHidden(false, 'fade')
-  }
+    componentWillUnmount() {
+        StatusBar.setHidden(false, 'fade')
+    }
 
-  render() {
-    if (!this.user) return <Loader />
+    render() {
+        if (!this.user) return <Loader />
 
-    return <SlideShow onPress={this.handlePress} uri={this.user.avatar} />
-  }
+        return <SlideShow onPress={this.handlePress} uri={this.user.avatar} />
+    }
 
-  handlePress = () => {
-    this.props.navigation.goBack()
-    // StatusBar.setHidden(false, 'slide')
-  }
+    handlePress = () => {
+        this.props.navigation.goBack()
+        // StatusBar.setHidden(false, 'slide')
+    }
 }
 
 export default UserAvatarsScreen

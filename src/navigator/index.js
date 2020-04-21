@@ -21,176 +21,176 @@ import PostScreen from '../components/screens/post-screen'
 import AuthLoadingScreen from '../components/screens/loader-screen'
 import MapScreen from '../components/screens/map-screen'
 import {
-  ACTIVE_TINT_COLOR,
-  DEFAULT_HEADER_COLOR,
-  WHITE_TEXT_COLOR,
-  INACTIVE_TEXT_COLOR,
-  WHITE_BACKGROUND_COLOR,
+    ACTIVE_TINT_COLOR,
+    DEFAULT_HEADER_COLOR,
+    WHITE_TEXT_COLOR,
+    INACTIVE_TEXT_COLOR,
+    WHITE_BACKGROUND_COLOR
 } from '../constants'
 
 const renderTabBarIcon = (name) => ({ tintColor, focused }) => (
-  <Icon
-    name={`ios-${name}`}
-    // TODO: make custom font
-    // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
-    size={30}
-    style={{ color: tintColor }}
-  />
+    <Icon
+        name={`ios-${name}`}
+        // TODO: make custom font
+        // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
+        size={30}
+        style={{ color: tintColor }}
+    />
 )
 
 const commonScreens = {
-  postScreen: {
-    screen: PostScreen,
-  },
-  userScreen: {
-    screen: UserInfo,
-  },
-  likesList: {
-    screen: LikesListScreen,
-  },
-  chatScreen: {
-    screen: ChatScreen,
-  },
-  mapScreen: {
-    screen: MapScreen,
-  },
+    postScreen: {
+        screen: PostScreen
+    },
+    userScreen: {
+        screen: UserInfo
+    },
+    likesList: {
+        screen: LikesListScreen
+    },
+    chatScreen: {
+        screen: ChatScreen
+    },
+    mapScreen: {
+        screen: MapScreen
+    }
 }
 
 const createCommonStack = (mainScreen) =>
-  createStackNavigator(
-    {
-      mainScreen,
-      ...commonScreens,
-    },
-    {
-      defaultNavigationOptions: {
-        headerStyle: {
-          backgroundColor: DEFAULT_HEADER_COLOR,
-          borderBottomWidth: 0,
+    createStackNavigator(
+        {
+            mainScreen,
+            ...commonScreens
         },
-        headerTintColor: WHITE_TEXT_COLOR,
-      },
-      headerMode: 'float',
-      // DEPRECATED!
-      // headerTransitionPreset: 'uikit'
-    }
-  )
+        {
+            defaultNavigationOptions: {
+                headerStyle: {
+                    backgroundColor: DEFAULT_HEADER_COLOR,
+                    borderBottomWidth: 0
+                },
+                headerTintColor: WHITE_TEXT_COLOR
+            },
+            headerMode: 'float'
+            // DEPRECATED!
+            // headerTransitionPreset: 'uikit'
+        }
+    )
 
 const AuthNavigator = createStackNavigator(
-  {
-    signIn: {
-      screen: AuthScreen,
+    {
+        signIn: {
+            screen: AuthScreen
+        },
+        signUp: {
+            screen: SignUpScreen
+        }
     },
-    signUp: {
-      screen: SignUpScreen,
-    },
-  },
-  {
-    headerMode: 'none',
-  }
+    {
+        headerMode: 'none'
+    }
 )
 
 const PostFormStack = createStackNavigator(
-  {
-    postForm: {
-      screen: PostFormScreen,
+    {
+        postForm: {
+            screen: PostFormScreen
+        },
+        locationForm: {
+            screen: LocationFormScreen
+        }
     },
-    locationForm: {
-      screen: LocationFormScreen,
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: DEFAULT_HEADER_COLOR,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: WHITE_TEXT_COLOR,
-    },
-    headerMode: 'float',
-    // DEPRECATED!
-    // headerTransitionPreset: 'uikit'
-  }
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: DEFAULT_HEADER_COLOR,
+                borderBottomWidth: 0
+            },
+            headerTintColor: WHITE_TEXT_COLOR
+        },
+        headerMode: 'float'
+        // DEPRECATED!
+        // headerTransitionPreset: 'uikit'
+    }
 )
 
 const createCommonTabRouteConfig = (mainScreen, icon) => ({
-  screen: createCommonStack(mainScreen),
-  navigationOptions: ({ navigation, screenProps }) => ({
-    ...getActiveChildNavigationOptions(navigation, screenProps),
-    headerShown: false,
-    tabBarIcon: renderTabBarIcon(icon),
-  }),
+    screen: createCommonStack(mainScreen),
+    navigationOptions: ({ navigation, screenProps }) => ({
+        ...getActiveChildNavigationOptions(navigation, screenProps),
+        headerShown: false,
+        tabBarIcon: renderTabBarIcon(icon)
+    })
 })
 
 const TabNavigator = createBottomTabNavigator(
-  {
-    feed: createCommonTabRouteConfig(FeedScreen, 'paper'),
-    messenger: createCommonTabRouteConfig(MessengerScreen, 'chatbubbles'),
-    people: createCommonTabRouteConfig(PeopleScreen, 'people'),
-    settings: {
-      screen: SettingsScreen,
-      navigationOptions: {
-        tabBarIcon: renderTabBarIcon('settings'),
-      },
+    {
+        feed: createCommonTabRouteConfig(FeedScreen, 'paper'),
+        messenger: createCommonTabRouteConfig(MessengerScreen, 'chatbubbles'),
+        people: createCommonTabRouteConfig(PeopleScreen, 'people'),
+        settings: {
+            screen: SettingsScreen,
+            navigationOptions: {
+                tabBarIcon: renderTabBarIcon('settings')
+            }
+        }
     },
-  },
-  {
-    tabBarOptions: {
-      activeBackgroundColor: WHITE_BACKGROUND_COLOR,
-      inactiveBackgroundColor: WHITE_BACKGROUND_COLOR,
-      activeTintColor: ACTIVE_TINT_COLOR,
-      inactiveTintColor: INACTIVE_TEXT_COLOR,
-      showLabel: false,
-    },
-  }
+    {
+        tabBarOptions: {
+            activeBackgroundColor: WHITE_BACKGROUND_COLOR,
+            inactiveBackgroundColor: WHITE_BACKGROUND_COLOR,
+            activeTintColor: ACTIVE_TINT_COLOR,
+            inactiveTintColor: INACTIVE_TEXT_COLOR,
+            showLabel: false
+        }
+    }
 )
 
 const CoreNavigator = createStackNavigator(
-  {
-    root: {
-      screen: TabNavigator,
-      navigationOptions: ({ navigation, screenProps }) => getActiveChildNavigationOptions(navigation, screenProps),
+    {
+        root: {
+            screen: TabNavigator,
+            navigationOptions: ({ navigation, screenProps }) => getActiveChildNavigationOptions(navigation, screenProps)
+        },
+        personPhoto: {
+            screen: PersonPhotoScreen
+        },
+        userPhoto: {
+            screen: UserPhotoScreen
+        },
+        userAvatars: {
+            screen: UserAvatarsScreen
+        }
     },
-    personPhoto: {
-      screen: PersonPhotoScreen,
-    },
-    userPhoto: {
-      screen: UserPhotoScreen,
-    },
-    userAvatars: {
-      screen: UserAvatarsScreen,
-    },
-  },
-  {
-    headerMode: 'float',
-    // DEPRECATED!
-    // headerTransitionPreset: 'uikit'
-  }
+    {
+        headerMode: 'float'
+        // DEPRECATED!
+        // headerTransitionPreset: 'uikit'
+    }
 )
 
 const ModalNavigator = createStackNavigator(
-  {
-    CoreNavigator,
-    PostFormStack,
-  },
-  {
-    headerMode: 'none',
-    mode: 'modal',
-  }
+    {
+        CoreNavigator,
+        PostFormStack
+    },
+    {
+        headerMode: 'none',
+        mode: 'modal'
+    }
 )
 
 const AppNavigator = createAppContainer(
-  createSwitchNavigator({
-    loading: {
-      screen: AuthLoadingScreen,
-    },
-    auth: {
-      screen: AuthNavigator,
-    },
-    app: {
-      screen: ModalNavigator,
-    },
-  })
+    createSwitchNavigator({
+        loading: {
+            screen: AuthLoadingScreen
+        },
+        auth: {
+            screen: AuthNavigator
+        },
+        app: {
+            screen: ModalNavigator
+        }
+    })
 )
 
 export default AppNavigator

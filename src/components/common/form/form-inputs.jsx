@@ -6,70 +6,70 @@ import LinedSeparator from '../separator/lined-separator'
 import TableRow from '../table/table-row'
 
 class FormInputs extends Component {
-  static propTypes = {
-    // style: View.propTypes.style,
-    scrollable: PropTypes.bool,
-    data: PropTypes.array.isRequired,
-  }
+    static propTypes = {
+        // style: View.propTypes.style,
+        scrollable: PropTypes.bool,
+        data: PropTypes.array.isRequired
+    }
 
-  inputs = []
+    inputs = []
 
-  addRef = (ref) => (this.inputs = [...this.inputs, ref])
+    addRef = (ref) => (this.inputs = [...this.inputs, ref])
 
-  focus = (index) => () => this.inputs[index].focus()
+    focus = (index) => () => this.inputs[index].focus()
 
-  renderItem = ({ item, index }) => {
-    const { data, addInputRef, focusNextInput, autoFocusIndex } = this.props
-    const { stretch, multiline, name, ...rest } = item
+    renderItem = ({ item, index }) => {
+        const { data, addInputRef, focusNextInput, autoFocusIndex } = this.props
+        const { stretch, multiline, name, ...rest } = item
 
-    const isLastItem = index === data.length - 1
-    const onSubmitEditing = !isLastItem ? this.focus(index + 1) : undefined
-    const returnKeyType = multiline ? 'default' : 'next'
+        const isLastItem = index === data.length - 1
+        const onSubmitEditing = !isLastItem ? this.focus(index + 1) : undefined
+        const returnKeyType = multiline ? 'default' : 'next'
 
-    return (
-      <TableRow style={stretch && styles.stretchedRow}>
-        <TextInput
-          onSubmitEditing={focusNextInput || onSubmitEditing}
-          {...rest}
-          autoFocus={index === autoFocusIndex}
-          style={styles.text}
-          returnKeyType={returnKeyType}
-          multiline={multiline}
-          blurOnSubmit={false}
-          ref={addInputRef || this.addRef}
-        />
-      </TableRow>
-    )
-  }
+        return (
+            <TableRow style={stretch && styles.stretchedRow}>
+                <TextInput
+                    onSubmitEditing={focusNextInput || onSubmitEditing}
+                    {...rest}
+                    autoFocus={index === autoFocusIndex}
+                    style={styles.text}
+                    returnKeyType={returnKeyType}
+                    multiline={multiline}
+                    blurOnSubmit={false}
+                    ref={addInputRef || this.addRef}
+                />
+            </TableRow>
+        )
+    }
 
-  render() {
-    const { data, scrollable } = this.props
+    render() {
+        const { data, scrollable } = this.props
 
-    return (
-      <FlatList
-        renderItem={this.renderItem}
-        ItemSeparatorComponent={LinedSeparator}
-        data={data}
-        scrollEnabled={scrollable}
-        keyExtractor={({ name }) => name}
-      />
-    )
-  }
+        return (
+            <FlatList
+                renderItem={this.renderItem}
+                ItemSeparatorComponent={LinedSeparator}
+                data={data}
+                scrollEnabled={scrollable}
+                keyExtractor={({ name }) => name}
+            />
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '100',
-    color: BLACK_TEXT_COLOR,
-  },
-  stretchedRow: {
-    flex: 1,
-    alignItems: 'flex-start',
-  },
+    container: {
+        flex: 1
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: '100',
+        color: BLACK_TEXT_COLOR
+    },
+    stretchedRow: {
+        flex: 1,
+        alignItems: 'flex-start'
+    }
 })
 
 export default FormInputs

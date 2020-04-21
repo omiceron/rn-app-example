@@ -6,97 +6,101 @@ import AuthRow from './auth-row'
 import { BLACK_TEXT_COLOR, HIT_SLOP, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR } from '../../constants'
 
 class AuthInputRow extends Component {
-  static propTypes = {
-    isNonEmpty: PropTypes.bool,
-    secureTextEntry: PropTypes.bool,
-    setRef: PropTypes.func,
-  }
+    static propTypes = {
+        isNonEmpty: PropTypes.bool,
+        secureTextEntry: PropTypes.bool,
+        setRef: PropTypes.func
+    }
 
-  componentDidMount() {
-    this.props.setRef && this.props.setRef(this)
-  }
+    componentDidMount() {
+        this.props.setRef && this.props.setRef(this)
+    }
 
-  state = {
-    isSecured: this.props.secureTextEntry,
-    isFocused: false,
-  }
+    state = {
+        isSecured: this.props.secureTextEntry,
+        isFocused: false
+    }
 
-  focus() {
-    this.textInput.focus()
-  }
+    focus() {
+        this.textInput.focus()
+    }
 
-  toggleVisibility = () => {
-    this.setState({
-      isSecured: !this.state.isSecured,
-    })
-  }
+    toggleVisibility = () => {
+        this.setState({
+            isSecured: !this.state.isSecured
+        })
+    }
 
-  setFocused = () => {
-    this.setState({ isFocused: true })
-  }
+    setFocused = () => {
+        this.setState({ isFocused: true })
+    }
 
-  setBlurred = () => {
-    this.setState({ isFocused: false })
-  }
+    setBlurred = () => {
+        this.setState({ isFocused: false })
+    }
 
-  renderVisibilitySwitch() {
-    return (
-      <TouchableWithoutFeedback onPress={this.toggleVisibility} hitSlop={HIT_SLOP}>
-        <View style={styles.icon}>
-          <Icon size={19} color="rgba(0, 0, 0, 0.2)" name={`visibility${this.state.isSecured ? '' : '-off'}`} />
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
+    renderVisibilitySwitch() {
+        return (
+            <TouchableWithoutFeedback onPress={this.toggleVisibility} hitSlop={HIT_SLOP}>
+                <View style={styles.icon}>
+                    <Icon
+                        size={19}
+                        color="rgba(0, 0, 0, 0.2)"
+                        name={`visibility${this.state.isSecured ? '' : '-off'}`}
+                    />
+                </View>
+            </TouchableWithoutFeedback>
+        )
+    }
 
-  setInputRef = (ref) => (this.textInput = ref)
+    setInputRef = (ref) => (this.textInput = ref)
 
-  render() {
-    const { value, visibilitySwitch, onFocus, onBlur, ...rest } = this.props
-    return (
-      <AuthRow style={styles.container}>
-        <TextInput
-          {...rest}
-          value={value}
-          onFocus={(...args) => {
-            this.setFocused()
-            if (onFocus) return onFocus(...args)
-          }}
-          onBlur={(...args) => {
-            this.setBlurred()
-            if (onBlur) return onBlur(...args)
-          }}
-          ref={this.setInputRef}
-          secureTextEntry={this.state.isSecured}
-          style={styles.text}
-          autoCapitalize="none"
-          spellCheck={false}
-          autoCorrect={false}
-        />
-        {this.state.isFocused && visibilitySwitch && !!value && this.renderVisibilitySwitch()}
-      </AuthRow>
-    )
-  }
+    render() {
+        const { value, visibilitySwitch, onFocus, onBlur, ...rest } = this.props
+        return (
+            <AuthRow style={styles.container}>
+                <TextInput
+                    {...rest}
+                    value={value}
+                    onFocus={(...args) => {
+                        this.setFocused()
+                        if (onFocus) return onFocus(...args)
+                    }}
+                    onBlur={(...args) => {
+                        this.setBlurred()
+                        if (onBlur) return onBlur(...args)
+                    }}
+                    ref={this.setInputRef}
+                    secureTextEntry={this.state.isSecured}
+                    style={styles.text}
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    autoCorrect={false}
+                />
+                {this.state.isFocused && visibilitySwitch && !!value && this.renderVisibilitySwitch()}
+            </AuthRow>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: WHITE_TRANSPARENT_BACKGROUND_COLOR,
-  },
-  text: {
-    flex: 1,
-    alignContent: 'center',
-    height: 50,
-    paddingLeft: 25,
-    fontSize: 18,
-    fontFamily: 'HelveticaNeue-Thin',
-    color: BLACK_TEXT_COLOR,
-  },
-  icon: {
-    margin: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    container: {
+        backgroundColor: WHITE_TRANSPARENT_BACKGROUND_COLOR
+    },
+    text: {
+        flex: 1,
+        alignContent: 'center',
+        height: 50,
+        paddingLeft: 25,
+        fontSize: 18,
+        fontFamily: 'HelveticaNeue-Thin',
+        color: BLACK_TEXT_COLOR
+    },
+    icon: {
+        margin: 6,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 })
 
 export default AuthInputRow

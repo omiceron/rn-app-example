@@ -4,24 +4,24 @@ import { shape, func } from 'prop-types'
 import { LayoutAnimation } from 'react-native'
 
 class AuthScreen extends Component {
-  static propTypes = {
-    navigation: shape({
-      navigate: func.isRequired,
-    }),
-  }
+    static propTypes = {
+        navigation: shape({
+            navigate: func.isRequired
+        })
+    }
 
-  // TODO: delete unnecessary LA in loader
-  componentDidMount() {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-  }
+    // TODO: delete unnecessary LA in loader
+    componentDidMount() {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }
 
-  render() {
-    return <SignIn signUp={this.openSignUp} />
-  }
+    render() {
+        return <SignIn signUp={this.openSignUp} />
+    }
 
-  openSignUp = () => {
-    this.props.navigation.navigate('signUp')
-  }
+    openSignUp = () => {
+        this.props.navigation.navigate('signUp')
+    }
 }
 
 export default AuthScreen

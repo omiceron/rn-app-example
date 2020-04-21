@@ -6,34 +6,34 @@ import PropTypes from 'prop-types'
 import { UNDERLAY_COLOR, WHITE_BACKGROUND_COLOR } from '../../constants'
 
 class TouchableCard extends Component {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired,
-    onLongPress: PropTypes.func,
-    children: PropTypes.node.isRequired,
-  }
+    static propTypes = {
+        onPress: PropTypes.func.isRequired,
+        onLongPress: PropTypes.func,
+        children: PropTypes.node.isRequired
+    }
 
-  render() {
-    const { onPress, onLongPress, children, ...rest } = this.props
+    render() {
+        const { onPress, onLongPress, children, ...rest } = this.props
 
-    return (
-      <RectButton
-        style={styles.container}
-        underlayColor={UNDERLAY_COLOR}
-        onLongPress={onLongPress}
-        onPress={onPress}
-        activeOpacity={1}
-      >
-        <BasicCard {...rest}>{children}</BasicCard>
-      </RectButton>
-    )
-  }
+        return (
+            <RectButton
+                style={styles.container}
+                underlayColor={UNDERLAY_COLOR}
+                onLongPress={onLongPress}
+                onPress={onPress}
+                activeOpacity={1}
+            >
+                <BasicCard {...rest}>{children}</BasicCard>
+            </RectButton>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // TODO
-    // backgroundColor: WHITE_BACKGROUND_COLOR
-  },
+    container: {
+        // TODO
+        // backgroundColor: WHITE_BACKGROUND_COLOR
+    }
 })
 
 export default TouchableCard

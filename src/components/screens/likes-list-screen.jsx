@@ -9,46 +9,46 @@ import { FEED_STORE } from '../../constants'
 @inject(FEED_STORE)
 @observer
 class LikesListScreen extends Component {
-  static propTypes = {
-    feed: PropTypes.shape({
-      attachLocation: PropTypes.func.isRequired,
-      getPostLikes: PropTypes.func.isRequired,
-    }),
-    navigation: PropTypes.shape({
-      state: PropTypes.shape({
-        params: PropTypes.shape({
-          postId: PropTypes.string.isRequired,
+    static propTypes = {
+        feed: PropTypes.shape({
+            attachLocation: PropTypes.func.isRequired,
+            getPostLikes: PropTypes.func.isRequired
         }),
-      }),
-    }),
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Likes',
+        navigation: PropTypes.shape({
+            state: PropTypes.shape({
+                params: PropTypes.shape({
+                    postId: PropTypes.string.isRequired
+                })
+            })
+        })
     }
-  }
 
-  @observable likes = null
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Likes'
+        }
+    }
 
-  async componentDidMount() {
-    const { navigation, feed } = this.props
-    this.likes = await feed.getPostLikes(navigation.state.params.postId)
+    @observable likes = null
 
-    // TODO: ?
-    // const {attachLocation} = feed
-    // navigation.state.setParams({attachLocation})
-  }
+    async componentDidMount() {
+        const { navigation, feed } = this.props
+        this.likes = await feed.getPostLikes(navigation.state.params.postId)
 
-  render() {
-    if (!this.likes) return <Loader />
+        // TODO: ?
+        // const {attachLocation} = feed
+        // navigation.state.setParams({attachLocation})
+    }
 
-    return <LikesList openUserInfoScreen={this.openUserInfoScreen} likes={this.likes} />
-  }
+    render() {
+        if (!this.likes) return <Loader />
 
-  openUserInfoScreen = (userId) => {
-    this.props.navigation.push('userScreen', { userId })
-  }
+        return <LikesList openUserInfoScreen={this.openUserInfoScreen} likes={this.likes} />
+    }
+
+    openUserInfoScreen = (userId) => {
+        this.props.navigation.push('userScreen', { userId })
+    }
 }
 
 export default LikesListScreen

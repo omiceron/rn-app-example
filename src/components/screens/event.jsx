@@ -6,15 +6,15 @@ import { EVENTS_STORE } from '../../constants'
 @inject(EVENTS_STORE)
 @observer
 class EventScreen extends Component {
-  static propTypes = {}
+    static propTypes = {}
 
-  static navigationOptions = {
-    title: 'event',
-  }
+    static navigationOptions = {
+        title: 'event'
+    }
 
-  render() {
-    return <Event event={this.props.events.entities[this.props.navigation.state.params.uid]} />
-  }
+    render() {
+        return <Event event={this.props.events.entities[this.props.navigation.state.params.uid]} />
+    }
 }
 
 export default EventScreen

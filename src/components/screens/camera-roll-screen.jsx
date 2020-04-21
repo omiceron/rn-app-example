@@ -9,43 +9,45 @@ const NUMBER_OF_COLUMNS = 6
 
 @observer
 class CameraRollScreen extends Component {
-  static propTypes = {}
+    static propTypes = {}
 
-  @observable photos = null
-  @action setPhotos = (photos) => {
-    // if (photos.length % NUMBER_OF_COLUMNS) {
-    //   const delta = NUMBER_OF_COLUMNS -
-    // (photos.length - Math.floor(photos.length / NUMBER_OF_COLUMNS) * NUMBER_OF_COLUMNS)
-    //   photos = [...photos, ...Array.from({length: delta}, () => ({isDummy: true}))]
-    // }
-    this.photos = photos
-  }
+    @observable photos = null
+    @action setPhotos = (photos) => {
+        // if (photos.length % NUMBER_OF_COLUMNS) {
+        //   const delta = NUMBER_OF_COLUMNS -
+        // (photos.length - Math.floor(photos.length / NUMBER_OF_COLUMNS) * NUMBER_OF_COLUMNS)
+        //   photos = [...photos, ...Array.from({length: delta}, () => ({isDummy: true}))]
+        // }
+        this.photos = photos
+    }
 
-  async componentDidMount() {
-    const { assets } = await MediaLibrary.getAssetsAsync()
-    const photos = await Promise.all(assets.map((asset) => MediaLibrary.getAssetInfoAsync(asset)))
-    this.setPhotos(photos)
-  }
+    async componentDidMount() {
+        const { assets } = await MediaLibrary.getAssetsAsync()
+        const photos = await Promise.all(assets.map((asset) => MediaLibrary.getAssetInfoAsync(asset)))
+        this.setPhotos(photos)
+    }
 
-  render() {
-    if (!this.photos) return null
+    render() {
+        if (!this.photos) return null
 
-    return (
-      <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
-        <FlatList
-          horizontal={false}
-          numColumns={NUMBER_OF_COLUMNS}
-          keyExtractor={(item) => item.id}
-          data={toJS(this.photos)}
-          renderItem={({ item }) => (
-            <View style={{ width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-              {!item.isDummy ? <Image style={{ width: 50, height: 50 }} source={{ uri: item.localUri }} /> : null}
-            </View>
-          )}
-        />
-      </SafeAreaView>
-    )
-  }
+        return (
+            <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+                <FlatList
+                    horizontal={false}
+                    numColumns={NUMBER_OF_COLUMNS}
+                    keyExtractor={(item) => item.id}
+                    data={toJS(this.photos)}
+                    renderItem={({ item }) => (
+                        <View style={{ width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                            {!item.isDummy ? (
+                                <Image style={{ width: 50, height: 50 }} source={{ uri: item.localUri }} />
+                            ) : null}
+                        </View>
+                    )}
+                />
+            </SafeAreaView>
+        )
+    }
 }
 
 export default CameraRollScreen

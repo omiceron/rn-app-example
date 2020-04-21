@@ -11,33 +11,33 @@ import EmptyList from '../common/empty-list'
 @inject(FEED_STORE)
 @observer
 class FeedScreen extends Component {
-  static propTypes = {
-    feed: PropTypes.shape({
-      posts: PropTypes.array.isRequired,
-      loading: PropTypes.bool.isRequired,
-    }),
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Feed',
-      headerRight: () => <NavigationButton icon="ios-add" onPress={() => navigation.navigate('postForm')} />,
+    static propTypes = {
+        feed: PropTypes.shape({
+            posts: PropTypes.array.isRequired,
+            loading: PropTypes.bool.isRequired
+        })
     }
-  }
 
-  // handleOnLikeNumberPress = (postId) => {
-  //   this.props.navigation.push('likesList', {postId})
-  // }
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Feed',
+            headerRight: () => <NavigationButton icon="ios-add" onPress={() => navigation.navigate('postForm')} />
+        }
+    }
 
-  render() {
-    const { posts, loading, loaded } = this.props.feed
+    // handleOnLikeNumberPress = (postId) => {
+    //   this.props.navigation.push('likesList', {postId})
+    // }
 
-    if (!posts.length && (!loaded || loading)) return <Loader />
-    if (!posts.length) return <EmptyList title={'There are no posts yet...'} />
+    render() {
+        const { posts, loading, loaded } = this.props.feed
 
-    return <Feed />
-    // return <Feed onLikeNumberPress = {this.handleOnLikeNumberPress}/>
-  }
+        if (!posts.length && (!loaded || loading)) return <Loader />
+        if (!posts.length) return <EmptyList title={'There are no posts yet...'} />
+
+        return <Feed />
+        // return <Feed onLikeNumberPress = {this.handleOnLikeNumberPress}/>
+    }
 }
 
 export default FeedScreen

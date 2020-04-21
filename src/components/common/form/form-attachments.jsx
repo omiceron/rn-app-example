@@ -7,53 +7,53 @@ import AttachedImagesRow from '../attachments/attached-images-row'
 import AttachedLocation from '../../feed/attached-location'
 
 class FormAttachments extends Component {
-  static propTypes = {
-    // style: View.propTypes.style,
-    images: PropTypes.array,
-    location: PropTypes.string,
-  }
+    static propTypes = {
+        // style: View.propTypes.style,
+        images: PropTypes.array,
+        location: PropTypes.string
+    }
 
-  renderAttachedImagesRow = () => {
-    const { images } = this.props
+    renderAttachedImagesRow = () => {
+        const { images } = this.props
 
-    return (
-      <TableRow style={{ paddingHorizontal: 8 }}>
-        <AttachedImagesRow attachments={images} />
-      </TableRow>
-    )
-  }
+        return (
+            <TableRow style={{ paddingHorizontal: 8 }}>
+                <AttachedImagesRow attachments={images} />
+            </TableRow>
+        )
+    }
 
-  renderAttachedLocation = () => {
-    const { location } = this.props
+    renderAttachedLocation = () => {
+        const { location } = this.props
 
-    return (
-      <TableRow>
-        <AttachedLocation disableIcon location={location} />
-      </TableRow>
-    )
-  }
+        return (
+            <TableRow>
+                <AttachedLocation disableIcon location={location} />
+            </TableRow>
+        )
+    }
 
-  render() {
-    const { images, location } = this.props
+    render() {
+        const { images, location } = this.props
 
-    return (
-      <React.Fragment>
-        {images.length ? this.renderAttachedImagesRow() : null}
-        {location ? this.renderAttachedLocation() : null}
-      </React.Fragment>
-    )
-  }
+        return (
+            <React.Fragment>
+                {images.length ? this.renderAttachedImagesRow() : null}
+                {location ? this.renderAttachedLocation() : null}
+            </React.Fragment>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '100',
-    color: BLACK_TEXT_COLOR,
-  },
+    container: {
+        flex: 1
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: '100',
+        color: BLACK_TEXT_COLOR
+    }
 })
 
 export default FormAttachments

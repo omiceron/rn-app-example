@@ -12,26 +12,26 @@ import { SafeAreaView, View, Image, FlatList } from 'react-native'
 @inject(AVATAR_STORE)
 @observer
 class UserPhotoScreen extends Component {
-  static propTypes = {
-    avatar: PropTypes.shape({
-      takePhoto: PropTypes.func.isRequired,
-    }),
-  }
+    static propTypes = {
+        avatar: PropTypes.shape({
+            takePhoto: PropTypes.func.isRequired
+        })
+    }
 
-  static navigationOptions = ({ navigation }) => ({
-    headerShown: false,
-    headerStyle: {
-      backgroundColor: WARNING_COLOR,
-    },
-  })
+    static navigationOptions = ({ navigation }) => ({
+        headerShown: false,
+        headerStyle: {
+            backgroundColor: WARNING_COLOR
+        }
+    })
 
-  // componentDidMount() {
-  //   ImagePicker.launchImageLibraryAsync()
-  // }
+    // componentDidMount() {
+    //   ImagePicker.launchImageLibraryAsync()
+    // }
 
-  render() {
-    return <Photo photoHandler={this.props.avatar.takePhoto} />
-  }
+    render() {
+        return <Photo photoHandler={this.props.avatar.takePhoto} />
+    }
 }
 
 export default UserPhotoScreen

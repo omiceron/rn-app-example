@@ -7,30 +7,30 @@ import LinedSeparator from '../separator/lined-separator'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 
 class Form extends Component {
-  static propTypes = {
-    // style: View.propTypes.style,
-    children: PropTypes.node.isRequired,
-    scrollable: PropTypes.bool,
-  }
+    static propTypes = {
+        // style: View.propTypes.style,
+        children: PropTypes.node.isRequired,
+        scrollable: PropTypes.bool
+    }
 
-  render() {
-    const { children, style, keyboardHeight, ...rest } = this.props
+    render() {
+        const { children, style, keyboardHeight, ...rest } = this.props
 
-    return (
-      <SafeAreaView style={[styles.container, style]}>
-        <BasicList {...rest} style={[styles.container]}>
-          {children}
-        </BasicList>
-        <View style={{ height: keyboardHeight - (isIphoneX() ? getBottomSpace() : 0) }} />
-      </SafeAreaView>
-    )
-  }
+        return (
+            <SafeAreaView style={[styles.container, style]}>
+                <BasicList {...rest} style={[styles.container]}>
+                    {children}
+                </BasicList>
+                <View style={{ height: keyboardHeight - (isIphoneX() ? getBottomSpace() : 0) }} />
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+    container: {
+        flex: 1
+    }
 })
 
 export default Form
