@@ -19,7 +19,6 @@
         "husky": "^4.2.5",
         "jest-expo": "^37.0.0",
         "lorem-ipsum": "^1.0.6",
-        "pre-commit": "^1.2.2",
         "prettier": "2.0.5",
         "pretty-quick": "^2.0.1",
         "react-test-renderer": "16.3.1"
@@ -32,14 +31,15 @@
         "ios": "expo start --ios",
         "test": "jest",
         "flow": "flow",
-        "pretty": "prettier --write \"./**/*.{js,jsx,json}\" && git add .",
-        "pre-commit": "pretty-quick --staged"
+        "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
+        "pre-commit": "pretty-quick --staged",
+        "post-commit": "git update-index -g"
     },
-    "pre-commit": {
-        "silent": true,
-        "run": [
-            "pre-commit"
-        ]
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run pre-commit",
+            "post-commit": "npm run post-commit"
+        }
     },
     "jest": {
         "preset": "jest-expo",
