@@ -1,6 +1,7 @@
 {
   "expo": {
     "version": "0.3.1",
+    "sdkVersion": "37.0.0",
     "name": "Meowchat",
     "slug": "meowchat",
     "privacy": "public",
