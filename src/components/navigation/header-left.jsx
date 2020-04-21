@@ -1,4 +1,4 @@
-import React, {Component, PureComponent} from 'react'
+import React, {PureComponent} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {View, TouchableOpacity, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'

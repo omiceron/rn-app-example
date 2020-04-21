@@ -51,13 +51,29 @@ class AuthStore extends BasicStore {
     @observable signUpPassword = ''
     @observable firstName = ''
 
-    @action setUser = (user) => (this.user = user)
-    @action setEmail = (email) => (this.email = email)
-    @action setPassword = (password) => (this.password = password)
+    @action setUser = (user) => {
+        this.user = user
+    }
 
-    @action setSignUpEmail = (email) => (this.signUpEmail = email)
-    @action setSignUpPassword = (password) => (this.signUpPassword = password)
-    @action setFirstName = (firstName) => (this.firstName = firstName)
+    @action setEmail = (email) => {
+        this.email = email
+    }
+
+    @action setPassword = (password) => {
+        this.password = password
+    }
+
+    @action setSignUpEmail = (email) => {
+        this.signUpEmail = email
+    }
+
+    @action setSignUpPassword = (password) => {
+        this.signUpPassword = password
+    }
+
+    @action setFirstName = (firstName) => {
+        this.firstName = firstName
+    }
 
     @computed
     get isEmailValid() {

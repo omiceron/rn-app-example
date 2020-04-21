@@ -1,5 +1,4 @@
-import React from 'react'
-import {createSwitchNavigator, getActiveChildNavigationOptions, createAppContainer} from 'react-navigation'
+import {createAppContainer, createSwitchNavigator, getActiveChildNavigationOptions} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 import AuthScreen from '../components/screens/auth-screen'
@@ -12,7 +11,6 @@ import ChatScreen from '../components/screens/chat-screen'
 import UserInfo from '../components/screens/user-screen'
 import UserAvatarsScreen from '../components/screens/user-avatars-screen'
 import SettingsScreen from '../components/screens/settings-screen'
-import Icon from 'react-native-vector-icons/Ionicons'
 import FeedScreen from '../components/screens/feed-screen'
 import PostFormScreen from '../components/screens/post-form-screen'
 import LocationFormScreen from '../components/screens/location-form-screen'
@@ -23,20 +21,11 @@ import MapScreen from '../components/screens/map-screen'
 import {
     ACTIVE_TINT_COLOR,
     DEFAULT_HEADER_COLOR,
-    WHITE_TEXT_COLOR,
     INACTIVE_TEXT_COLOR,
-    WHITE_BACKGROUND_COLOR
+    WHITE_BACKGROUND_COLOR,
+    WHITE_TEXT_COLOR
 } from '../constants'
-
-const renderTabBarIcon = (name) => ({tintColor, focused}) => (
-    <Icon
-        name={`ios-${name}`}
-        // TODO: make custom font
-        // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
-        size={30}
-        style={{color: tintColor}}
-    />
-)
+import {createTabBarIcon} from './create-tab-bar-icon'
 
 const commonScreens = {
     postScreen: {
@@ -118,7 +107,7 @@ const createCommonTabRouteConfig = (mainScreen, icon) => ({
     navigationOptions: ({navigation, screenProps}) => ({
         ...getActiveChildNavigationOptions(navigation, screenProps),
         headerShown: false,
-        tabBarIcon: renderTabBarIcon(icon)
+        tabBarIcon: createTabBarIcon(icon)
     })
 })
 
@@ -130,7 +119,7 @@ const TabNavigator = createBottomTabNavigator(
         settings: {
             screen: SettingsScreen,
             navigationOptions: {
-                tabBarIcon: renderTabBarIcon('settings')
+                tabBarIcon: createTabBarIcon('settings')
             }
         }
     },
