@@ -27,4 +27,5 @@ const styles = StyleSheet.create({
         padding: 0
     }
 })
+
 export default AuthRow
