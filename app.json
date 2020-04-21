@@ -1,23 +1,22 @@
 {
-  "expo": {
-    "version": "0.3.1",
-    "name": "Meowchat",
-    "slug": "meowchat",
-    "privacy": "public",
-    "orientation": "portrait",
-    "facebookScheme": "fb1943342692364166",
-    "facebookAppId": "1943342692364166",
-    "facebookDisplayName": "React Native Auth",
-    "icon": "./assets/images/icon.png",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "backgroundColor": "#fffffd"
-    },
-    "platforms": [
-      "ios"
-    ],
-    "ios": {
-      "bundleIdentifier": "com.omiceron.meowchat"
+    "expo": {
+        "version": "0.3.1",
+        "sdkVersion": "37.0.0",
+        "name": "Meowchat",
+        "slug": "meowchat",
+        "privacy": "public",
+        "orientation": "portrait",
+        "facebookScheme": "fb1943342692364166",
+        "facebookAppId": "1943342692364166",
+        "facebookDisplayName": "React Native Auth",
+        "icon": "./assets/images/icon.png",
+        "splash": {
+            "image": "./assets/images/splash.png",
+            "backgroundColor": "#fffffd"
+        },
+        "platforms": ["ios"],
+        "ios": {
+            "bundleIdentifier": "com.omiceron.meowchat"
+        }
     }
-  }
 }

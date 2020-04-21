@@ -17,12 +17,12 @@ export const apiKey = 'AIzaSyCCtMGA9FTNVds_QTkB1oRTlqF2u07MHuk'
 export const messagingSenderId = '649150663252'
 
 export const config = {
-  apiKey,
-  authDomain: `${appName}.firebaseapp.com`,
-  databaseURL: `https://${appName}.firebaseio.com`,
-  projectId: appName,
-  storageBucket: `gs://${appName}.appspot.com`,
-  messagingSenderId
+    apiKey,
+    authDomain: `${appName}.firebaseapp.com`,
+    databaseURL: `https://${appName}.firebaseio.com`,
+    projectId: appName,
+    storageBucket: `gs://${appName}.appspot.com`,
+    messagingSenderId
 }
 
 firebase.initializeApp(config)

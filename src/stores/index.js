@@ -6,16 +6,17 @@ import UserAvatarStore from './user-avatar'
 import NavigationStore from './navigation'
 import PeopleStore from './people'
 import FeedStore from './feed'
-import MessengerStore from "./messenger"
+import MessengerStore from './messenger'
 import {
-  AUTH_STORE,
-  KEYBOARD_STORE,
-  NAVIGATION_STORE,
-  AVATAR_STORE,
-  MESSENGER_STORE,
-  PEOPLE_STORE,
-  CURRENT_USER_STORE,
-  FEED_STORE, ATTACHMENTS_STORE
+    AUTH_STORE,
+    KEYBOARD_STORE,
+    NAVIGATION_STORE,
+    AVATAR_STORE,
+    MESSENGER_STORE,
+    PEOPLE_STORE,
+    CURRENT_USER_STORE,
+    FEED_STORE,
+    ATTACHMENTS_STORE
 } from '../constants'
 import AttachmentsStore from './attachments'
 
