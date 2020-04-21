@@ -1,10 +1,10 @@
-import React, { PureComponent, Component } from 'react'
-import { View, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native'
-import { reaction } from 'mobx'
-import { observer } from 'mobx-react'
+import React, {PureComponent, Component} from 'react'
+import {View, StyleSheet, Animated, TouchableWithoutFeedback} from 'react-native'
+import {reaction} from 'mobx'
+import {observer} from 'mobx-react'
 import Icon from '../common/meowchat-icon'
 import PropTypes from 'prop-types'
-import { INACTIVE_TEXT_COLOR } from '../../constants'
+import {INACTIVE_TEXT_COLOR} from '../../constants'
 
 @observer
 class Like extends Component {
@@ -41,7 +41,7 @@ class Like extends Component {
     })
 
     render() {
-        const { activated, style, onPress } = this.props
+        const {activated, style, onPress} = this.props
 
         const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
@@ -52,7 +52,7 @@ class Like extends Component {
                         color={activated ? '#f40003' : INACTIVE_TEXT_COLOR}
                         size={30}
                         name={`cat${activated ? '' : '-outline'}`}
-                        style={{ transform: [{ scale: this.interpolation }] }}
+                        style={{transform: [{scale: this.interpolation}]}}
                     />
                 </View>
             </TouchableWithoutFeedback>

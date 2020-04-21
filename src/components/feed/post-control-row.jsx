@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import Like from './like'
 import LikesCounter from './likes-counter'
 import PropTypes from 'prop-types'
@@ -24,7 +24,7 @@ class PostControlRow extends Component {
 
     // TODO: Decide how to use this - with injection and postId or with props
     render() {
-        const { isLiked, likesNumber, onLikePress, onCounterPress } = this.props
+        const {isLiked, likesNumber, onLikePress, onCounterPress} = this.props
         return (
             <View style={styles.container}>
                 <Like style={styles.button} onPress={onLikePress} activated={isLiked} />

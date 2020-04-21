@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Animated, Easing } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, View, Animated, Easing} from 'react-native'
 
 const timing = 4000
 
@@ -39,7 +39,7 @@ class Loader extends Component {
         return (
             <View style={styles.container}>
                 <Animated.Image
-                    style={{ width: 227, height: 200, transform: [{ rotate: spin }] }}
+                    style={{width: 227, height: 200, transform: [{rotate: spin}]}}
                     source={require('../../../assets/images/reactjs.png')}
                 />
             </View>

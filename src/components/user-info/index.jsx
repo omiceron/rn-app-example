@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Text, ActivityIndicator, StyleSheet, ScrollView, View } from 'react-native'
-import { observable } from 'mobx'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {Text, ActivityIndicator, StyleSheet, ScrollView, View} from 'react-native'
+import {observable} from 'mobx'
+import {observer, inject} from 'mobx-react'
 import Avatar from '../common/touchable-avatar'
 import PropTypes from 'prop-types'
 import SegmentedCard from '../common/segmented-card'
@@ -16,7 +16,7 @@ import {
     BLACK_TEXT_COLOR,
     WHITE_BACKGROUND_COLOR
 } from '../../constants'
-import { getDate, getTime } from '../../stores/utils'
+import {getDate, getTime} from '../../stores/utils'
 import Table from '../common/table/table'
 import List from '../common/list/list'
 
@@ -54,9 +54,9 @@ class UserInfo extends Component {
         </TableRow>
     )
 
-    renderPostsList = ({ items, emptyBlockTitle }) =>
+    renderPostsList = ({items, emptyBlockTitle}) =>
         items.length ? (
-            items.map(({ postId, title }) => (
+            items.map(({postId, title}) => (
                 <TableRow key={postId} title={title} onPress={this.handleOpenPostScreen(postId)} />
             ))
         ) : (
@@ -66,9 +66,9 @@ class UserInfo extends Component {
     renderOnlineStatus = () => <Text style={[styles.text, styles.online]}>online</Text>
 
     renderLastSeenStatus = () => {
-        const { online: timestamp } = this.props.user
+        const {online: timestamp} = this.props.user
 
-        const date = getDate(timestamp, { short: true })
+        const date = getDate(timestamp, {short: true})
         const time = getTime(timestamp)
 
         return (
@@ -82,7 +82,7 @@ class UserInfo extends Component {
         typeof this.props.user.online === 'number' ? this.renderLastSeenStatus() : this.renderOnlineStatus()
 
     renderUserCard = () => {
-        const { lastName, firstName, online } = this.props.user
+        const {lastName, firstName, online} = this.props.user
 
         return (
             <SegmentedCard mainContainerStyle={styles.textView} LeftComponent={this.renderAvatar}>
@@ -98,11 +98,11 @@ class UserInfo extends Component {
     }
 
     render() {
-        const { lastName, firstName, userInfo, email, avatar, uid, online } = this.props.user
+        const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
         const {
             likes,
             posts,
-            props: { openChatWithUser }
+            props: {openChatWithUser}
         } = this
 
         const sections = [
@@ -144,7 +144,7 @@ class UserInfo extends Component {
                     {
                         name: 'user-liked-posts',
                         customComponent: likes ? this.renderPostsList : this.renderLoadingRow,
-                        props: { items: likes, emptyBlockTitle: 'User have not liked any posts' }
+                        props: {items: likes, emptyBlockTitle: 'User have not liked any posts'}
                     }
                 ]
             },
@@ -154,7 +154,7 @@ class UserInfo extends Component {
                     {
                         name: 'user-posts',
                         customComponent: posts ? this.renderPostsList : this.renderLoadingRow,
-                        props: { items: posts, emptyBlockTitle: 'User have no posts' }
+                        props: {items: posts, emptyBlockTitle: 'User have no posts'}
                     }
                 ]
             }
@@ -164,11 +164,11 @@ class UserInfo extends Component {
     }
 
     render2() {
-        const { lastName, firstName, userInfo, email, avatar, uid, online } = this.props.user
+        const {lastName, firstName, userInfo, email, avatar, uid, online} = this.props.user
         const {
             likes,
             posts,
-            props: { openChatWithUser }
+            props: {openChatWithUser}
         } = this
 
         return (

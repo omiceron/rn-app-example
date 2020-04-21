@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
-import { WHITE_TEXT_COLOR } from '../../constants'
+import {WHITE_TEXT_COLOR} from '../../constants'
 
 class NavigationButton extends Component {
     static propTypes = {
@@ -20,7 +20,7 @@ class NavigationButton extends Component {
     }
 
     render() {
-        const { onPress, title, icon } = this.props
+        const {onPress, title, icon} = this.props
         const renderIcon = () => <Icon color={WHITE_TEXT_COLOR} size={40} name={icon} />
         const renderTitle = () => <Text style={styles.text}>{title}</Text>
 

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {observer, inject} from 'mobx-react'
 import PeopleList from '../people/people-list'
 import Loader from '../common/loader'
-import { PEOPLE_STORE } from '../../constants'
-import { SafeAreaView, ActivityIndicator } from 'react-native'
+import {PEOPLE_STORE} from '../../constants'
+import {SafeAreaView, ActivityIndicator} from 'react-native'
 
 @inject(PEOPLE_STORE)
 @observer
@@ -14,7 +14,7 @@ class PeopleListScreen extends Component {
 
     // TODO: loading behavior must depend on AsyncStorage
     render() {
-        const { people } = this.props
+        const {people} = this.props
         if (!people.size) return <Loader />
         // if (people.loading) return <Loader/>
 
@@ -40,15 +40,15 @@ class PeopleListScreen extends Component {
     // TODO: chatId?
     openChatScreen = (userId) => {
         const user = this.props.people.getUser(userId)
-        this.props.navigation.push('chatScreen', { user, userId })
+        this.props.navigation.push('chatScreen', {user, userId})
     }
 
     openUserInfoScreen = (userId) => {
-        this.props.navigation.push('userScreen', { userId })
+        this.props.navigation.push('userScreen', {userId})
     }
 
     getPhoto = (userId) => {
-        this.props.navigation.navigate('personPhoto', { userId })
+        this.props.navigation.navigate('personPhoto', {userId})
     }
 }
 

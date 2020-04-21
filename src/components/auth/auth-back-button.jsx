@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
-import { inject, observer } from 'mobx-react'
-import { HIT_SLOP, NAVIGATION_STORE, BACK_BUTTON_HEIGHT, WHITE_TEXT_COLOR } from '../../constants'
+import {inject, observer} from 'mobx-react'
+import {HIT_SLOP, NAVIGATION_STORE, BACK_BUTTON_HEIGHT, WHITE_TEXT_COLOR} from '../../constants'
 
 @inject(NAVIGATION_STORE)
 @observer
@@ -17,8 +17,8 @@ class AuthBackButton extends Component {
     render() {
         return (
             <View style={styles.backButton}>
-                <TouchableOpacity style={{ width: 30 }} hitSlop={HIT_SLOP} onPress={this.props.navigation.goBack}>
-                    <Icon style={{ lineHeight: 37 }} name="ios-close" size={50} color={WHITE_TEXT_COLOR} />
+                <TouchableOpacity style={{width: 30}} hitSlop={HIT_SLOP} onPress={this.props.navigation.goBack}>
+                    <Icon style={{lineHeight: 37}} name="ios-close" size={50} color={WHITE_TEXT_COLOR} />
                 </TouchableOpacity>
             </View>
         )

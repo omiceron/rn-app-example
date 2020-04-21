@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Modal, ActivityIndicator, Image } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, Modal, ActivityIndicator, Image} from 'react-native'
 import Photo from '../common/photo'
-import { observer, inject } from 'mobx-react'
-import { observable, action } from 'mobx'
-import { PEOPLE_STORE } from '../../constants'
+import {observer, inject} from 'mobx-react'
+import {observable, action} from 'mobx'
+import {PEOPLE_STORE} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(PEOPLE_STORE)
@@ -19,7 +19,7 @@ class PersonPhoto extends Component {
     renderPreview() {
         return (
             <View style={styles.container}>
-                <Image style={styles.preview} source={{ uri: this.uri }} />
+                <Image style={styles.preview} source={{uri: this.uri}} />
                 <Modal transparent key="loader">
                     <View style={styles.modal}>
                         <ActivityIndicator size="large" />
@@ -35,8 +35,8 @@ class PersonPhoto extends Component {
         return <Photo photoHandler={this.getPhoto.bind(this)} />
     }
 
-    async getPhoto({ uri }) {
-        const { userId, people } = this.props
+    async getPhoto({uri}) {
+        const {userId, people} = this.props
 
         this.setUri(uri)
 

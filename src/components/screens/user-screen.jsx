@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import UserInfo from '../user-info'
-import { inject, observer } from 'mobx-react'
-import { PEOPLE_STORE } from '../../constants'
-import { observable } from 'mobx'
+import {inject, observer} from 'mobx-react'
+import {PEOPLE_STORE} from '../../constants'
+import {observable} from 'mobx'
 import Loader from '../common/loader'
 
 @inject(PEOPLE_STORE)
 @observer
 class UserScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({navigation}) => ({
         title: 'Info'
     })
 
     @observable user = null
 
     async componentDidMount() {
-        const { userId } = this.props.navigation.state.params
+        const {userId} = this.props.navigation.state.params
         this.user = await this.props.people.getUserGreedily(userId)
     }
 
@@ -33,18 +33,18 @@ class UserScreen extends Component {
     }
 
     openPostScreen = (postId) => {
-        this.props.navigation.push('postScreen', { postId })
+        this.props.navigation.push('postScreen', {postId})
     }
 
     // TODO: remove user parameter
     openChatWithUser = () => {
-        const { userId } = this.props.navigation.state.params
-        this.props.navigation.push('chatScreen', { user: this.user, userId })
+        const {userId} = this.props.navigation.state.params
+        this.props.navigation.push('chatScreen', {user: this.user, userId})
     }
 
     openUserAvatarsScreen = () => {
-        const { userId } = this.props.navigation.state.params
-        this.props.navigation.navigate('userAvatars', { userId })
+        const {userId} = this.props.navigation.state.params
+        this.props.navigation.navigate('userAvatars', {userId})
     }
 }
 

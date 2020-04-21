@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import { observer, inject } from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import LikesList from '../feed/likes-list'
-import { observable } from 'mobx'
+import {observable} from 'mobx'
 import Loader from '../common/loader'
-import { FEED_STORE } from '../../constants'
+import {FEED_STORE} from '../../constants'
 
 @inject(FEED_STORE)
 @observer
@@ -23,7 +23,7 @@ class LikesListScreen extends Component {
         })
     }
 
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({navigation}) => {
         return {
             title: 'Likes'
         }
@@ -32,7 +32,7 @@ class LikesListScreen extends Component {
     @observable likes = null
 
     async componentDidMount() {
-        const { navigation, feed } = this.props
+        const {navigation, feed} = this.props
         this.likes = await feed.getPostLikes(navigation.state.params.postId)
 
         // TODO: ?
@@ -47,7 +47,7 @@ class LikesListScreen extends Component {
     }
 
     openUserInfoScreen = (userId) => {
-        this.props.navigation.push('userScreen', { userId })
+        this.props.navigation.push('userScreen', {userId})
     }
 }
 

@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
-import { BLACK_TEXT_COLOR } from '../../../constants'
+import {BLACK_TEXT_COLOR} from '../../../constants'
 import TableRow from '../table/table-row'
 import AttachedImagesRow from '../attachments/attached-images-row'
 import AttachedLocation from '../../feed/attached-location'
@@ -14,17 +14,17 @@ class FormAttachments extends Component {
     }
 
     renderAttachedImagesRow = () => {
-        const { images } = this.props
+        const {images} = this.props
 
         return (
-            <TableRow style={{ paddingHorizontal: 8 }}>
+            <TableRow style={{paddingHorizontal: 8}}>
                 <AttachedImagesRow attachments={images} />
             </TableRow>
         )
     }
 
     renderAttachedLocation = () => {
-        const { location } = this.props
+        const {location} = this.props
 
         return (
             <TableRow>
@@ -34,7 +34,7 @@ class FormAttachments extends Component {
     }
 
     render() {
-        const { images, location } = this.props
+        const {images, location} = this.props
 
         return (
             <React.Fragment>

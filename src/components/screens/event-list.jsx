@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { observer, inject } from 'mobx-react'
-import { View, StyleSheet, StatusBar } from 'react-native'
+import React, {Component} from 'react'
+import {observer, inject} from 'mobx-react'
+import {View, StyleSheet, StatusBar} from 'react-native'
 import EventList from '../events/event-list'
 import Loader from '../common/loader'
 // import Loader from '../common/initial-loader'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import { EVENTS_STORE } from '../../constants'
+import {EVENTS_STORE} from '../../constants'
 
 @inject(EVENTS_STORE)
 @observer
@@ -28,7 +28,7 @@ class EventListScreen extends Component {
     }
 
     render() {
-        const { events } = this.props
+        const {events} = this.props
         // return this.getLoader()
         if (events.loading) return this.getLoader()
         // return <EventList/>
@@ -39,8 +39,8 @@ class EventListScreen extends Component {
         return <Loader />
     }
 
-    handleEventPress = ({ uid, where }) => {
-        this.props.navigation.navigate('event', { uid, where })
+    handleEventPress = ({uid, where}) => {
+        this.props.navigation.navigate('event', {uid, where})
     }
 }
 

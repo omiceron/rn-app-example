@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
+import React, {Component} from 'react'
+import {inject, observer} from 'mobx-react'
 import Event from '../events/event'
-import { EVENTS_STORE } from '../../constants'
+import {EVENTS_STORE} from '../../constants'
 
 @inject(EVENTS_STORE)
 @observer

@@ -1,18 +1,9 @@
-import React, { Component, PureComponent } from 'react'
-import {
-    Text,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    Animated,
-    Easing,
-    Image
-} from 'react-native'
+import React, {Component, PureComponent} from 'react'
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing, Image} from 'react-native'
 import PropTypes from 'prop-types'
-import { inject, observer } from 'mobx-react'
-import { computed } from 'mobx'
-import { FEED_STORE, HIT_SLOP } from '../../constants/index'
+import {inject, observer} from 'mobx-react'
+import {computed} from 'mobx'
+import {FEED_STORE, HIT_SLOP} from '../../constants/index'
 import {
     NAVIGATION_STORE,
     WHITE_BACKGROUND_COLOR,
@@ -52,11 +43,11 @@ class PostCard extends Component {
 
     render() {
         console.log('render')
-        const { title, text, location, uid, navigation, feed, coords, attachments } = this.props
+        const {title, text, location, uid, navigation, feed, coords, attachments} = this.props
 
         return (
             <View style={[styles.container]}>
-                <TouchableOpacity onPress={() => navigation.navigate('postScreen', { postId: uid })}>
+                <TouchableOpacity onPress={() => navigation.navigate('postScreen', {postId: uid})}>
                     <View style={styles.row}>
                         <Text numberOfLines={1} style={styles.title}>
                             {title}
@@ -77,8 +68,8 @@ class PostCard extends Component {
                 {location && (
                     <AttachedLocation
                         location={location}
-                        style={{ marginBottom: 8 }}
-                        onPress={() => navigation.navigate('mapScreen', { coords })}
+                        style={{marginBottom: 8}}
+                        onPress={() => navigation.navigate('mapScreen', {coords})}
                     />
                 )}
 
@@ -88,7 +79,7 @@ class PostCard extends Component {
                     isLiked={this.isLiked}
                     likesNumber={this.likesNumber}
                     onLikePress={this.setLike}
-                    onCounterPress={() => navigation.push('likesList', { postId: uid })}
+                    onCounterPress={() => navigation.push('likesList', {postId: uid})}
                 />
             </View>
         )

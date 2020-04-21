@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, FlatList} from 'react-native'
 import PropTypes from 'prop-types'
 import AttachedImage from './attached-image'
-import { IMAGE_SEPARATOR_SIZE } from '../../../constants'
+import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
 
 class AttachedImagesRow extends Component {
     static propTypes = {
         attachments: PropTypes.array.isRequired
     }
 
-    renderItem = ({ item }) => <AttachedImage {...item} height={50} width={50} />
+    renderItem = ({item}) => <AttachedImage {...item} height={50} width={50} />
 
-    renderSeparator = () => <View style={{ width: IMAGE_SEPARATOR_SIZE }} />
+    renderSeparator = () => <View style={{width: IMAGE_SEPARATOR_SIZE}} />
 
     render() {
         return (

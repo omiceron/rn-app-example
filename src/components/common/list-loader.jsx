@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_BACKGROUND_COLOR } from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR} from '../../constants'
 
 class ListLoader extends Component {
     static propTypes = {

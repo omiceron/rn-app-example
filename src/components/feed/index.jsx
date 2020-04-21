@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { FlatList, View, StyleSheet, SafeAreaView, LayoutAnimation } from 'react-native'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {FlatList, View, StyleSheet, SafeAreaView, LayoutAnimation} from 'react-native'
+import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import PostCard from './post-card'
-import { FEED_STORE, INACTIVE_BACKGROUND_COLOR } from '../../constants'
-import { reaction } from 'mobx'
+import {FEED_STORE, INACTIVE_BACKGROUND_COLOR} from '../../constants'
+import {reaction} from 'mobx'
 import ListLoader from '../common/list-loader'
 
 @inject(FEED_STORE)
@@ -31,10 +31,10 @@ class Feed extends Component {
         )
     }
 
-    renderItem = ({ item: { likes, ...props } }) => <PostCard {...props} />
+    renderItem = ({item: {likes, ...props}}) => <PostCard {...props} />
 
     render() {
-        const { feed } = this.props
+        const {feed} = this.props
         // const {onLikeNumberPress} = this.props
 
         // const ItemSeparatorComponent = () => <View style = {{height: 4}}/>

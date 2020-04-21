@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
 
 class BasicCard extends Component {
@@ -9,7 +9,7 @@ class BasicCard extends Component {
     }
 
     render() {
-        const { children, style, ...rest } = this.props
+        const {children, style, ...rest} = this.props
         return (
             <View {...rest} style={[styles.container, style]}>
                 {children}

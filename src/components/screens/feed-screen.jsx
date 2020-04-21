@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {observer, inject} from 'mobx-react'
 import Feed from '../feed/'
-import { FEED_STORE } from '../../constants/index'
+import {FEED_STORE} from '../../constants/index'
 import Loader from '../common/loader'
 import NavigationButton from '../navigation/navigation-button'
 import PropTypes from 'prop-types'
-import { DEFAULT_HEADER_COLOR } from '../../constants'
+import {DEFAULT_HEADER_COLOR} from '../../constants'
 import EmptyList from '../common/empty-list'
 
 @inject(FEED_STORE)
@@ -18,7 +18,7 @@ class FeedScreen extends Component {
         })
     }
 
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({navigation}) => {
         return {
             title: 'Feed',
             headerRight: () => <NavigationButton icon="ios-add" onPress={() => navigation.navigate('postForm')} />
@@ -30,7 +30,7 @@ class FeedScreen extends Component {
     // }
 
     render() {
-        const { posts, loading, loaded } = this.props.feed
+        const {posts, loading, loaded} = this.props.feed
 
         if (!posts.length && (!loaded || loading)) return <Loader />
         if (!posts.length) return <EmptyList title={'There are no posts yet...'} />

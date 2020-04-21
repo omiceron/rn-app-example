@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native'
-import { array, string, func, shape, objectOf, number } from 'prop-types'
+import React, {Component} from 'react'
+import {StyleSheet, FlatList, SafeAreaView, View} from 'react-native'
+import {array, string, func, shape, objectOf, number} from 'prop-types'
 import PersonCard from '../people/person-card'
-import { INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR } from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import LinedSeparator from '../common/separator/lined-separator'
 
 class LikesList extends Component {
@@ -11,7 +11,7 @@ class LikesList extends Component {
         likes: array.isRequired
     }
 
-    renderLike = ({ item }) => {
+    renderLike = ({item}) => {
         return <PersonCard onPress={this.props.openUserInfoScreen.bind(null, item.user.uid)} user={item.user} />
     }
 
@@ -19,7 +19,7 @@ class LikesList extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
-                    contentContainerStyle={{ backgroundColor: WHITE_BACKGROUND_COLOR }}
+                    contentContainerStyle={{backgroundColor: WHITE_BACKGROUND_COLOR}}
                     ItemSeparatorComponent={() => <LinedSeparator style={styles.separator} />}
                     data={this.props.likes}
                     renderItem={this.renderLike}

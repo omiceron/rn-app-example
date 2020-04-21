@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, View, Text} from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_TEXT_COLOR, TABLE_VIEW_BORDER_COLOR, WHITE_BACKGROUND_COLOR } from '../../../constants'
+import {INACTIVE_TEXT_COLOR, TABLE_VIEW_BORDER_COLOR, WHITE_BACKGROUND_COLOR} from '../../../constants'
 import LinedSeparator from '../separator/lined-separator'
 import BasicList from '../grid/basic-list'
 import TableRow from './table-row'
@@ -14,19 +14,19 @@ class TableBlock extends Component {
     }
 
     renderHint = () => (
-        <View style={{ padding: 8 }}>
+        <View style={{padding: 8}}>
             <Text style={[styles.text, styles.hint]}>{this.props.hint}</Text>
         </View>
     )
 
     renderHeader = () => (
-        <View style={{ padding: 8 }}>
+        <View style={{padding: 8}}>
             <Text style={[styles.text, styles.header]}>{this.props.header}</Text>
         </View>
     )
 
     render() {
-        const { style, children, hint, header, emptyBlockTitle } = this.props
+        const {style, children, hint, header, emptyBlockTitle} = this.props
         const count = React.Children.count(children)
 
         return (

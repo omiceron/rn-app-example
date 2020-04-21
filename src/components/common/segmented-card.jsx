@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import TouchableCard from './touchable-card'
 import BasicCard from './basic-card'
 import PropTypes from 'prop-types'
@@ -12,7 +12,7 @@ class SegmentedCard extends Component {
     }
 
     render() {
-        const { LeftComponent, RightComponent, mainContainerStyle, ...rest } = this.props
+        const {LeftComponent, RightComponent, mainContainerStyle, ...rest} = this.props
 
         const left = LeftComponent && (
             <View style={styles.leftSegmentView}>

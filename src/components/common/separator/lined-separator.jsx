@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 import BasicSeparator from './basic-separator'
-import { SEPARATOR_DEFAULT_MARGIN, SEPARATOR_LINE_COLOR } from '../../../constants'
+import {SEPARATOR_DEFAULT_MARGIN, SEPARATOR_LINE_COLOR} from '../../../constants'
 
 class LinedSeparator extends Component {
     render() {
-        const { style, noMargins, vertical, ...rest } = this.props
-        const { container, horizontalIndents, verticalIndents } = styles
+        const {style, noMargins, vertical, ...rest} = this.props
+        const {container, horizontalIndents, verticalIndents} = styles
 
         const calculatedStyle = [!noMargins && (vertical ? verticalIndents : horizontalIndents)]
 

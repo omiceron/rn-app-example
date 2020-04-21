@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react'
-import { StyleSheet, SectionList, Text, View, FlatList } from 'react-native'
+import React, {Component, Fragment} from 'react'
+import {StyleSheet, SectionList, Text, View, FlatList} from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../../../constants'
+import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../../constants'
 import BasicSeparator from '../separator/basic-separator'
 import LinedSeparator from '../separator/lined-separator'
 import TableRow from '../table/table-row'
@@ -17,8 +17,8 @@ class List extends Component {
 
     addInputRef = (ref) => (this.inputs = [...this.inputs, ref])
 
-    focusNextInput = ({ target }) => {
-        const nextInput = this.inputs.findIndex(({ _inputRef }) => _inputRef._nativeTag === target) + 1
+    focusNextInput = ({target}) => {
+        const nextInput = this.inputs.findIndex(({_inputRef}) => _inputRef._nativeTag === target) + 1
 
         if (nextInput >= this.inputs.length) {
             return
@@ -33,26 +33,26 @@ class List extends Component {
         </View>
     )
 
-    renderSectionHeader = ({ section: { header } }) =>
+    renderSectionHeader = ({section: {header}}) =>
         header ? (
             <View style={styles.separator}>
                 <Text style={[styles.text, styles.header]}>{header}</Text>
             </View>
         ) : null
 
-    renderSectionSeparatorComponent = ({ leadingItem, trailingItem, section: { hint } }) => (
+    renderSectionSeparatorComponent = ({leadingItem, trailingItem, section: {hint}}) => (
         <Fragment>
             {leadingItem ? <LinedSeparator noMargins /> : null}
             {!trailingItem && hint ? this.renderHint(hint) : null}
             {trailingItem ? (
                 <LinedSeparator noMargins />
             ) : (
-                <BasicSeparator style={{ backgroundColor: INACTIVE_BACKGROUND_COLOR }} size={40} />
+                <BasicSeparator style={{backgroundColor: INACTIVE_BACKGROUND_COLOR}} size={40} />
             )}
         </Fragment>
     )
 
-    renderItem = ({ item: { customComponent: Component, props }, item }) =>
+    renderItem = ({item: {customComponent: Component, props}, item}) =>
         Component ? (
             <Component {...props} addInputRef={this.addInputRef} focusNextInput={this.focusNextInput} />
         ) : (
@@ -60,7 +60,7 @@ class List extends Component {
         )
 
     render() {
-        const { sections, ...rest } = this.props
+        const {sections, ...rest} = this.props
 
         return (
             <SectionList

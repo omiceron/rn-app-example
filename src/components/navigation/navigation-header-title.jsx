@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import BasicAvatar from '../common/basic-avatar'
-import { HeaderTitle } from 'react-navigation'
+import {HeaderTitle} from 'react-navigation'
 
-const newHeaderTitle = ({ user, ...rest }) => (
+const newHeaderTitle = ({user, ...rest}) => (
     <View
         style={{
             display: 'flex',

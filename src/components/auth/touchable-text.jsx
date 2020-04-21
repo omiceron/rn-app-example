@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native'
+import React, {Component} from 'react'
+import {TouchableOpacity, Text, StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
-import { HIT_SLOP } from '../../constants'
+import {HIT_SLOP} from '../../constants'
 
 class TouchableText extends Component {
     static propTypes = {
@@ -12,7 +12,7 @@ class TouchableText extends Component {
     }
 
     render() {
-        const { onPress, title, caption, style } = this.props
+        const {onPress, title, caption, style} = this.props
         return (
             <View style={styles.container}>
                 <Text style={style}>{caption}</Text>

@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react'
-import { View, StyleSheet, Text, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import React, {PureComponent} from 'react'
+import {View, StyleSheet, Text, Keyboard, TouchableWithoutFeedback} from 'react-native'
 import PropTypes from 'prop-types'
-import { INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR } from '../../constants/index'
+import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR} from '../../constants/index'
 
 class EmptyList extends PureComponent {
     static propTypes = {

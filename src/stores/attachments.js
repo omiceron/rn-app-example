@@ -1,5 +1,5 @@
 import EntitiesStore from './entities-store'
-import { computed, action } from 'mobx'
+import {computed, action} from 'mobx'
 import firebase from 'firebase/app'
 import {
     AVATARS_STORAGE_REFERENCE,
@@ -11,8 +11,8 @@ import {
 } from '../constants'
 import path from 'path'
 import * as FileSystem from 'expo-file-system'
-import { alphabetic, copyFile, urlToBlob } from './utils'
-import { toJS } from 'mobx'
+import {alphabetic, copyFile, urlToBlob} from './utils'
+import {toJS} from 'mobx'
 
 class AttachmentsStore extends EntitiesStore {
     off() {
@@ -25,7 +25,7 @@ class AttachmentsStore extends EntitiesStore {
 
     getAttachmentLazily = async (url) => {
         const ref = firebase.storage().refFromURL(url)
-        const { name: uid } = path.parse(ref.fullPath)
+        const {name: uid} = path.parse(ref.fullPath)
 
         if (!this.entities[uid]) await this.refreshAttachment(url)
         return this.entities[uid]
@@ -36,13 +36,13 @@ class AttachmentsStore extends EntitiesStore {
             this.entities[attachment.uid] = {}
         }
 
-        this.entities[attachment.uid] = { ...this.entities[attachment.uid], ...attachment }
+        this.entities[attachment.uid] = {...this.entities[attachment.uid], ...attachment}
         // await this.cacheEntities()
         return this.entities[attachment.uid]
     }
 
     deleteAttachment = (uid) => {
-        const { url, uri, loaded, task } = this.entities[uid]
+        const {url, uri, loaded, task} = this.entities[uid]
 
         // TODO: not sure. Maybe EE, UploadTaskSnapshot?
         if (!loaded) {
@@ -59,8 +59,8 @@ class AttachmentsStore extends EntitiesStore {
         delete this.entities[uid]
     }
 
-    async *attachFileSequence({ uri }) {
-        const { name: uid, base } = path.parse(uri)
+    async *attachFileSequence({uri}) {
+        const {name: uid, base} = path.parse(uri)
         const attachmentsDirectory = path.join(CACHE_DIR, ATTACHMENTS_STORAGE_REFERENCE)
         const attachmentUri = path.join(attachmentsDirectory, base)
 
@@ -115,7 +115,7 @@ class AttachmentsStore extends EntitiesStore {
 
     @action refreshAttachment = async (url) => {
         const ref = firebase.storage().refFromURL(url)
-        const { name: uid, base } = path.parse(ref.fullPath)
+        const {name: uid, base} = path.parse(ref.fullPath)
 
         await this.appendAttachment({
             uid,
@@ -128,15 +128,15 @@ class AttachmentsStore extends EntitiesStore {
         const attachmentsDirectory = path.join(CACHE_DIR, ATTACHMENTS_STORAGE_REFERENCE)
         const uri = path.join(attachmentsDirectory, base)
 
-        const { exists } = await FileSystem.getInfoAsync(uri).catch(console.warn)
+        const {exists} = await FileSystem.getInfoAsync(uri).catch(console.warn)
 
         if (!exists) {
-            const { isDirectory } = await FileSystem.getInfoAsync(attachmentsDirectory).catch(console.warn)
+            const {isDirectory} = await FileSystem.getInfoAsync(attachmentsDirectory).catch(console.warn)
 
             if (!isDirectory)
-                await FileSystem.makeDirectoryAsync(attachmentsDirectory, { intermediates: true }).catch(console.warn)
+                await FileSystem.makeDirectoryAsync(attachmentsDirectory, {intermediates: true}).catch(console.warn)
 
-            const { status } = await FileSystem.downloadAsync(url, uri).catch(console.warn)
+            const {status} = await FileSystem.downloadAsync(url, uri).catch(console.warn)
 
             if (status !== 200) {
                 FileSystem.deleteAsync(uri).then(() => console.log('Deleted from device'))

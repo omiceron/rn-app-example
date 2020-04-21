@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator, ImageBackground } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, ActivityIndicator, ImageBackground} from 'react-native'
 import PropTypes from 'prop-types'
 
 class AttachedImage extends Component {
@@ -11,12 +11,12 @@ class AttachedImage extends Component {
     }
 
     render() {
-        const { uri, loading, width, height } = this.props
-        const containerStyle = StyleSheet.compose(styles.container, { width, height })
+        const {uri, loading, width, height} = this.props
+        const containerStyle = StyleSheet.compose(styles.container, {width, height})
 
         return (
             <View style={containerStyle}>
-                <ImageBackground source={{ uri }} style={styles.content} imageStyle={containerStyle}>
+                <ImageBackground source={{uri}} style={styles.content} imageStyle={containerStyle}>
                     {loading ? <ActivityIndicator /> : null}
                 </ImageBackground>
             </View>

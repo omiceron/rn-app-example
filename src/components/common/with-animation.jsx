@@ -2,11 +2,11 @@
 
 // import React, {Component} from 'react'
 import * as React from 'react'
-import { Animated, Keyboard } from 'react-native'
-import { observable, action } from 'mobx'
+import {Animated, Keyboard} from 'react-native'
+import {observable, action} from 'mobx'
 
-import { KEYBOARD_EASING, KEYBOARD } from '../../constants'
-import { observer, inject } from 'mobx-react'
+import {KEYBOARD_EASING, KEYBOARD} from '../../constants'
+import {observer, inject} from 'mobx-react'
 
 export default (...props: string[]) => (
     AnimatedComponent: React.ComponentType<any>
@@ -20,7 +20,7 @@ export default (...props: string[]) => (
 
             if (!props) console.error('layoutNames type error')
 
-            props.forEach((name) => (this.layouts[name] = { height: 0, y: 0 }))
+            props.forEach((name) => (this.layouts[name] = {height: 0, y: 0}))
         }
 
         componentDidMount() {
@@ -59,19 +59,19 @@ export default (...props: string[]) => (
         }
 
         @action onFocus = (event) => {
-            const { height, screenY: y } = event.endCoordinates
-            this.layouts[KEYBOARD] = { height, y }
+            const {height, screenY: y} = event.endCoordinates
+            this.layouts[KEYBOARD] = {height, y}
             this.startTimingAnimation(event, 1)
         }
 
         @action onBlur = (event) => {
-            this.layouts[KEYBOARD] = { height: 0, y: 0 }
+            this.layouts[KEYBOARD] = {height: 0, y: 0}
 
             this.startTimingAnimation(event, 0)
         }
 
         onExit = () => {
-            this.startTimingAnimation({ duration: 0 }, 0)
+            this.startTimingAnimation({duration: 0}, 0)
         }
 
         render() {

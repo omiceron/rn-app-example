@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { View, SafeAreaView, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native'
-import { string, object, number, bool, shape } from 'prop-types'
+import React, {Component} from 'react'
+import {View, SafeAreaView, StyleSheet, Text, ScrollView, TouchableOpacity} from 'react-native'
+import {string, object, number, bool, shape} from 'prop-types'
 import AttachedMap from './attached-map'
-import { FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR } from '../../constants'
-import { inject, observer } from 'mobx-react'
-import { computed } from 'mobx'
+import {FEED_STORE, INACTIVE_TEXT_COLOR, NAVIGATION_STORE, OFFLINE_COLOR, BLACK_TEXT_COLOR} from '../../constants'
+import {inject, observer} from 'mobx-react'
+import {computed} from 'mobx'
 import BasicAvatar from '../common/basic-avatar'
-import { getDate } from '../../stores/utils'
+import {getDate} from '../../stores/utils'
 import AttachedLocation from './attached-location'
 import PostControlRow from './post-control-row'
 import LinedSeparator from '../common/separator/lined-separator'
@@ -42,7 +42,7 @@ class Post extends Component {
     renderPostInfo = () => {
         const {
             timestamp,
-            user: { firstName, lastName, uid: userId },
+            user: {firstName, lastName, uid: userId},
             navigation
         } = this.props
 
@@ -54,7 +54,7 @@ class Post extends Component {
                     <Text style={styles.caption}>{date}</Text>
                 </View>
 
-                <TouchableOpacity style={styles.authorButton} onPress={() => navigation.push('userScreen', { userId })}>
+                <TouchableOpacity style={styles.authorButton} onPress={() => navigation.push('userScreen', {userId})}>
                     <View style={styles.author}>
                         <View style={styles.authorName}>
                             <Text style={styles.caption} numberOfLines={1}>
@@ -75,7 +75,7 @@ class Post extends Component {
     render() {
         console.log('render post')
 
-        const { location, title, text, coords, uid: postId, feed } = this.props
+        const {location, title, text, coords, uid: postId, feed} = this.props
 
         // TODO: Attached location logic must be reordered
         return (
@@ -92,14 +92,10 @@ class Post extends Component {
                     </View>
 
                     {location && (
-                        <AttachedLocation
-                            location={location}
-                            onPress={this.props.openMap}
-                            style={{ marginBottom: 8 }}
-                        />
+                        <AttachedLocation location={location} onPress={this.props.openMap} style={{marginBottom: 8}} />
                     )}
 
-                    {coords && <AttachedMap coords={coords} onPress={this.props.openMap} style={{ marginBottom: 8 }} />}
+                    {coords && <AttachedMap coords={coords} onPress={this.props.openMap} style={{marginBottom: 8}} />}
 
                     <LinedSeparator noMargins />
                     <PostControlRow

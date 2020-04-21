@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import React, {Component} from 'react'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 
 class BasicList extends Component {
@@ -10,7 +10,7 @@ class BasicList extends Component {
     }
 
     render() {
-        const { children, scrollable, separator: Separator, style, ...rest } = this.props
+        const {children, scrollable, separator: Separator, style, ...rest} = this.props
         const childrenArray = React.Children.toArray(children)
         const ViewComponent = scrollable ? ScrollView : View
 

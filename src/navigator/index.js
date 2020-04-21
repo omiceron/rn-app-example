@@ -1,7 +1,7 @@
 import React from 'react'
-import { createSwitchNavigator, getActiveChildNavigationOptions, createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
-import { createBottomTabNavigator } from 'react-navigation-tabs'
+import {createSwitchNavigator, getActiveChildNavigationOptions, createAppContainer} from 'react-navigation'
+import {createStackNavigator} from 'react-navigation-stack'
+import {createBottomTabNavigator} from 'react-navigation-tabs'
 import AuthScreen from '../components/screens/auth-screen'
 import SignUpScreen from '../components/screens/sign-up-screen'
 import PeopleScreen from '../components/screens/people-screen'
@@ -28,13 +28,13 @@ import {
     WHITE_BACKGROUND_COLOR
 } from '../constants'
 
-const renderTabBarIcon = (name) => ({ tintColor, focused }) => (
+const renderTabBarIcon = (name) => ({tintColor, focused}) => (
     <Icon
         name={`ios-${name}`}
         // TODO: make custom font
         // <Icon name = {focused ? `ios-${name}` : `ios-${name}-outline`}
         size={30}
-        style={{ color: tintColor }}
+        style={{color: tintColor}}
     />
 )
 
@@ -115,7 +115,7 @@ const PostFormStack = createStackNavigator(
 
 const createCommonTabRouteConfig = (mainScreen, icon) => ({
     screen: createCommonStack(mainScreen),
-    navigationOptions: ({ navigation, screenProps }) => ({
+    navigationOptions: ({navigation, screenProps}) => ({
         ...getActiveChildNavigationOptions(navigation, screenProps),
         headerShown: false,
         tabBarIcon: renderTabBarIcon(icon)
@@ -149,7 +149,7 @@ const CoreNavigator = createStackNavigator(
     {
         root: {
             screen: TabNavigator,
-            navigationOptions: ({ navigation, screenProps }) => getActiveChildNavigationOptions(navigation, screenProps)
+            navigationOptions: ({navigation, screenProps}) => getActiveChildNavigationOptions(navigation, screenProps)
         },
         personPhoto: {
             screen: PersonPhotoScreen

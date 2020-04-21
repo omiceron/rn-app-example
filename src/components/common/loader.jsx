@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
-import { INACTIVE_BACKGROUND_COLOR } from '../../constants'
+import React, {Component} from 'react'
+import {View, StyleSheet, ActivityIndicator} from 'react-native'
+import {INACTIVE_BACKGROUND_COLOR} from '../../constants'
 
 class Loader extends Component {
     static propTypes = {}

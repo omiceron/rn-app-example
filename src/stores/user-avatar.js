@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
 import EntitiesStore from './entities-store'
@@ -12,9 +12,9 @@ import {
     AVATARS_STORAGE_REFERENCE,
     NAVIGATION_STORE
 } from '../constants'
-import { urlToBlob } from './utils'
+import {urlToBlob} from './utils'
 import path from 'path'
-import { reaction } from 'mobx'
+import {reaction} from 'mobx'
 
 // TODO 1. Merge user and user-avatar
 // TODO 3. New store class for user settings instead of entities-store
@@ -50,10 +50,10 @@ class UserAvatarStore extends EntitiesStore {
     getAvatarUri = async (userId) => {
         const avatarsDirectory = path.join(CACHE_DIR, AVATARS_STORAGE_REFERENCE)
 
-        const { isDirectory } = await FileSystem.getInfoAsync(avatarsDirectory).catch(console.warn)
+        const {isDirectory} = await FileSystem.getInfoAsync(avatarsDirectory).catch(console.warn)
 
         if (!isDirectory)
-            await FileSystem.makeDirectoryAsync(avatarsDirectory, { intermediates: true }).catch(console.warn)
+            await FileSystem.makeDirectoryAsync(avatarsDirectory, {intermediates: true}).catch(console.warn)
 
         return path.join(avatarsDirectory, userId + '.jpg')
     }
@@ -106,7 +106,7 @@ class UserAvatarStore extends EntitiesStore {
     }
 
     fetchCacheControl = async (uri) => {
-        const { cacheControl } = await firebase
+        const {cacheControl} = await firebase
             .storage()
             .refFromURL(uri)
             .getMetadata()
@@ -122,7 +122,7 @@ class UserAvatarStore extends EntitiesStore {
         const avatarUri = await this.getAvatarUri(this.user.uid)
 
         // downloading the file from uri to device
-        const { uri } = await FileSystem.downloadAsync(url, avatarUri).catch(console.warn)
+        const {uri} = await FileSystem.downloadAsync(url, avatarUri).catch(console.warn)
 
         const cacheControl = await this.fetchCacheControl(url).catch(console.warn)
 
@@ -137,7 +137,7 @@ class UserAvatarStore extends EntitiesStore {
     }
 
     @action
-    takePhoto = async ({ uri, cancelled }, doNotSave) => {
+    takePhoto = async ({uri, cancelled}, doNotSave) => {
         if (this.loading || cancelled) return
         this.loading = true
 
@@ -154,23 +154,23 @@ class UserAvatarStore extends EntitiesStore {
         // const file = await fetch(uri).then(res => res.blob())
 
         console.log('AVATAR:', 'resizing photo...')
-        const { uri: resizedAvatarUri } = await ImageManipulator.manipulateAsync(uri, [
-            { resize: { width: 200 } }
-        ]).catch(console.warn)
+        const {uri: resizedAvatarUri} = await ImageManipulator.manipulateAsync(uri, [{resize: {width: 200}}]).catch(
+            console.warn
+        )
         console.log('AVATAR:', 'photo resized')
 
         const userId = this.user.uid
         const avatarUri = await this.getAvatarUri(userId).catch(console.warn)
 
-        await FileSystem.copyAsync({ from: resizedAvatarUri, to: avatarUri }).catch(console.warn)
+        await FileSystem.copyAsync({from: resizedAvatarUri, to: avatarUri}).catch(console.warn)
 
-        FileSystem.deleteAsync(resizedAvatarUri, { idempotent: true })
+        FileSystem.deleteAsync(resizedAvatarUri, {idempotent: true})
             .then(() => console.log('AVATAR:', 'resized photo deleted'))
             .catch(console.warn)
 
         const file = await urlToBlob(avatarUri).catch(console.warn)
 
-        const { md5: cacheControl } = await FileSystem.getInfoAsync(avatarUri, { md5: true }).catch(console.warn)
+        const {md5: cacheControl} = await FileSystem.getInfoAsync(avatarUri, {md5: true}).catch(console.warn)
 
         const ref = firebase
             .storage()
@@ -183,10 +183,10 @@ class UserAvatarStore extends EntitiesStore {
 
         const newAvatarUrl = await ref.getDownloadURL().catch(console.warn)
 
-        await ref.updateMetadata({ cacheControl }).catch(console.warn)
+        await ref.updateMetadata({cacheControl}).catch(console.warn)
         console.log('AVATAR:', 'cacheControl updated')
 
-        await this.updateUserData({ avatar: newAvatarUrl }).catch(console.warn)
+        await this.updateUserData({avatar: newAvatarUrl}).catch(console.warn)
         console.log('AVATAR:', 'database updated')
 
         this.entities.uri = avatarUri
@@ -205,7 +205,7 @@ class UserAvatarStore extends EntitiesStore {
 
         if (!this.entities.uri) return
 
-        const { exists } = await FileSystem.getInfoAsync(this.entities.uri).catch(console.warn)
+        const {exists} = await FileSystem.getInfoAsync(this.entities.uri).catch(console.warn)
 
         if (!exists) {
             console.log('User avatar file has not been found')

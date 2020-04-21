@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { View, Text, TextInput, TouchableOpacity, Platform, Switch, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, Text, TextInput, TouchableOpacity, Platform, Switch, StyleSheet} from 'react-native'
 import SegmentedCard from '../segmented-card'
 import PropTypes from 'prop-types'
-import { INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR } from '../../../constants'
+import {INACTIVE_TEXT_COLOR, BLACK_TEXT_COLOR} from '../../../constants'
 import LinedSeparator from '../separator/lined-separator'
 
 // TODO divide table row and settings row

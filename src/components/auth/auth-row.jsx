@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import BasicCard from '../common/basic-card'
 
 class AuthRow extends Component {
@@ -8,7 +8,7 @@ class AuthRow extends Component {
     }
 
     render() {
-        const { style, ...rest } = this.props
+        const {style, ...rest} = this.props
         return <BasicCard {...rest} style={[styles.container, style]} />
     }
 }

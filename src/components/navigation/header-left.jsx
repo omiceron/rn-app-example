@@ -1,9 +1,9 @@
-import React, { Component, PureComponent } from 'react'
+import React, {Component, PureComponent} from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import {View, TouchableOpacity, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
-import { inject } from 'mobx-react'
-import { NAVIGATION_STORE } from '../../constants'
+import {inject} from 'mobx-react'
+import {NAVIGATION_STORE} from '../../constants'
 
 @inject(NAVIGATION_STORE)
 class HeaderLeft extends PureComponent {
@@ -12,7 +12,7 @@ class HeaderLeft extends PureComponent {
     }
 
     render() {
-        const { onPress } = this.props
+        const {onPress} = this.props
         return (
             <TouchableOpacity style={styles.header} onPress={onPress || this.props.navigation.goBack}>
                 <View style={styles.backButtonIcon}>

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { AsyncStorage, ImageBackground, StyleSheet } from 'react-native'
-import { SplashScreen } from 'expo'
+import React, {Component} from 'react'
+import {AsyncStorage, ImageBackground, StyleSheet} from 'react-native'
+import {SplashScreen} from 'expo'
 import image from '../../../assets/images/splash.png'
-import { WHITE_BACKGROUND_COLOR } from '../../constants'
-import { LayoutAnimation } from 'react-native'
+import {WHITE_BACKGROUND_COLOR} from '../../constants'
+import {LayoutAnimation} from 'react-native'
 
 class AuthLoadingScreen extends Component {
     componentDidMount() {

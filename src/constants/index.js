@@ -1,4 +1,4 @@
-import { Dimensions, Easing } from 'react-native'
+import {Dimensions, Easing} from 'react-native'
 import Constants from 'expo-constants'
 import * as FileSystem from 'expo-file-system'
 
@@ -7,14 +7,14 @@ export const KEYBOARD_EASING = Easing.bezier(0.17, 0.59, 0.4, 0.77)
 export const WINDOW_HEIGHT = Dimensions.get('window').height
 export const WINDOW_WIDTH = Dimensions.get('window').width
 export const STATUS_BAR_HEIGHT = Constants.statusBarHeight
-export const HIT_SLOP = { left: 10, right: 10, top: 10, bottom: 10 }
+export const HIT_SLOP = {left: 10, right: 10, top: 10, bottom: 10}
 export const BACK_BUTTON_HEIGHT = 36
 export const DIVIDER_MARGIN_TOP = 20
 export const ROW_HEIGHT = 76
-export const REGION_DELTAS = { latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
-export const DATE_FORMAT = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-export const SHORT_DATE_FORMAT = { year: '2-digit', month: '2-digit', day: '2-digit' }
-export const TIME_FORMAT = { hour: '2-digit', minute: '2-digit' }
+export const REGION_DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}
+export const DATE_FORMAT = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+export const SHORT_DATE_FORMAT = {year: '2-digit', month: '2-digit', day: '2-digit'}
+export const TIME_FORMAT = {hour: '2-digit', minute: '2-digit'}
 export const LOCALE = 'en-GB'
 
 export const IMAGE_SEPARATOR_SIZE = 4

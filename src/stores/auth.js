@@ -1,7 +1,7 @@
-import { observable, action, computed } from 'mobx'
+import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import BasicStore from './basic-store'
-import { AsyncStorage, Alert } from 'react-native'
+import {AsyncStorage, Alert} from 'react-native'
 import validator from 'validator'
 import {
     PEOPLE_STORE,
@@ -14,7 +14,7 @@ import {
 import * as Facebook from 'expo-facebook'
 import * as Google from 'expo-google-app-auth'
 import * as MediaLibrary from 'expo-media-library'
-import { facebookAppId, googleClientId } from '../config'
+import {facebookAppId, googleClientId} from '../config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'
 // import {FileSystem} from 'expo'
@@ -148,8 +148,8 @@ class AuthStore extends BasicStore {
     }
 
     async checkUser() {
-        const { firstName } = this || this.getStore(CURRENT_USER_STORE)
-        return firebase.functions().httpsCallable('checkUser')({ firstName })
+        const {firstName} = this || this.getStore(CURRENT_USER_STORE)
+        return firebase.functions().httpsCallable('checkUser')({firstName})
     }
 
     signOut = async () => {
@@ -165,7 +165,7 @@ class AuthStore extends BasicStore {
     @action loginWithFacebook = async () => {
         this.loading = true
 
-        const { type, token } = await Facebook.logInWithReadPermissionsAsync(facebookAppId, {
+        const {type, token} = await Facebook.logInWithReadPermissionsAsync(facebookAppId, {
             permissions: ['public_profile', 'email']
         })
 
@@ -175,7 +175,7 @@ class AuthStore extends BasicStore {
             const credential = firebase.auth.FacebookAuthProvider.credential(token)
 
             const {
-                user: { uid },
+                user: {uid},
                 additionalUserInfo: {
                     isNewUser,
                     profile: {
@@ -183,14 +183,14 @@ class AuthStore extends BasicStore {
                         last_name: lastName,
                         email,
                         picture: {
-                            data: { url: avatar }
+                            data: {url: avatar}
                         }
                     }
                 }
             } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
             if (isNewUser) {
-                await firebase.functions().httpsCallable('checkUser')({ uid, firstName, lastName, email })
+                await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
             }
 
             this.getStore(NAVIGATION_STORE).navigate('app')
@@ -202,7 +202,7 @@ class AuthStore extends BasicStore {
     @action loginWithGoogle = async () => {
         this.loading = true
 
-        const { type, idToken, accessToken } = await Google.logInAsync({
+        const {type, idToken, accessToken} = await Google.logInAsync({
             iosClientId: googleClientId,
             scopes: ['profile', 'email']
         })
@@ -211,15 +211,15 @@ class AuthStore extends BasicStore {
             const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
 
             const {
-                user: { uid },
+                user: {uid},
                 additionalUserInfo: {
                     isNewUser,
-                    profile: { family_name: lastName, given_name: firstName, email, picture: avatar }
+                    profile: {family_name: lastName, given_name: firstName, email, picture: avatar}
                 }
             } = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
             if (isNewUser) {
-                await firebase.functions().httpsCallable('checkUser')({ uid, firstName, lastName, email })
+                await firebase.functions().httpsCallable('checkUser')({uid, firstName, lastName, email})
             }
 
             this.getStore(NAVIGATION_STORE).navigate('app')

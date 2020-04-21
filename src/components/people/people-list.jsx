@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import { Text, SectionList, StyleSheet, SafeAreaView } from 'react-native'
+import React, {Component} from 'react'
+import {inject, observer} from 'mobx-react'
+import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
 import PersonCard from './person-card'
 import Loader from '../common/loader'
-import { INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR } from '../../constants'
-import { shape, bool, func, array } from 'prop-types'
+import {INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {shape, bool, func, array} from 'prop-types'
 import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(PEOPLE_STORE)
@@ -19,10 +19,10 @@ class PeopleList extends Component {
         openUserInfoScreen: func.isRequired
     }
 
-    renderSectionHeader = ({ section }) => <Text style={styles.header}>{section.title}</Text>
+    renderSectionHeader = ({section}) => <Text style={styles.header}>{section.title}</Text>
 
-    renderItem = ({ item: { user, key } }) => {
-        const { getPhoto, openChatScreen, openUserInfoScreen } = this.props
+    renderItem = ({item: {user, key}}) => {
+        const {getPhoto, openChatScreen, openUserInfoScreen} = this.props
 
         return (
             <PersonCard
@@ -37,8 +37,8 @@ class PeopleList extends Component {
     render() {
         console.log('PEOPLE LIST:', 'render')
 
-        const { people } = this.props
-        const SectionSeparatorComponent = ({ trailingItem, trailingSection }) =>
+        const {people} = this.props
+        const SectionSeparatorComponent = ({trailingItem, trailingSection}) =>
             trailingSection && !trailingItem ? <LinedSeparator style={styles.sectionSeparator} /> : null
 
         const ItemSeparatorComponent = () => <LinedSeparator style={styles.itemSeparator} />
@@ -47,7 +47,7 @@ class PeopleList extends Component {
             <SafeAreaView style={styles.container}>
                 <SectionList
                     sections={people.sections}
-                    contentContainerStyle={{ backgroundColor: WHITE_BACKGROUND_COLOR }}
+                    contentContainerStyle={{backgroundColor: WHITE_BACKGROUND_COLOR}}
                     ItemSeparatorComponent={ItemSeparatorComponent}
                     SectionSeparatorComponent={SectionSeparatorComponent}
                     renderSectionHeader={this.renderSectionHeader}

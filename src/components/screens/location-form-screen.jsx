@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
 import LocationForm from '../feed/location-form'
-import { observer, inject } from 'mobx-react'
-import { FEED_STORE } from '../../constants/index'
+import {observer, inject} from 'mobx-react'
+import {FEED_STORE} from '../../constants/index'
 // import {HeaderBackButton} from 'react-navigation'
 import NavigationButton from '../navigation/navigation-button'
 
@@ -11,7 +11,7 @@ import NavigationButton from '../navigation/navigation-button'
 class LocationFormScreen extends Component {
     static propTypes = {}
 
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({navigation}) => {
         return {
             title: 'Add location',
             headerLeft: () => <NavigationButton title="Cancel" onPress={() => navigation.goBack()} />,
@@ -20,8 +20,8 @@ class LocationFormScreen extends Component {
     }
 
     componentDidMount() {
-        const { attachLocation } = this.props.feed
-        this.props.navigation.setParams({ attachLocation })
+        const {attachLocation} = this.props.feed
+        this.props.navigation.setParams({attachLocation})
     }
 
     render() {

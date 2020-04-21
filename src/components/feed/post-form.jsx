@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { reaction, computed } from 'mobx'
-import { observer, inject } from 'mobx-react'
-import { StyleSheet, LayoutAnimation } from 'react-native'
-import { bool, string, func, shape, objectOf, number, array } from 'prop-types'
-import { KEYBOARD, FEED_STORE, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE } from '../../constants/'
+import React, {Component} from 'react'
+import {reaction, computed} from 'mobx'
+import {observer, inject} from 'mobx-react'
+import {StyleSheet, LayoutAnimation} from 'react-native'
+import {bool, string, func, shape, objectOf, number, array} from 'prop-types'
+import {KEYBOARD, FEED_STORE, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE} from '../../constants/'
 import withAnimation from '../common/with-animation'
 import PostFormControlRow from './post-form-control-row'
 import Form from '../common/form/form'
@@ -64,9 +64,9 @@ class PostForm extends Component {
 
     render() {
         const {
-            feed: { attachedLocation, attachImageHandler, attachPhotoHandler, title, text, setTitle, setText },
+            feed: {attachedLocation, attachImageHandler, attachPhotoHandler, title, text, setTitle, setText},
             layouts: {
-                [KEYBOARD]: { height }
+                [KEYBOARD]: {height}
             }
         } = this.props
 

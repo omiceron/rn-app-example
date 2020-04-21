@@ -1,10 +1,10 @@
-import React, { Component, PureComponent } from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import React, {Component, PureComponent} from 'react'
+import {Animated, StyleSheet, Text, View} from 'react-native'
 import PropTypes from 'prop-types'
-import { RectButton } from 'react-native-gesture-handler'
+import {RectButton} from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 import SegmentedCard from './segmented-card'
-import { WHITE_TEXT_COLOR, ROW_HEIGHT, ACTIVE_TINT_COLOR } from '../../constants'
+import {WHITE_TEXT_COLOR, ROW_HEIGHT, ACTIVE_TINT_COLOR} from '../../constants'
 
 class SwipeableCard extends Component {
     static propTypes = {
@@ -21,7 +21,7 @@ class SwipeableCard extends Component {
     }
 
     renderLeftActions = (progress, dragX) => {
-        const { leftAction } = this.props
+        const {leftAction} = this.props
 
         if (!leftAction) return null
 
@@ -37,7 +37,7 @@ class SwipeableCard extends Component {
 
         return (
             <RectButton style={styles.leftAction} onPress={onPressHandler}>
-                <Animated.Text style={[styles.actionText, { transform: [{ translateX }] }]}>Archive</Animated.Text>
+                <Animated.Text style={[styles.actionText, {transform: [{translateX}]}]}>Archive</Animated.Text>
             </RectButton>
         )
     }
@@ -55,8 +55,8 @@ class SwipeableCard extends Component {
         }
 
         return (
-            <Animated.View key={key} style={{ flex: 1, transform: [{ translateX }] }}>
-                <RectButton style={[styles.rightAction, { backgroundColor: color }]} onPress={onPressHandler}>
+            <Animated.View key={key} style={{flex: 1, transform: [{translateX}]}}>
+                <RectButton style={[styles.rightAction, {backgroundColor: color}]} onPress={onPressHandler}>
                     <Text style={styles.actionText}>{title}</Text>
                 </RectButton>
             </Animated.View>
@@ -64,15 +64,15 @@ class SwipeableCard extends Component {
     }
 
     renderRightActions = (progress, dragX) => {
-        const { rightActionWidth = ROW_HEIGHT, rightActions } = this.props
+        const {rightActionWidth = ROW_HEIGHT, rightActions} = this.props
 
         if (!rightActions) return null
 
         const width = rightActionWidth * rightActions.length
 
         return (
-            <View style={{ width, flexDirection: 'row' }}>
-                {rightActions.map(({ title, color, callback }, i) =>
+            <View style={{width, flexDirection: 'row'}}>
+                {rightActions.map(({title, color, callback}, i) =>
                     this.renderRightAction(title, color, width - rightActionWidth * i, progress, callback, i, dragX)
                 )}
             </View>

@@ -1,5 +1,5 @@
-import { observable, action } from 'mobx'
-import { Keyboard } from 'react-native'
+import {observable, action} from 'mobx'
+import {Keyboard} from 'react-native'
 import BasicStore from './basic-store'
 
 class KeyboardStore extends BasicStore {

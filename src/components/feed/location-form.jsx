@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
-import { array, string, func, shape, objectOf, number, object } from 'prop-types'
+import React, {Component} from 'react'
+import {View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
+import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
 import MapView from 'react-native-maps'
 import TableBlock from '../common/table/table-block'
 import TableRow from '../common/table/table-row'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { observer, inject } from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import {
     BLACK_TEXT_COLOR,
     FEED_STORE,
@@ -16,7 +16,7 @@ import {
     NAVIGATION_STORE,
     REGION_DELTAS
 } from '../../constants'
-import { observable, action } from 'mobx'
+import {observable, action} from 'mobx'
 import Loader from '../common/loader'
 import List from '../common/list/list'
 
@@ -49,8 +49,8 @@ class LocationForm extends Component {
     @action setPermissionGranted = (granted) => (this.permissionGranted = granted)
 
     async componentDidMount() {
-        const { attachedCoords, setCoords } = this.props.feed
-        const { status } = await Permissions.askAsync(Permissions.LOCATION)
+        const {attachedCoords, setCoords} = this.props.feed
+        const {status} = await Permissions.askAsync(Permissions.LOCATION)
         this.setPermissionGranted(status === 'granted')
 
         if (!this.permissionGranted) {
@@ -74,13 +74,13 @@ class LocationForm extends Component {
     handleSubmit = async () => {
         const coords = await this.props.feed.getCoordsFromAddress()
         if (!coords) return
-        this.map.animateToRegion({ ...coords })
+        this.map.animateToRegion({...coords})
     }
 
     setMapRef = (ref) => (this.map = ref)
 
     renderInput = () => {
-        const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+        const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
         return (
             <TableRow>
@@ -99,19 +99,19 @@ class LocationForm extends Component {
     }
 
     renderMap = () => {
-        const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+        const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
         return (
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <MapView
                     ref={this.setMapRef}
                     style={styles.container}
-                    initialRegion={{ ...coords, ...REGION_DELTAS }}
+                    initialRegion={{...coords, ...REGION_DELTAS}}
                     // region = {{...coords, ...REGION_DELTAS}}
                 >
                     <MapView.Marker
                         draggable
-                        coordinate={{ ...coords }}
+                        coordinate={{...coords}}
                         onDragEnd={(e) => setCoords(e.nativeEvent.coordinate)}
                     />
                 </MapView>
@@ -120,7 +120,7 @@ class LocationForm extends Component {
     }
 
     render2() {
-        const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+        const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
         if (!coords) return <Loader />
 
@@ -143,7 +143,7 @@ class LocationForm extends Component {
     }
 
     render() {
-        const { coords, setAddress, getCoordsFromAddress, address, setCoords } = this.props.feed
+        const {coords, setAddress, getCoordsFromAddress, address, setCoords} = this.props.feed
 
         if (!coords) return <Loader />
 
@@ -166,12 +166,12 @@ class LocationForm extends Component {
                     <MapView
                         ref={this.setMapRef}
                         style={styles.container}
-                        initialRegion={{ ...coords, ...REGION_DELTAS }}
+                        initialRegion={{...coords, ...REGION_DELTAS}}
                         // region = {{...coords, ...REGION_DELTAS}}
                     >
                         <MapView.Marker
                             draggable
-                            coordinate={{ ...coords }}
+                            coordinate={{...coords}}
                             onDragEnd={(e) => setCoords(e.nativeEvent.coordinate)}
                         />
                     </MapView>

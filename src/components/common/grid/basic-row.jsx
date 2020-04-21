@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 import BasicList from './basic-list'
 
@@ -10,7 +10,7 @@ class BasicRow extends Component {
     }
 
     render() {
-        const { style, children, ...rest } = this.props
+        const {style, children, ...rest} = this.props
 
         return (
             <BasicList {...rest} style={[styles.container, style]}>

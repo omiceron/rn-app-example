@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
 
 class BasicSeparator extends Component {
@@ -10,9 +10,9 @@ class BasicSeparator extends Component {
     }
 
     render() {
-        const { style, size, vertical, children } = this.props
+        const {style, size, vertical, children} = this.props
 
-        const calculatedStyles = [size && (vertical ? { width: size } : { height: size })]
+        const calculatedStyles = [size && (vertical ? {width: size} : {height: size})]
 
         return <View style={[...calculatedStyles, style]}>{children}</View>
     }

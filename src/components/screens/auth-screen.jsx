@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import SignIn from '../auth/sign-in'
-import { shape, func } from 'prop-types'
-import { LayoutAnimation } from 'react-native'
+import {shape, func} from 'prop-types'
+import {LayoutAnimation} from 'react-native'
 
 class AuthScreen extends Component {
     static propTypes = {

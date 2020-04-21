@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import React, {Component} from 'react'
+import {TouchableOpacity, View} from 'react-native'
 import BasicAvatar from './basic-avatar'
 import PropTypes from 'prop-types'
 
@@ -13,7 +13,7 @@ class TouchableAvatar extends Component {
     }
 
     render() {
-        const { onPress, ...rest } = this.props
+        const {onPress, ...rest} = this.props
         return (
             <TouchableOpacity onPress={onPress}>
                 <BasicAvatar {...rest} />

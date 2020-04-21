@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import { RectButton } from 'react-native-gesture-handler'
+import React, {Component} from 'react'
+import {StyleSheet} from 'react-native'
+import {RectButton} from 'react-native-gesture-handler'
 import BasicCard from './basic-card'
 import PropTypes from 'prop-types'
-import { UNDERLAY_COLOR, WHITE_BACKGROUND_COLOR } from '../../constants'
+import {UNDERLAY_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 class TouchableCard extends Component {
     static propTypes = {
@@ -13,7 +13,7 @@ class TouchableCard extends Component {
     }
 
     render() {
-        const { onPress, onLongPress, children, ...rest } = this.props
+        const {onPress, onLongPress, children, ...rest} = this.props
 
         return (
             <RectButton

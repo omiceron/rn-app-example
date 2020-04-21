@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { View, TextInput, TouchableWithoutFeedback, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {View, TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import AuthRow from './auth-row'
-import { BLACK_TEXT_COLOR, HIT_SLOP, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR } from '../../constants'
+import {BLACK_TEXT_COLOR, HIT_SLOP, WHITE_BACKGROUND_COLOR, WHITE_TRANSPARENT_BACKGROUND_COLOR} from '../../constants'
 
 class AuthInputRow extends Component {
     static propTypes = {
@@ -32,11 +32,11 @@ class AuthInputRow extends Component {
     }
 
     setFocused = () => {
-        this.setState({ isFocused: true })
+        this.setState({isFocused: true})
     }
 
     setBlurred = () => {
-        this.setState({ isFocused: false })
+        this.setState({isFocused: false})
     }
 
     renderVisibilitySwitch() {
@@ -56,7 +56,7 @@ class AuthInputRow extends Component {
     setInputRef = (ref) => (this.textInput = ref)
 
     render() {
-        const { value, visibilitySwitch, onFocus, onBlur, ...rest } = this.props
+        const {value, visibilitySwitch, onFocus, onBlur, ...rest} = this.props
         return (
             <AuthRow style={styles.container}>
                 <TextInput

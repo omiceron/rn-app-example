@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { ImageBackground, View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import React, {Component} from 'react'
+import {ImageBackground, View, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import PropTypes from 'prop-types'
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../constants'
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants'
 
 class BackgroundImage extends Component {
     static propTypes = {
@@ -13,7 +13,7 @@ class BackgroundImage extends Component {
     }
 
     render() {
-        const { onPress, uri, overlayOpacity, source, style, ...rest } = this.props
+        const {onPress, uri, overlayOpacity, source, style, ...rest} = this.props
 
         return (
             <TouchableWithoutFeedback onPress={onPress}>
@@ -21,11 +21,11 @@ class BackgroundImage extends Component {
                     <ImageBackground
                         {...rest}
                         source={
-                            source || { uri: uri || `https://picsum.photos/${WINDOW_WIDTH}/${WINDOW_HEIGHT}/?random` }
+                            source || {uri: uri || `https://picsum.photos/${WINDOW_WIDTH}/${WINDOW_HEIGHT}/?random`}
                         }
                         style={[styles.container, style]}
                     >
-                        {overlayOpacity && <View style={[styles.overlay, { opacity: overlayOpacity }]} />}
+                        {overlayOpacity && <View style={[styles.overlay, {opacity: overlayOpacity}]} />}
                         {this.props.children}
                     </ImageBackground>
                 </View>

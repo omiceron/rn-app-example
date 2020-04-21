@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Messenger from '../messenger/index'
-import { inject, observer } from 'mobx-react'
-import { DEFAULT_HEADER_COLOR, MESSENGER_STORE, WHITE_TEXT_COLOR, PEOPLE_STORE } from '../../constants'
+import {inject, observer} from 'mobx-react'
+import {DEFAULT_HEADER_COLOR, MESSENGER_STORE, WHITE_TEXT_COLOR, PEOPLE_STORE} from '../../constants'
 import Loader from '../common/loader'
-import { LayoutAnimation, ActionSheetIOS } from 'react-native'
-import { reaction } from 'mobx'
+import {LayoutAnimation, ActionSheetIOS} from 'react-native'
+import {reaction} from 'mobx'
 
 @inject(PEOPLE_STORE)
 @inject(MESSENGER_STORE)
@@ -19,12 +19,12 @@ class MessengerScreen extends Component {
         )
     }
 
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({navigation}) => ({
         title: 'Chats'
     })
 
     render() {
-        const { loading, loaded, chats } = this.props.messenger
+        const {loading, loaded, chats} = this.props.messenger
 
         if (!chats.length && (!loaded || loading)) return <Loader />
 
@@ -40,11 +40,11 @@ class MessengerScreen extends Component {
     openChatScreen = (userId) => {
         // TODO: remove user parameter
         const user = this.props.people.getUser(userId)
-        this.props.navigation.navigate('chatScreen', { user, userId })
+        this.props.navigation.navigate('chatScreen', {user, userId})
     }
 
     openUserInfoScreen = (userId) => {
-        this.props.navigation.push('userScreen', { userId })
+        this.props.navigation.push('userScreen', {userId})
     }
 
     deleteChat = (chatId) => {

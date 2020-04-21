@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import SignUp from '../auth/sign-up'
 
 class SignUpScreen extends Component {

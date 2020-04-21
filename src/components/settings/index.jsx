@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar } from 'react-native'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {TextInput, StyleSheet, ScrollView, ActionSheetIOS, StatusBar} from 'react-native'
+import {observer, inject} from 'mobx-react'
 import CurrentUserAvatar from './current-user-avatar'
 import TableRow from '../common/table/table-row'
 import SegmentedCard from '../common/segmented-card'
@@ -12,7 +12,7 @@ import {
     CURRENT_USER_STORE,
     WARNING_COLOR
 } from '../../constants'
-import { string, func, shape, bool } from 'prop-types'
+import {string, func, shape, bool} from 'prop-types'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import List from '../common/list/list'
@@ -97,7 +97,7 @@ class Settings extends Component {
         )
 
     renderAvatar = () => {
-        const { uri, loading } = this.props.avatar
+        const {uri, loading} = this.props.avatar
 
         return (
             <CurrentUserAvatar
@@ -110,8 +110,8 @@ class Settings extends Component {
         )
     }
 
-    renderUserCard = ({ addInputRef, focusNextInput }) => {
-        const { currentUser } = this.props
+    renderUserCard = ({addInputRef, focusNextInput}) => {
+        const {currentUser} = this.props
 
         const formInputs = [
             {
@@ -144,8 +144,8 @@ class Settings extends Component {
         )
     }
 
-    renderBio = ({ addInputRef }) => {
-        const { currentUser } = this.props
+    renderBio = ({addInputRef}) => {
+        const {currentUser} = this.props
 
         return (
             <TableRow>

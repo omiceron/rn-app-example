@@ -1,5 +1,5 @@
-import React, { Component, PureComponent } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import React, {Component, PureComponent} from 'react'
+import {Text, StyleSheet, View} from 'react-native'
 import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 import {
@@ -13,10 +13,10 @@ import {
     WARNING_COLOR,
     ACTIVE_TINT_COLOR
 } from '../../constants'
-import { array, string, func, shape, objectOf, number, object } from 'prop-types'
-import { getTime } from '../../stores/utils'
-import { inject, observer } from 'mobx-react'
-import { observable, action } from 'mobx'
+import {array, string, func, shape, objectOf, number, object} from 'prop-types'
+import {getTime} from '../../stores/utils'
+import {inject, observer} from 'mobx-react'
+import {observable, action} from 'mobx'
 import SegmentedCard from '../common/segmented-card'
 
 @inject(AUTH_STORE)
@@ -73,17 +73,17 @@ class ChatCard extends Component {
             // chat: {
             chatId,
             // messages,
-            user: { firstName, lastName, uid: userId }
+            user: {firstName, lastName, uid: userId}
             // }
         } = this.props
 
         console.log('render chat', firstName)
 
-        const { text, user: lastMessageUserId } = lastMessage
+        const {text, user: lastMessageUserId} = lastMessage
         const isCurrentUser = this.props.currentUser.currentUserId === lastMessageUserId
 
         // TODO Color
-        if (this.isArchived) return <View style={{ backgroundColor: ACTIVE_TINT_COLOR, height: 76 }} />
+        if (this.isArchived) return <View style={{backgroundColor: ACTIVE_TINT_COLOR, height: 76}} />
 
         return (
             <SwipeableCard
@@ -94,8 +94,8 @@ class ChatCard extends Component {
                 leftAction={openChatScreen.bind(null, userId)}
                 rightActionWidth={ROW_HEIGHT}
                 rightActions={[
-                    { title: 'Info', color: INFO_COLOR, callback: openUserInfoScreen.bind(null, userId) },
-                    { title: 'Delete', color: WARNING_COLOR, callback: deleteChat.bind(null, chatId) }
+                    {title: 'Info', color: INFO_COLOR, callback: openUserInfoScreen.bind(null, userId)},
+                    {title: 'Delete', color: WARNING_COLOR, callback: deleteChat.bind(null, chatId)}
                 ]}
             >
                 <Text numberOfLines={1} style={styles.title}>

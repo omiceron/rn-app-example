@@ -1,28 +1,22 @@
 import EntitiesStore from './entities-store'
-import { computed, action } from 'mobx'
+import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
-import {
-    AVATARS_STORAGE_REFERENCE,
-    PEOPLE_REFERENCE,
-    CURRENT_USER_STORE,
-    CACHE_DIR,
-    MESSENGER_STORE
-} from '../constants'
+import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, CURRENT_USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
 import path from 'path'
 import * as FileSystem from 'expo-file-system'
-import { alphabetic, urlToBlob } from './utils'
-import { toJS } from 'mobx'
+import {alphabetic, urlToBlob} from './utils'
+import {toJS} from 'mobx'
 
 class PeopleStore extends EntitiesStore {
     @computed
     get sections() {
-        const grouped = groupBy(this.entities, ({ firstName }) => firstName[0].toUpperCase())
+        const grouped = groupBy(this.entities, ({firstName}) => firstName[0].toUpperCase())
 
         return Object.entries(grouped)
             .map(([title, section]) => ({
                 title,
-                data: section.map((user) => ({ key: user.uid, user })).sort(alphabetic(['user', 'firstName']))
+                data: section.map((user) => ({key: user.uid, user})).sort(alphabetic(['user', 'firstName']))
             }))
             .sort(alphabetic('title'))
     }
@@ -55,7 +49,7 @@ class PeopleStore extends EntitiesStore {
 
     @action appendUser = async (user) => {
         const oldUser = this.entities[user.uid] || {}
-        this.entities[user.uid] = { ...oldUser, ...user }
+        this.entities[user.uid] = {...oldUser, ...user}
         await this.cacheEntities()
         return this.entities[user.uid]
     }
@@ -65,7 +59,7 @@ class PeopleStore extends EntitiesStore {
         const callback = async (snapshot) => {
             // fixme. Problem caused by posts linked to deleted user
             // if (!snapshot.val()) return false
-            return await this.convertUser({ [userId]: snapshot.val() }).then(this.appendUser)
+            return await this.convertUser({[userId]: snapshot.val()}).then(this.appendUser)
         }
 
         return await this.reference.child(userId).once('value').then(callback)
@@ -79,11 +73,11 @@ class PeopleStore extends EntitiesStore {
     // TODO: avatar to object {uri, cache}
     @action convertUsers = async (payload) => {
         return Promise.all(
-            Object.entries(payload).map(async ([key, { chats, ...user }]) => {
+            Object.entries(payload).map(async ([key, {chats, ...user}]) => {
                 user.uid = key
                 user.key = key
 
-                const { uri, avatarCacheControl } = await this.downloadUserAvatar(user.avatar, key)
+                const {uri, avatarCacheControl} = await this.downloadUserAvatar(user.avatar, key)
                 user.avatar = uri
                 user.avatarCacheControl = avatarCacheControl
 
@@ -126,16 +120,16 @@ class PeopleStore extends EntitiesStore {
 
     @action appendFetchedUsers = async (payload) => {
         const users = await this.convertUsers(payload).then((users) =>
-            users.reduce((acc, user) => ({ ...acc, [user.uid]: user }), {})
+            users.reduce((acc, user) => ({...acc, [user.uid]: user}), {})
         )
 
-        this.entities = { ...this.entities, ...users }
+        this.entities = {...this.entities, ...users}
 
         await this.cacheEntities()
     }
 
     fetchCacheControl = async (uri) => {
-        const { cacheControl } = await firebase
+        const {cacheControl} = await firebase
             .storage()
             .refFromURL(uri)
             .getMetadata()
@@ -156,17 +150,17 @@ class PeopleStore extends EntitiesStore {
         }
         const avatarsDirectory = path.join(CACHE_DIR, AVATARS_STORAGE_REFERENCE)
 
-        const { isDirectory } = await FileSystem.getInfoAsync(avatarsDirectory).catch((err) =>
+        const {isDirectory} = await FileSystem.getInfoAsync(avatarsDirectory).catch((err) =>
             console.warn('PEOPLE:', 'FileSystem getInfoAsync isDirectory error')
         )
 
         if (!isDirectory)
-            await FileSystem.makeDirectoryAsync(avatarsDirectory, { intermediates: true }).catch((err) =>
+            await FileSystem.makeDirectoryAsync(avatarsDirectory, {intermediates: true}).catch((err) =>
                 console.warn('PEOPLE:', 'FileSystem makeDirectoryAsync error')
             )
 
         const avatarPath = path.join(avatarsDirectory, userId + '.jpg')
-        const { exists } = await FileSystem.getInfoAsync(avatarPath).catch((err) =>
+        const {exists} = await FileSystem.getInfoAsync(avatarPath).catch((err) =>
             console.warn('PEOPLE:', 'FileSystem getInfoAsync exist error')
         )
 
@@ -177,19 +171,19 @@ class PeopleStore extends EntitiesStore {
 
             if (this.entities[userId] && this.entities[userId].avatarCacheControl === avatarCacheControl) {
                 // console.log('PEOPLE:', userId, 'avatar is up-to-date')
-                return { uri: avatarPath, avatarCacheControl }
+                return {uri: avatarPath, avatarCacheControl}
             }
         }
 
         // console.log('PEOPLE:', userId, 'avatar does not exist or cache test failed. Downloading avatar...')
 
-        const { uri } = await FileSystem.downloadAsync(url, avatarPath).catch((err) =>
+        const {uri} = await FileSystem.downloadAsync(url, avatarPath).catch((err) =>
             console.warn('PEOPLE:', 'FileSystem downloadAsync uri error')
         )
 
         // console.log('PEOPLE:', userId,  'avatar has been downloaded')
 
-        return { uri, avatarCacheControl }
+        return {uri, avatarCacheControl}
     }
 }
 

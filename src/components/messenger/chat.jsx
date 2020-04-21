@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
     View,
     TextInput,
@@ -10,15 +10,15 @@ import {
     ActionSheetIOS
 } from 'react-native'
 
-import { observer, inject } from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import Message from './message'
-import { observable, action } from 'mobx'
-import { string, func, shape, object, any } from 'prop-types'
+import {observable, action} from 'mobx'
+import {string, func, shape, object, any} from 'prop-types'
 import EmptyList from '../common/empty-list'
-import { reaction, computed } from 'mobx'
-import { isIphoneX, getBottomSpace } from 'react-native-iphone-x-helper'
+import {reaction, computed} from 'mobx'
+import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 
-import { AUTH_STORE, MESSENGER_STORE, WHITE_BACKGROUND_COLOR } from '../../constants'
+import {AUTH_STORE, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 
 import ListLoader from '../common/list-loader'
 import AttachedImagesRow from '../common/attachments/attached-images-row'
@@ -75,10 +75,10 @@ class Chat extends Component {
     @observable message = ''
     @action setMessage = (message) => (this.message = message)
 
-    renderItem = ({ item }) => <Message {...item} />
+    renderItem = ({item}) => <Message {...item} />
 
     renderMessagesList = () => {
-        const { messenger, chatId } = this.props
+        const {messenger, chatId} = this.props
 
         return (
             <FlatList
@@ -95,7 +95,7 @@ class Chat extends Component {
     }
 
     render() {
-        const { messenger, chatId } = this.props
+        const {messenger, chatId} = this.props
         return (
             <SafeAreaView style={styles.container}>
                 {!this.messages.length && messenger.isChatLoaded(chatId) ? (
@@ -111,7 +111,7 @@ class Chat extends Component {
                 >
                     <View style={styles.controlContainer}>
                         {this.tempAttachments.length ? (
-                            <View style={{ padding: 8 }}>
+                            <View style={{padding: 8}}>
                                 <AttachedImagesRow attachments={this.tempAttachments} />
                             </View>
                         ) : null}

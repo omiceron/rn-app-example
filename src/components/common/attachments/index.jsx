@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import AttachedImage from './attached-image'
-import { IMAGE_SEPARATOR_SIZE } from '../../../constants'
-import { chunk } from 'lodash'
+import {IMAGE_SEPARATOR_SIZE} from '../../../constants'
+import {chunk} from 'lodash'
 import BasicList from '../grid/basic-list'
 import BasicRow from '../grid/basic-row'
 import RowSeparator from './row-separator'
@@ -19,7 +19,7 @@ class Attachments extends Component {
     }
 
     render() {
-        const { maxSize, attachments, lastRowBottomBorder } = this.props
+        const {maxSize, attachments, lastRowBottomBorder} = this.props
 
         const COLUMNS_NUMBER = 2
         const halfSize = (maxSize - IMAGE_SEPARATOR_SIZE) / COLUMNS_NUMBER

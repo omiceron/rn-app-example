@@ -1,5 +1,5 @@
-import { toJS } from 'mobx'
-import { SHORT_DATE_FORMAT, DATE_FORMAT, LOCALE, TIME_FORMAT } from '../constants'
+import {toJS} from 'mobx'
+import {SHORT_DATE_FORMAT, DATE_FORMAT, LOCALE, TIME_FORMAT} from '../constants'
 import * as FileSystem from 'expo-file-system'
 import path from 'path'
 
@@ -10,7 +10,7 @@ export function entitiesFromFB(data) {
 
 // TODO: Rename 'user' to 'userId'
 export function messagesFromFirebase(data) {
-    return Object.entries(data).map(([key, value]) => ({ ...value, key, userId: value.user }))
+    return Object.entries(data).map(([key, value]) => ({...value, key, userId: value.user}))
 }
 
 export function randomId() {
@@ -67,9 +67,9 @@ export function alphabetic(p, options = {}) {
 export async function copyFile(from, to) {
     const targetDirectory = path.dirname(to)
 
-    const { isDirectory } = await FileSystem.getInfoAsync(targetDirectory).catch(console.warn)
+    const {isDirectory} = await FileSystem.getInfoAsync(targetDirectory).catch(console.warn)
 
-    if (!isDirectory) await FileSystem.makeDirectoryAsync(targetDirectory, { intermediates: true }).catch(console.warn)
+    if (!isDirectory) await FileSystem.makeDirectoryAsync(targetDirectory, {intermediates: true}).catch(console.warn)
 
-    return await FileSystem.copyAsync({ from, to }).catch(console.warn)
+    return await FileSystem.copyAsync({from, to}).catch(console.warn)
 }

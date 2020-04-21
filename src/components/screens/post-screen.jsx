@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import { FEED_STORE, PEOPLE_STORE } from '../../constants'
+import React, {Component} from 'react'
+import {inject, observer} from 'mobx-react'
+import {FEED_STORE, PEOPLE_STORE} from '../../constants'
 import Post from '../feed/post'
-import { observable, action, computed, autorun, reaction } from 'mobx'
+import {observable, action, computed, autorun, reaction} from 'mobx'
 import Loader from '../common/loader'
 
 @inject(PEOPLE_STORE)
 @inject(FEED_STORE)
 @observer
 class PostScreen extends Component {
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({navigation}) => {
         return {
             title: 'Post'
         }
@@ -17,7 +17,7 @@ class PostScreen extends Component {
 
     @computed
     get post() {
-        const { postId } = this.props.navigation.state.params
+        const {postId} = this.props.navigation.state.params
         const post = this.props.feed.getPost(postId)
         if (!post) this.props.feed.refreshPost(postId)
         return post
@@ -34,7 +34,7 @@ class PostScreen extends Component {
 
     render() {
         if (!this.post /*|| !this.user*/) return <Loader />
-        const { title, text, coords, timestamp, uid, location, user } = this.post
+        const {title, text, coords, timestamp, uid, location, user} = this.post
 
         return (
             <Post
@@ -52,13 +52,13 @@ class PostScreen extends Component {
     }
 
     openLikedPosts = () => {
-        const { postId } = this.props.navigation.state.params
-        this.props.navigation.push('likesList', { postId })
+        const {postId} = this.props.navigation.state.params
+        this.props.navigation.push('likesList', {postId})
     }
 
     openMap = () => {
-        const { coords } = this.post
-        this.props.navigation.navigate('mapScreen', { coords })
+        const {coords} = this.post
+        this.props.navigation.navigate('mapScreen', {coords})
     }
 }
 

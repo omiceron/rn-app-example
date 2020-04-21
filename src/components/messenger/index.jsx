@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { StyleSheet, FlatList, SafeAreaView, ActivityIndicator, View } from 'react-native'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {StyleSheet, FlatList, SafeAreaView, ActivityIndicator, View} from 'react-native'
+import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
-import { AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR } from '../../constants'
-import { array, string, func, shape } from 'prop-types'
+import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {array, string, func, shape} from 'prop-types'
 import EmptyList from '../common/empty-list'
 import ListLoader from '../common/list-loader'
 import LinedSeparator from '../common/separator/lined-separator'
@@ -26,8 +26,8 @@ class Messenger extends Component {
         })
     }
 
-    renderChatCard = ({ item }) => {
-        const { openChatScreen, openUserInfoScreen, deleteChat } = this.props
+    renderChatCard = ({item}) => {
+        const {openChatScreen, openUserInfoScreen, deleteChat} = this.props
 
         return (
             <ChatCard
@@ -44,14 +44,14 @@ class Messenger extends Component {
     renderSeparator = () => <LinedSeparator style={styles.messengerSeparator} />
 
     render() {
-        const { messenger } = this.props
+        const {messenger} = this.props
         const chats = messenger.chats
 
         if (!chats.length) return <EmptyList title={'You have no chats yet...'} />
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
-                    contentContainerStyle={{ backgroundColor: WHITE_BACKGROUND_COLOR }}
+                    contentContainerStyle={{backgroundColor: WHITE_BACKGROUND_COLOR}}
                     ItemSeparatorComponent={this.renderSeparator}
                     data={chats}
                     renderItem={this.renderChatCard}

@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Photo from '../common/photo'
-import { inject } from 'mobx-react'
-import { AVATAR_STORE, WARNING_COLOR } from '../../constants'
+import {inject} from 'mobx-react'
+import {AVATAR_STORE, WARNING_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
 import * as MediaLibrary from 'expo-media-library'
 import * as ImagePicker from 'expo-image-picker'
-import { observable, action, toJS } from 'mobx'
-import { observer } from 'mobx-react'
-import { SafeAreaView, View, Image, FlatList } from 'react-native'
+import {observable, action, toJS} from 'mobx'
+import {observer} from 'mobx-react'
+import {SafeAreaView, View, Image, FlatList} from 'react-native'
 
 @inject(AVATAR_STORE)
 @observer
@@ -18,7 +18,7 @@ class UserPhotoScreen extends Component {
         })
     }
 
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({navigation}) => ({
         headerShown: false,
         headerStyle: {
             backgroundColor: WARNING_COLOR

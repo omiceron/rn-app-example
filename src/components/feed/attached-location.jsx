@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import React, {Component} from 'react'
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
-import { OFFLINE_COLOR } from '../../constants'
+import {OFFLINE_COLOR} from '../../constants'
 
 class AttachedLocation extends Component {
     static propTypes = {

@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 import MapView from 'react-native-maps'
-import { REGION_DELTAS } from '../../constants'
+import {REGION_DELTAS} from '../../constants'
 
 class AttachedMap extends Component {
     static propTypes = {
@@ -14,7 +14,7 @@ class AttachedMap extends Component {
     }
 
     render() {
-        const { coords, onPress, style } = this.props
+        const {coords, onPress, style} = this.props
 
         if (!coords) return null
 
@@ -28,7 +28,7 @@ class AttachedMap extends Component {
                 scrollEnabled={false}
                 cacheEnabled={true}
                 // onMapReady = {e => console.log('ready')}
-                region={{ ...coords, ...REGION_DELTAS }}
+                region={{...coords, ...REGION_DELTAS}}
             >
                 {/*<MapView.Marker coordinate = {{...coords}}/>*/}
             </MapView>

@@ -1,13 +1,13 @@
-import React, { Component, PureComponent } from 'react'
-import { Text, StyleSheet, SectionList, Animated, TouchableHighlight, View, PixelRatio } from 'react-native'
+import React, {Component, PureComponent} from 'react'
+import {Text, StyleSheet, SectionList, Animated, TouchableHighlight, View, PixelRatio} from 'react-native'
 import EventCard from './event-card'
-import { inject, observer } from 'mobx-react'
-import { EVENTS_STORE } from '../../constants'
+import {inject, observer} from 'mobx-react'
+import {EVENTS_STORE} from '../../constants'
 import LinedSeparator from '../common/separator/lined-separator'
 
 const sectionsFixtures = 'abcdefghijklmnopqrstuvwxyz'.split('').map((letter) => ({
     title: letter,
-    data: Array.from({ length: 3 }, (_, i) => ({
+    data: Array.from({length: 3}, (_, i) => ({
         key: letter + i,
         event: {
             title: letter + '_title_' + i,
@@ -24,7 +24,7 @@ class EventList extends Component {
     static propTypes = {}
 
     render() {
-        const { onEventPress, events } = this.props
+        const {onEventPress, events} = this.props
 
         return (
             <SectionList
@@ -33,8 +33,8 @@ class EventList extends Component {
                 ItemSeparatorComponent={LinedSeparator}
                 style={styles.container}
                 sections={events.sections}
-                renderSectionHeader={({ section }) => <Text style={styles.header}>{section.title}</Text>}
-                renderItem={({ item: { event } }) => (
+                renderSectionHeader={({section}) => <Text style={styles.header}>{section.title}</Text>}
+                renderItem={({item: {event}}) => (
                     <EventCard
                         onPress={onEventPress.bind(null, event)}
                         leftAction={onEventPress.bind(null, event)}

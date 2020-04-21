@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import SlideShow from '../common/slide-show'
-import { StatusBar } from 'react-native'
-import { observable } from 'mobx'
-import { observer, inject } from 'mobx-react'
+import {StatusBar} from 'react-native'
+import {observable} from 'mobx'
+import {observer, inject} from 'mobx-react'
 import Loader from '../common/loader'
-import { PEOPLE_STORE } from '../../constants'
+import {PEOPLE_STORE} from '../../constants'
 
 @inject(PEOPLE_STORE)
 @observer
 class UserAvatarsScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({navigation}) => ({
         headerShown: false
     })
 
@@ -20,7 +20,7 @@ class UserAvatarsScreen extends Component {
     }
 
     async componentDidMount() {
-        const { userId } = this.props.navigation.state.params
+        const {userId} = this.props.navigation.state.params
 
         this.user = await this.props.people.getUserGreedily(userId)
     }

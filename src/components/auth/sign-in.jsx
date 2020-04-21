@@ -1,21 +1,13 @@
-import React, { Component } from 'react'
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    SafeAreaView,
-    Animated,
-    TouchableWithoutFeedback
-} from 'react-native'
-import { observer, inject } from 'mobx-react'
+import React, {Component} from 'react'
+import {View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, TouchableWithoutFeedback} from 'react-native'
+import {observer, inject} from 'mobx-react'
 import SocialMedia from './social-media'
 import InputRow from './auth-input-row'
 import BackgroundImage from '../common/background-image'
-import { config } from '../../config'
+import {config} from '../../config'
 import Button from './button'
 import withAnimation from '../common/with-animation'
-import { bool, string, func, shape, objectOf, number } from 'prop-types'
+import {bool, string, func, shape, objectOf, number} from 'prop-types'
 
 import {
     DIVIDER_MARGIN_TOP,
@@ -66,7 +58,7 @@ class SignIn extends Component {
     getAnimation = (type) => this.props.getAnimation(type, this.getOutputRange)
 
     getOutputRange = (type) => {
-        const { layouts } = this.props
+        const {layouts} = this.props
 
         switch (type) {
             case LOGO + SCALE:
@@ -79,13 +71,13 @@ class SignIn extends Component {
                 return [0, STATUS_BAR_HEIGHT - layouts[INPUT].y - layouts[LOGO].height / 2]
 
             case BUTTON + TRANSLATE + Y: {
-                const { y, height } = layouts[BUTTON]
+                const {y, height} = layouts[BUTTON]
                 return [0, layouts[KEYBOARD].y - y + height]
             }
 
             case FOOTER + TRANSLATE + Y: {
-                const { y } = layouts[FOOTER]
-                const { height: keyboardHeight } = layouts[KEYBOARD]
+                const {y} = layouts[FOOTER]
+                const {height: keyboardHeight} = layouts[KEYBOARD]
                 return [0, WINDOW_HEIGHT - DIVIDER_MARGIN_TOP - y - (keyboardHeight * 3) / 4]
             }
 
@@ -118,7 +110,7 @@ class SignIn extends Component {
             >
                 <Text style={[styles.titleText]}>
                     <Text style={styles.boldText}>
-                        Me<Text style={{ fontFamily: 'Meowchat' }}></Text>w
+                        Me<Text style={{fontFamily: 'Meowchat'}}></Text>w
                     </Text>
                     chat
                 </Text>
@@ -129,7 +121,7 @@ class SignIn extends Component {
     setPasswordRef = (ref) => (this.textInput = ref)
 
     renderInput = () => {
-        const { setEmail, setPassword, password, signIn, email, isEmailValid, isPasswordValid } = this.props.auth
+        const {setEmail, setPassword, password, signIn, email, isEmailValid, isPasswordValid} = this.props.auth
 
         return (
             <Animated.View
@@ -137,7 +129,7 @@ class SignIn extends Component {
                 style={{
                     // flex: 4,
                     // minHeight: 296,
-                    transform: [{ translateY: this.getAnimation(INPUT + TRANSLATE + Y) }],
+                    transform: [{translateY: this.getAnimation(INPUT + TRANSLATE + Y)}],
                     justifyContent: 'flex-end'
                 }}
             >
@@ -210,7 +202,7 @@ class SignIn extends Component {
     }
 
     renderRegister() {
-        const { signUp } = this.props
+        const {signUp} = this.props
         return (
             <View style={styles.row}>
                 <Text style={styles.text}>Do not have an account?</Text>
@@ -233,7 +225,7 @@ class SignIn extends Component {
         //                         }}>
         return (
             <TouchableWithoutFeedback onPress={this.props.keyboard.dismiss}>
-                <SafeAreaView style={{ flex: 1, backgroundColor: '#7a839e' }}>
+                <SafeAreaView style={{flex: 1, backgroundColor: '#7a839e'}}>
                     <View style={styles.container}>
                         {this.renderInput()}
 
@@ -241,7 +233,7 @@ class SignIn extends Component {
                             onLayout={this.props.setLayout(FOOTER)}
                             style={{
                                 opacity: this.getAnimation(FOOTER + OPACITY),
-                                transform: [{ translateY: this.getAnimation(FOOTER + TRANSLATE + Y) }]
+                                transform: [{translateY: this.getAnimation(FOOTER + TRANSLATE + Y)}]
                             }}
                         >
                             {this.renderDivider()}

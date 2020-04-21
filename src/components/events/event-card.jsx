@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react'
-import { Text, StyleSheet, View, TouchableHighlight } from 'react-native'
+import React, {PureComponent} from 'react'
+import {Text, StyleSheet, View, TouchableHighlight} from 'react-native'
 import SwipeableCard from '../common/swipeable-card'
 import Avatar from '../common/basic-avatar'
 
@@ -12,7 +12,7 @@ class EventCard extends PureComponent {
 
     renderDate = () => {
         const {
-            event: { when }
+            event: {when}
         } = this.props
         const timestamp = Date.parse(when)
 
@@ -35,7 +35,7 @@ class EventCard extends PureComponent {
     render() {
         const {
             onPress,
-            event: { title, where }
+            event: {title, where}
         } = this.props
 
         return (
@@ -46,8 +46,8 @@ class EventCard extends PureComponent {
                 onSwipeableLeftOpen={onPress}
                 leftAction={onPress}
                 rightActions={[
-                    { title: 'Info', color: '#C8C7CD', callback: onPress },
-                    { title: 'Delete', color: '#E67', callback: onPress }
+                    {title: 'Info', color: '#C8C7CD', callback: onPress},
+                    {title: 'Delete', color: '#E67', callback: onPress}
                 ]}
             >
                 {/*        <View style = {styles.imageView}>

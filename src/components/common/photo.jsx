@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, Image } from 'react-native'
-import { Camera } from 'expo-camera'
+import React, {Component} from 'react'
+import {View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, Image} from 'react-native'
+import {Camera} from 'expo-camera'
 import * as Permissions from 'expo-permissions'
-import { observable, action } from 'mobx'
-import { observer, inject } from 'mobx-react'
+import {observable, action} from 'mobx'
+import {observer, inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { NAVIGATION_STORE, WHITE_TEXT_COLOR } from '../../constants'
+import {NAVIGATION_STORE, WHITE_TEXT_COLOR} from '../../constants'
 import PropTypes from 'prop-types'
 
 @inject(NAVIGATION_STORE)
@@ -30,7 +30,7 @@ class Photo extends Component {
     async componentDidMount() {
         StatusBar.setHidden(true, 'slide')
 
-        const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL)
+        const {status} = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL)
         this.setPermission(status)
     }
 
@@ -106,11 +106,11 @@ class Photo extends Component {
         if (this.pending) return
         this.pending = true
 
-        const { photoHandler } = this.props
+        const {photoHandler} = this.props
         // TODO Make preview. Wait photo to load on device then go back. Expo camera freezes...
         // this.camera.getAvailablePictureSizesAsync().then(console.log)
 
-        this.camera.takePictureAsync({ onPictureSaved: photoHandler })
+        this.camera.takePictureAsync({onPictureSaved: photoHandler})
         this.camera.pausePreview()
         // console.log('got photo')
         // photoHandler(photo)

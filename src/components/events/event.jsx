@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {View, Text, Image, StyleSheet, Button, TouchableOpacity} from 'react-native'
 import ConfirmModal from '../common/confirm-modal'
-import { web } from 'react-native-communications'
+import {web} from 'react-native-communications'
 
 class Event extends Component {
     static propTypes = {}
@@ -11,12 +11,12 @@ class Event extends Component {
     }
 
     render() {
-        const { event } = this.props
+        const {event} = this.props
         return (
             <View style={styles.container}>
                 <Text style={[styles.text, styles.header]}>{event.title}</Text>
                 <View>
-                    <Image source={{ uri: 'http://lorempixel.com/200/100/technics' }} style={styles.image} />
+                    <Image source={{uri: 'http://lorempixel.com/200/100/technics'}} style={styles.image} />
                     <Text>{event.when}</Text>
                     <Text>{event.where}</Text>
                 </View>
@@ -47,8 +47,8 @@ class Event extends Component {
         })
     }
 
-    confirmDelete = () => this.setState({ confirmModal: false })
-    cancelDelete = () => this.setState({ confirmModal: false })
+    confirmDelete = () => this.setState({confirmModal: false})
+    cancelDelete = () => this.setState({confirmModal: false})
 }
 
 const styles = StyleSheet.create({

@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { Modal, View, Text, Button, StyleSheet } from 'react-native'
+import React, {Component} from 'react'
+import {Modal, View, Text, Button, StyleSheet} from 'react-native'
 
 class ConfirmModal extends Component {
     static propTypes = {}
 
     render() {
-        const { visible, children, onConfirm, onCancel } = this.props
+        const {visible, children, onConfirm, onCancel} = this.props
         return (
             <Modal visible={visible} animationType="slide" transparent>
                 <View style={styles.container}>

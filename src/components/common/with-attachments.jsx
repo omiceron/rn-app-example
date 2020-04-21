@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from 'react'
-import { observable, action, computed } from 'mobx'
-import { inject, observer } from 'mobx-react'
-import { StatusBar } from 'react-native'
+import {observable, action, computed} from 'mobx'
+import {inject, observer} from 'mobx-react'
+import {StatusBar} from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import { ATTACHMENTS_STORE } from '../../constants'
+import {ATTACHMENTS_STORE} from '../../constants'
 
 export default (...props) => (
     Component: React.ComponentType<any>
@@ -32,16 +32,16 @@ export default (...props) => (
 
         @computed get attachmentsObject() {
             return this._attachments.reduce((acc, uid) => {
-                const { url } = this.props.attachments.getAttachment(uid)
-                return { ...acc, [uid]: url }
+                const {url} = this.props.attachments.getAttachment(uid)
+                return {...acc, [uid]: url}
             }, {})
         }
 
-        attachFile = async ({ uri, cancelled }) => {
+        attachFile = async ({uri, cancelled}) => {
             if (cancelled) return
 
-            const attachFile = this.props.attachments.attachFileSequence({ uri })
-            const { value: uid } = await attachFile.next()
+            const attachFile = this.props.attachments.attachFileSequence({uri})
+            const {value: uid} = await attachFile.next()
 
             this.addAttachment(uid)
 

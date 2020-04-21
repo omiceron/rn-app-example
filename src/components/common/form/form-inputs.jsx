@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet, FlatList, TextInput } from 'react-native'
+import React, {Component} from 'react'
+import {StyleSheet, FlatList, TextInput} from 'react-native'
 import PropTypes from 'prop-types'
-import { BLACK_TEXT_COLOR } from '../../../constants'
+import {BLACK_TEXT_COLOR} from '../../../constants'
 import LinedSeparator from '../separator/lined-separator'
 import TableRow from '../table/table-row'
 
@@ -18,9 +18,9 @@ class FormInputs extends Component {
 
     focus = (index) => () => this.inputs[index].focus()
 
-    renderItem = ({ item, index }) => {
-        const { data, addInputRef, focusNextInput, autoFocusIndex } = this.props
-        const { stretch, multiline, name, ...rest } = item
+    renderItem = ({item, index}) => {
+        const {data, addInputRef, focusNextInput, autoFocusIndex} = this.props
+        const {stretch, multiline, name, ...rest} = item
 
         const isLastItem = index === data.length - 1
         const onSubmitEditing = !isLastItem ? this.focus(index + 1) : undefined
@@ -43,7 +43,7 @@ class FormInputs extends Component {
     }
 
     render() {
-        const { data, scrollable } = this.props
+        const {data, scrollable} = this.props
 
         return (
             <FlatList
@@ -51,7 +51,7 @@ class FormInputs extends Component {
                 ItemSeparatorComponent={LinedSeparator}
                 data={data}
                 scrollEnabled={scrollable}
-                keyExtractor={({ name }) => name}
+                keyExtractor={({name}) => name}
             />
         )
     }
