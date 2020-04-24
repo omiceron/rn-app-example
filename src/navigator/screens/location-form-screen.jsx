@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
-import LocationForm from '../feed/location-form'
+import LocationForm from '../../components/feed/location-form'
 import {observer, inject} from 'mobx-react'
-import {FEED_STORE} from '../../constants/index'
+import {FEED_STORE} from '../../constants'
 // import {HeaderBackButton} from 'react-navigation'
-import NavigationButton from '../navigation/navigation-button'
+import NavigationButton from '../../components/navigation/navigation-button'
 
 @inject(FEED_STORE)
 @observer

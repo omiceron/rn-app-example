@@ -28,6 +28,11 @@
             "error",
             4
         ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "import/prefer-default-export": 0,
         "react-native/no-unused-styles": 2,
         "react-native/no-inline-styles": 2,
         "react-native/no-color-literals": 2,

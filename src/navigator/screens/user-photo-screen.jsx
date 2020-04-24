@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Photo from '../common/photo'
+import Photo from '../../components/common/photo'
 import {inject} from 'mobx-react'
 import {AVATAR_STORE, WARNING_COLOR} from '../../constants'
 import PropTypes from 'prop-types'

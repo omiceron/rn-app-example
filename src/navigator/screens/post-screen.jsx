@@ -1,15 +1,13 @@
 import React, {Component} from 'react'
-import {inject, observer} from 'mobx-react'
-import {FEED_STORE, PEOPLE_STORE} from '../../constants'
-import Post from '../feed/post'
-import {observable, action, computed, autorun, reaction} from 'mobx'
-import Loader from '../common/loader'
+import {inject} from 'mobx-react'
+import {FEED_STORE} from '../../constants'
+import Post from '../../components/post/post'
+import {computed} from 'mobx'
+import Loader from '../../components/common/loader'
 
-@inject(PEOPLE_STORE)
 @inject(FEED_STORE)
-@observer
 class PostScreen extends Component {
-    static navigationOptions = ({navigation}) => {
+    static navigationOptions = () => {
         return {
             title: 'Post'
         }
@@ -32,6 +30,20 @@ class PostScreen extends Component {
     //   return user
     // }
 
+    openLikedPosts = () => {
+        const {postId} = this.props.navigation.state.params
+        this.props.navigation.push('likesList', {postId})
+    }
+
+    openMap = () => {
+        const {coords} = this.post
+        this.props.navigation.navigate('mapScreen', {coords})
+    }
+
+    handleInfoPress = () => {
+        this.props.navigation.push('userScreen', {userId: this.post.user.uid})
+    }
+
     render() {
         if (!this.post /*|| !this.user*/) return <Loader />
         const {title, text, coords, timestamp, uid, location, user} = this.post
@@ -47,18 +59,9 @@ class PostScreen extends Component {
                 user={user}
                 openLikedPosts={this.openLikedPosts}
                 openMap={this.openMap}
+                handleInfoPress={this.handleInfoPress}
             />
         )
-    }
-
-    openLikedPosts = () => {
-        const {postId} = this.props.navigation.state.params
-        this.props.navigation.push('likesList', {postId})
-    }
-
-    openMap = () => {
-        const {coords} = this.post
-        this.props.navigation.navigate('mapScreen', {coords})
     }
 }
 

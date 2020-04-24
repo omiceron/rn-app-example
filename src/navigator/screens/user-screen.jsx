@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import UserInfo from '../user-info'
+import UserInfo from '../../components/user-info'
 import {inject, observer} from 'mobx-react'
 import {PEOPLE_STORE} from '../../constants'
 import {observable} from 'mobx'
-import Loader from '../common/loader'
+import Loader from '../../components/common/loader'
 
 @inject(PEOPLE_STORE)
 @observer

@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Anim
 import PropTypes from 'prop-types'
 import {inject, observer} from 'mobx-react'
 import {computed} from 'mobx'
-import {FEED_STORE, HIT_SLOP} from '../../constants/index'
+import {FEED_STORE, HIT_SLOP} from '../../constants'
 import {
     NAVIGATION_STORE,
     WHITE_BACKGROUND_COLOR,
@@ -12,12 +12,11 @@ import {
     POST_IMAGE_SIZE
 } from '../../constants'
 import AttachedLocation from './attached-location'
-import PostControlRow from './post-control-row'
+import PostControlRow from '../post/post-control-row'
 import Attachments from '../common/attachments'
 import LinedSeparator from '../common/separator/lined-separator'
 
 @inject(NAVIGATION_STORE)
-@inject(FEED_STORE)
 @observer
 class PostCard extends Component {
     static propTypes = {
@@ -27,27 +26,17 @@ class PostCard extends Component {
         coords: PropTypes.object
     }
 
-    @computed
-    get likesNumber() {
-        return this.props.feed.getPostLikesNumber(this.props.uid)
-    }
+    handleHeaderPress = () => this.props.navigation.navigate('postScreen', {postId: this.props.uid})
 
-    @computed
-    get isLiked() {
-        return this.props.feed.isPostLiked(this.props.uid)
-    }
-
-    setLike = () => {
-        this.props.feed.setLike(this.props.uid)
-    }
+    handleLocationPress = () => this.props.navigation.navigate('mapScreen', {coords: this.props.coords})
 
     render() {
-        console.log('render')
-        const {title, text, location, uid, navigation, feed, coords, attachments} = this.props
+        console.log('render post-card')
+        const {title, text, location, uid, attachments} = this.props
 
         return (
             <View style={[styles.container]}>
-                <TouchableOpacity onPress={() => navigation.navigate('postScreen', {postId: uid})}>
+                <TouchableOpacity onPress={this.handleHeaderPress}>
                     <View style={styles.row}>
                         <Text numberOfLines={1} style={styles.title}>
                             {title}
@@ -69,18 +58,13 @@ class PostCard extends Component {
                     <AttachedLocation
                         location={location}
                         style={{marginBottom: 8}}
-                        onPress={() => navigation.navigate('mapScreen', {coords})}
+                        onPress={this.handleLocationPress}
                     />
                 )}
 
                 <LinedSeparator />
 
-                <PostControlRow
-                    isLiked={this.isLiked}
-                    likesNumber={this.likesNumber}
-                    onLikePress={this.setLike}
-                    onCounterPress={() => navigation.push('likesList', {postId: uid})}
-                />
+                <PostControlRow uid={uid} />
             </View>
         )
     }

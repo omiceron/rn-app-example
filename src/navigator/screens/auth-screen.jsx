@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import SignIn from '../auth/sign-in'
+import SignIn from '../../components/auth/sign-in'
 import {shape, func} from 'prop-types'
 import {LayoutAnimation} from 'react-native'
 

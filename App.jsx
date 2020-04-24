@@ -6,13 +6,12 @@ import {AppLoading} from 'expo'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as Font from 'expo-font'
 import {Asset} from 'expo-asset'
-import AppNavigator from './src/navigator'
+import Navigator from './src/navigator'
 import stores from './src/stores'
 
 configure({enforceActions: 'never'})
 
-@observer
-export default class App extends React.Component {
+class App extends React.Component {
     @observable isReady = false
     @action setReady = () => (this.isReady = true)
 
@@ -34,7 +33,7 @@ export default class App extends React.Component {
 
         return (
             <Provider {...stores}>
-                <AppNavigator ref={this.setNavRef} />
+                <Navigator ref={this.setNavRef} />
             </Provider>
         )
     }
@@ -43,3 +42,5 @@ export default class App extends React.Component {
         stores.navigation.setRef(ref)
     }
 }
+
+export default observer(App)

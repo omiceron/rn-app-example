@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {observer, inject} from 'mobx-react'
-import LikesList from '../feed/likes-list'
+import LikesList from '../../components/likes-list/likes-list'
 import {observable} from 'mobx'
-import Loader from '../common/loader'
+import Loader from '../../components/common/loader'
 import {FEED_STORE} from '../../constants'
 
 @inject(FEED_STORE)

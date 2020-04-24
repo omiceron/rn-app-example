@@ -8,6 +8,12 @@ import {INACTIVE_TEXT_COLOR} from '../../constants'
 
 @observer
 class Like extends Component {
+    static propTypes = {
+        // style: View.propTypes.style,
+        activated: PropTypes.bool.isRequired,
+        onPress: PropTypes.func.isRequired
+    }
+
     constructor(...args) {
         super(...args)
 
@@ -25,12 +31,6 @@ class Like extends Component {
                     })
                 ]).start()
         )
-    }
-
-    static propTypes = {
-        // style: View.propTypes.style,
-        activated: PropTypes.bool.isRequired,
-        onPress: PropTypes.func.isRequired
     }
 
     animation = new Animated.Value(0)

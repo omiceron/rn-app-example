@@ -1,23 +1,23 @@
 import {createAppContainer, createSwitchNavigator, getActiveChildNavigationOptions} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
-import AuthScreen from '../components/screens/auth-screen'
-import SignUpScreen from '../components/screens/sign-up-screen'
-import PeopleScreen from '../components/screens/people-screen'
-import PersonPhotoScreen from '../components/screens/person-photo-screen'
-import UserPhotoScreen from '../components/screens/user-photo-screen'
-import MessengerScreen from '../components/screens/messenger-screen'
-import ChatScreen from '../components/screens/chat-screen'
-import UserInfo from '../components/screens/user-screen'
-import UserAvatarsScreen from '../components/screens/user-avatars-screen'
-import SettingsScreen from '../components/screens/settings-screen'
-import FeedScreen from '../components/screens/feed-screen'
-import PostFormScreen from '../components/screens/post-form-screen'
-import LocationFormScreen from '../components/screens/location-form-screen'
-import LikesListScreen from '../components/screens/likes-list-screen'
-import PostScreen from '../components/screens/post-screen'
-import AuthLoadingScreen from '../components/screens/loader-screen'
-import MapScreen from '../components/screens/map-screen'
+import AuthScreen from './screens/auth-screen'
+import SignUpScreen from './screens/sign-up-screen'
+import PeopleScreen from './screens/people-screen'
+import PersonPhotoScreen from './screens/person-photo-screen'
+import UserPhotoScreen from './screens/user-photo-screen'
+import MessengerScreen from './screens/messenger-screen'
+import ChatScreen from './screens/chat-screen'
+import UserInfo from './screens/user-screen'
+import UserAvatarsScreen from './screens/user-avatars-screen'
+import SettingsScreen from './screens/settings-screen'
+import FeedScreen from './screens/feed-screen'
+import PostFormScreen from './screens/post-form-screen'
+import LocationFormScreen from './screens/location-form-screen'
+import LikesListScreen from './screens/likes-list-screen'
+import PostScreen from './screens/post-screen'
+import AuthLoadingScreen from './screens/loader-screen'
+import MapScreen from './screens/map-screen'
 import {
     ACTIVE_TINT_COLOR,
     DEFAULT_HEADER_COLOR,
@@ -25,7 +25,7 @@ import {
     WHITE_BACKGROUND_COLOR,
     WHITE_TEXT_COLOR
 } from '../constants'
-import {createTabBarIcon} from './create-tab-bar-icon'
+import {createTabBarIcon} from './utils/create-tab-bar-icon'
 
 const commonScreens = {
     postScreen: {
@@ -168,7 +168,7 @@ const ModalNavigator = createStackNavigator(
     }
 )
 
-const AppNavigator = createAppContainer(
+const Navigator = createAppContainer(
     createSwitchNavigator({
         loading: {
             screen: AuthLoadingScreen
@@ -182,4 +182,4 @@ const AppNavigator = createAppContainer(
     })
 )
 
-export default AppNavigator
+export default Navigator

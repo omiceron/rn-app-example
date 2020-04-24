@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
-import Feed from '../feed/'
-import {FEED_STORE} from '../../constants/index'
-import Loader from '../common/loader'
-import NavigationButton from '../navigation/navigation-button'
+import Feed from '../../components/feed'
+import {FEED_STORE} from '../../constants'
+import Loader from '../../components/common/loader'
+import NavigationButton from '../../components/navigation/navigation-button'
 import PropTypes from 'prop-types'
 import {DEFAULT_HEADER_COLOR} from '../../constants'
-import EmptyList from '../common/empty-list'
+import EmptyList from '../../components/common/empty-list'
 
 @inject(FEED_STORE)
 @observer

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import PersonPhoto from '../people/person-photo'
+import PersonPhoto from '../../components/people/person-photo'
 import {DEFAULT_HEADER_COLOR} from '../../constants'
 
 class PersonPhotoScreen extends Component {

@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
-import {FEED_STORE} from '../../constants/index'
-import PostForm from '../feed/post-form'
-import NavigationButton from '../navigation/navigation-button'
+import {FEED_STORE} from '../../constants'
+import PostForm from '../../components/post/post-form'
+import NavigationButton from '../../components/navigation/navigation-button'
 
 @inject(FEED_STORE)
 @observer
