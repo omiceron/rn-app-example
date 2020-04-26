@@ -1,14 +1,7 @@
 import EntitiesStore from './entities-store'
 import {computed, action} from 'mobx'
 import firebase from 'firebase/app'
-import {
-    AVATARS_STORAGE_REFERENCE,
-    PEOPLE_REFERENCE,
-    CURRENT_USER_STORE,
-    CACHE_DIR,
-    MESSENGER_STORE,
-    ATTACHMENTS_STORAGE_REFERENCE
-} from '../constants'
+import {CACHE_DIR, ATTACHMENTS_STORAGE_REFERENCE} from '../constants'
 import path from 'path'
 import * as FileSystem from 'expo-file-system'
 import {alphabetic, copyFile, urlToBlob} from './utils'

@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import Messenger from '../../components/messenger'
 import {inject, observer} from 'mobx-react'
-import {DEFAULT_HEADER_COLOR, MESSENGER_STORE, WHITE_TEXT_COLOR, PEOPLE_STORE} from '../../constants'
+import {DEFAULT_HEADER_COLOR, MESSENGER_STORE, WHITE_TEXT_COLOR, USERS_STORE} from '../../constants'
 import Loader from '../../components/ui/loader'
 import {LayoutAnimation, ActionSheetIOS} from 'react-native'
 import {reaction} from 'mobx'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @inject(MESSENGER_STORE)
 @observer
 class MessengerScreen extends Component {

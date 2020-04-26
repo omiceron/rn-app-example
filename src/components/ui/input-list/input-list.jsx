@@ -6,7 +6,7 @@ import BasicSeparator from '../separator/basic-separator'
 import LinedSeparator from '../separator/lined-separator'
 import TableRow from '../table/table-row'
 
-class BasicList extends Component {
+class InputList extends Component {
     static propTypes = {
         // style: View.propTypes.style,
         scrollable: PropTypes.bool,
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default BasicList
+export default InputList

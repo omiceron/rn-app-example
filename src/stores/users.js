@@ -2,13 +2,13 @@ import EntitiesStore from './entities-store'
 import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
 import firebase from 'firebase/app'
-import {AVATARS_STORAGE_REFERENCE, PEOPLE_REFERENCE, CURRENT_USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
+import {AVATARS_STORAGE_REFERENCE, USERS_REFERENCE, CURRENT_USER_STORE, CACHE_DIR, MESSENGER_STORE} from '../constants'
 import path from 'path'
 import * as FileSystem from 'expo-file-system'
 import {alphabetic, urlToBlob} from './utils'
 import {toJS} from 'mobx'
 
-class PeopleStore extends EntitiesStore {
+class UsersStore extends EntitiesStore {
     @computed
     get sections() {
         const grouped = groupBy(this.entities, ({firstName}) => firstName[0].toUpperCase())
@@ -22,7 +22,7 @@ class PeopleStore extends EntitiesStore {
     }
 
     get reference() {
-        return firebase.database().ref(PEOPLE_REFERENCE)
+        return firebase.database().ref(USERS_REFERENCE)
     }
 
     off() {
@@ -187,4 +187,4 @@ class PeopleStore extends EntitiesStore {
     }
 }
 
-export default PeopleStore
+export default UsersStore

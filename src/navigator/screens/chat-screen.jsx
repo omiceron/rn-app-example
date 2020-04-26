@@ -3,11 +3,11 @@ import {inject, observer} from 'mobx-react'
 import Chat from '../../components/messenger/chat'
 import TouchableAvatar from '../../components/ui/touchable-avatar'
 import {observable} from 'mobx'
-import {MESSENGER_STORE, PEOPLE_STORE} from '../../constants'
+import {MESSENGER_STORE, USERS_STORE} from '../../constants'
 import PropTypes from 'prop-types'
 import Loader from '../../components/ui/loader'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @inject(MESSENGER_STORE)
 @observer
 class ChatScreen extends Component {

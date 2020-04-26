@@ -4,7 +4,7 @@ import BasicStore from './basic-store'
 import {AsyncStorage, Alert} from 'react-native'
 import validator from 'validator'
 import {
-    PEOPLE_STORE,
+    USERS_STORE,
     AVATAR_STORE,
     CURRENT_USER_STORE,
     FEED_STORE,
@@ -34,7 +34,7 @@ class AuthStore extends BasicStore {
                 this.getStore(AVATAR_STORE).subscribeOnUserAvatar()
                 this.getStore(MESSENGER_STORE).subscribeOnChats()
 
-                await this.getStore(PEOPLE_STORE).fetchAllUsers()
+                await this.getStore(USERS_STORE).fetchAllUsers()
                 await this.getStore(FEED_STORE).fetchPosts()
                 await this.getStore(MESSENGER_STORE).fetchChats()
             }
@@ -170,7 +170,7 @@ class AuthStore extends BasicStore {
 
     signOut = async () => {
         this.clear()
-        const stores = [MESSENGER_STORE, AVATAR_STORE, CURRENT_USER_STORE, FEED_STORE, PEOPLE_STORE]
+        const stores = [MESSENGER_STORE, AVATAR_STORE, CURRENT_USER_STORE, FEED_STORE, USERS_STORE]
         stores.forEach((store) => this.getStore(store).off())
         // AsyncStorage.removeItem('user')
         await firebase.auth().signOut()

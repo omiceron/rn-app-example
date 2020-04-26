@@ -20,7 +20,7 @@ import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {
-    PEOPLE_STORE,
+    USERS_STORE,
     FEED_CHUNK_LENGTH,
     POSTS_REFERENCE,
     LIKES_REFERENCE,
@@ -179,7 +179,7 @@ class FeedStore extends EntitiesStore {
             post.attachments = await this.getStore(ATTACHMENTS_STORE).convertAttachments(post.attachments)
         }
 
-        post.user = await this.getStore(PEOPLE_STORE).getUserLazily(post.userId)
+        post.user = await this.getStore(USERS_STORE).getUserLazily(post.userId)
 
         return post
     }
@@ -358,7 +358,7 @@ class FeedStore extends EntitiesStore {
 
     getPostLikes = async (postId) => {
         const {likes} = this.entities[postId]
-        const people = this.getStore(PEOPLE_STORE)
+        const people = this.getStore(USERS_STORE)
 
         return Promise.all(
             Object.entries(likes).map(async ([key, {userId}]) => {

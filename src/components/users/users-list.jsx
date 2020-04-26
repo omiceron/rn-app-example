@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
 import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
-import PersonCard from './person-card'
+import UsersCard from './users-card'
 import Loader from '../ui/loader'
-import {INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {INACTIVE_BACKGROUND_COLOR, USERS_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {shape, bool, func, array} from 'prop-types'
 import LinedSeparator from '../ui/separator/lined-separator'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @observer
-class PeopleList extends Component {
+class UsersList extends Component {
     static propTypes = {
         people: shape({
             sections: array.isRequired
@@ -25,7 +25,7 @@ class PeopleList extends Component {
         const {getPhoto, openChatScreen, openUserInfoScreen} = this.props
 
         return (
-            <PersonCard
+            <UsersCard
                 onPress={openChatScreen.bind(null, user.uid)}
                 getPhoto={getPhoto.bind(null, user.uid)}
                 openUserInfoScreen={openUserInfoScreen.bind(null, user.uid)}
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PeopleList
+export default UsersList

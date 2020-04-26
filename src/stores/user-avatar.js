@@ -8,7 +8,7 @@ import * as MediaLibrary from 'expo-media-library'
 import {
     USER_AVATAR_REFERENCE,
     CACHE_DIR,
-    PEOPLE_REFERENCE,
+    USERS_REFERENCE,
     AVATARS_STORAGE_REFERENCE,
     NAVIGATION_STORE
 } from '../constants'
@@ -28,7 +28,7 @@ class UserAvatarStore extends EntitiesStore {
     }
 
     get currentUserReference() {
-        return firebase.database().ref(PEOPLE_REFERENCE).child(this.user.uid)
+        return firebase.database().ref(USERS_REFERENCE).child(this.user.uid)
     }
 
     get currentUserAvatarStorageReference() {

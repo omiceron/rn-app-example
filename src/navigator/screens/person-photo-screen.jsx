@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import PersonPhoto from '../../components/people/person-photo'
+import UsersPhoto from '../../components/users/users-photo'
 import {DEFAULT_HEADER_COLOR} from '../../constants'
 
 class PersonPhotoScreen extends Component {
@@ -11,7 +11,7 @@ class PersonPhotoScreen extends Component {
     })
 
     render() {
-        return <PersonPhoto userId={this.props.navigation.state.params.userId} />
+        return <UsersPhoto userId={this.props.navigation.state.params.userId} />
     }
 }
 

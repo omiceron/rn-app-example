@@ -3,12 +3,12 @@ import {View, StyleSheet, Modal, ActivityIndicator, Image} from 'react-native'
 import Photo from '../ui/photo'
 import {observer, inject} from 'mobx-react'
 import {observable, action} from 'mobx'
-import {PEOPLE_STORE} from '../../constants'
+import {USERS_STORE} from '../../constants'
 import PropTypes from 'prop-types'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @observer
-class PersonPhoto extends Component {
+class UsersPhoto extends Component {
     static propTypes = {
         userId: PropTypes.string.isRequired
     }
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PersonPhoto
+export default UsersPhoto

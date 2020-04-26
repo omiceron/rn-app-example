@@ -25,8 +25,8 @@ import {
     CHATS_REFERENCE,
     MESSAGES_CHUNK_LENGTH,
     MESSAGES_REFERENCE,
-    PEOPLE_REFERENCE,
-    PEOPLE_STORE
+    USERS_REFERENCE,
+    USERS_STORE
 } from '../constants'
 import {toJS} from 'mobx'
 import withAttachments from './with-attachments'
@@ -38,7 +38,7 @@ class MessengerStore extends EntitiesStore {
     }
 
     getUserChatsReference = (userId) => {
-        return firebase.database().ref(PEOPLE_REFERENCE).child(userId).child(CHATS_REFERENCE)
+        return firebase.database().ref(USERS_REFERENCE).child(userId).child(CHATS_REFERENCE)
     }
 
     get currentUserChatsReference() {
@@ -218,7 +218,7 @@ class MessengerStore extends EntitiesStore {
 
     convertChats = async (payload) => {
         const chatsPromises = Object.entries(payload).map(async ([key, chat]) => {
-            chat.user = await this.getStore(PEOPLE_STORE).getUserLazily(chat.userId)
+            chat.user = await this.getStore(USERS_STORE).getUserLazily(chat.userId)
             chat.key = key
 
             if (!chat.lastMessage) {

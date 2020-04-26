@@ -4,7 +4,7 @@ import {observer, inject} from 'mobx-react'
 import {translate} from '../utils'
 import {AUTH_STORE, BLACK_TEXT_COLOR, CURRENT_USER_STORE, WARNING_COLOR} from '../../constants'
 import {string, func, shape, bool} from 'prop-types'
-import BasicList from '../ui/basic-list/basic-list'
+import InputList from '../ui/input-list'
 import SettingsUserBio from './settings-user-bio'
 import SettingsUserCard from './settings-user-card'
 
@@ -91,7 +91,7 @@ class Settings extends Component {
             }
         ]
 
-        return <BasicList sections={sections} />
+        return <InputList sections={sections} />
     }
 }
 

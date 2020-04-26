@@ -4,7 +4,7 @@ import UserStore from './user'
 import KeyboardStore from './keyboard'
 import UserAvatarStore from './user-avatar'
 import NavigationStore from './navigation'
-import PeopleStore from './people'
+import UsersStore from './users'
 import FeedStore from './feed'
 import MessengerStore from './messenger'
 import {
@@ -13,7 +13,7 @@ import {
     NAVIGATION_STORE,
     AVATAR_STORE,
     MESSENGER_STORE,
-    PEOPLE_STORE,
+    USERS_STORE,
     CURRENT_USER_STORE,
     FEED_STORE,
     ATTACHMENTS_STORE
@@ -29,7 +29,7 @@ stores[FEED_STORE] = new FeedStore(stores, FEED_STORE)
 stores[AVATAR_STORE] = new UserAvatarStore(stores, AVATAR_STORE)
 stores[AUTH_STORE] = new AuthStore(stores, AUTH_STORE)
 stores[NAVIGATION_STORE] = new NavigationStore(stores, NAVIGATION_STORE)
-stores[PEOPLE_STORE] = new PeopleStore(stores, PEOPLE_STORE)
+stores[USERS_STORE] = new UsersStore(stores, USERS_STORE)
 stores[MESSENGER_STORE] = new MessengerStore(stores, MESSENGER_STORE)
 
 export default stores

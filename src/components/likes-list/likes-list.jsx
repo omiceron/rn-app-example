@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {FlatList, SafeAreaView} from 'react-native'
 import {WHITE_BACKGROUND_COLOR} from '../../constants'
 import LinedSeparator from '../ui/separator/lined-separator'
-import PersonCard from '../people/person-card'
+import UsersCard from '../users/users-card'
 import {styles} from './styles'
 
 class LikesList extends Component {
@@ -13,7 +13,7 @@ class LikesList extends Component {
     }
 
     renderLike = ({item}) => {
-        return <PersonCard onPress={this.props.openUserInfoScreen.bind(null, item.user.uid)} user={item.user} />
+        return <UsersCard onPress={this.props.openUserInfoScreen.bind(null, item.user.uid)} user={item.user} />
     }
 
     render() {

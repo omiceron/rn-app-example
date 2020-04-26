@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
 import {FEED_STORE} from '../../constants'
 import PostForm from '../../components/post-form'
-import NavigationButton from '../../components/navigation/navigation-button'
+import NavigationButton from '../../components/ui/navigation-button'
 
 @inject(FEED_STORE)
 @observer

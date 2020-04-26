@@ -7,7 +7,7 @@ import React, {Component} from 'react'
 import {KeyboardAvoidingView, TextInput} from 'react-native'
 import MapView from 'react-native-maps'
 import {FEED_STORE, NAVIGATION_STORE, REGION_DELTAS} from '../../constants'
-import BasicList from '../ui/basic-list/basic-list'
+import InputList from '../ui/input-list'
 import Loader from '../ui/loader'
 import TableBlock from '../ui/table/table-block'
 import TableRow from '../ui/table/table-row'
@@ -132,7 +132,7 @@ class LocationForm extends Component {
             }
         ]
 
-        return <BasicList sections={sections} scrollable={false} />
+        return <InputList sections={sections} scrollable={false} />
     }
 
     render() {

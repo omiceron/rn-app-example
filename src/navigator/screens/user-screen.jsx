@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import UserInfo from '../../components/user-info'
 import {inject, observer} from 'mobx-react'
-import {PEOPLE_STORE} from '../../constants'
+import {USERS_STORE} from '../../constants'
 import {observable} from 'mobx'
 import Loader from '../../components/ui/loader'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @observer
 class UserScreen extends Component {
     static navigationOptions = ({navigation}) => ({

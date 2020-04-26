@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import {BLACK_TEXT_COLOR, ROW_HEIGHT} from '../../constants'
 import SegmentedCard from '../ui/segmented-card'
 
-class PersonCard extends Component {
+class UsersCard extends Component {
     static propTypes = {
         user: PropTypes.shape({
             firstName: PropTypes.string.isRequired,
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PersonCard
+export default UsersCard

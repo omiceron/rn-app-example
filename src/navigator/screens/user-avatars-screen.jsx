@@ -4,9 +4,9 @@ import {StatusBar} from 'react-native'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import Loader from '../../components/ui/loader'
-import {PEOPLE_STORE} from '../../constants'
+import {USERS_STORE} from '../../constants'
 
-@inject(PEOPLE_STORE)
+@inject(USERS_STORE)
 @observer
 class UserAvatarsScreen extends Component {
     static navigationOptions = ({navigation}) => ({

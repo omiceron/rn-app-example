@@ -18,7 +18,7 @@ import {
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
 import Table from '../ui/table/table'
-import BasicList from '../ui/basic-list/basic-list'
+import InputList from '../ui/input-list'
 
 @inject(FEED_STORE)
 @observer
@@ -160,7 +160,7 @@ class UserInfo extends Component {
             }
         ]
 
-        return <BasicList sections={sections} />
+        return <InputList sections={sections} />
     }
 
     render2() {

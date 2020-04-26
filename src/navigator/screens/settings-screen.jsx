@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
 import Settings from '../../components/settings'
 import {observer, inject} from 'mobx-react'
-import {AUTH_STORE, WHITE_TEXT_COLOR, CURRENT_USER_STORE, WARNING_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import {WHITE_TEXT_COLOR, CURRENT_USER_STORE, WARNING_COLOR} from '../../constants'
 import Loader from '../../components/ui/loader'
 
-@inject(AUTH_STORE)
 @inject(CURRENT_USER_STORE)
 @observer
 class SettingsScreen extends Component {
-    static navigationOptions = ({navigation}) => ({
+    static navigationOptions = () => ({
         title: 'Settings',
         tabBarOptions: {
             activeTintColor: WARNING_COLOR,
@@ -28,7 +27,6 @@ class SettingsScreen extends Component {
     // render() {
     //   return this.props.currentUser.loaded ? <Settings /*onPress = {this.handlePress}*//> : <Loader/>
     // }
-
     // handlePress = () => {
     //   this.props.navigation.navigate('userPhoto')
     // }

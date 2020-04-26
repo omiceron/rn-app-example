@@ -4,7 +4,7 @@ import LocationForm from '../../components/location-form'
 import {observer, inject} from 'mobx-react'
 import {FEED_STORE} from '../../constants'
 // import {HeaderBackButton} from 'react-navigation'
-import NavigationButton from '../../components/navigation/navigation-button'
+import NavigationButton from '../../components/ui/navigation-button'
 
 @inject(FEED_STORE)
 @observer
