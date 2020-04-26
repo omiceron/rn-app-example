@@ -3,7 +3,7 @@ import {Text, StyleSheet, SectionList, Animated, TouchableHighlight, View, Pixel
 import EventCard from './event-card'
 import {inject, observer} from 'mobx-react'
 import {EVENTS_STORE} from '../../constants'
-import LinedSeparator from '../common/separator/lined-separator'
+import LinedSeparator from '../ui/separator/lined-separator'
 
 const sectionsFixtures = 'abcdefghijklmnopqrstuvwxyz'.split('').map((letter) => ({
     title: letter,

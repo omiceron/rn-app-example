@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import BasicButton from '../common/basic-button'
-import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import BasicButton from '../../ui/basic-button'
+import {INACTIVE_BACKGROUND_COLOR, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../../constants'
 
 class PostButton extends Component {
     static propTypes = {

@@ -1,11 +1,10 @@
-import {inject, observer} from 'mobx-react'
 import {number, object, shape, string} from 'prop-types'
 import React, {Component} from 'react'
 import {SafeAreaView, ScrollView, Text, View} from 'react-native'
-import LinedSeparator from '../common/separator/lined-separator'
-import AttachedLocation from '../feed/attached-location'
-import AttachedMap from '../feed/attached-map'
-import PostControlRow from './post-control-row'
+import LinedSeparator from '../ui/separator/lined-separator'
+import AttachedLocation from '../attached-location'
+import AttachedMap from './attached-map'
+import PostControlRow from '../post-control-row'
 import PostInfo from './post-info'
 import {styles} from './styles'
 
@@ -26,8 +25,7 @@ class Post extends Component {
     render() {
         console.log('render post')
 
-        const {location, title, text, coords, uid} = this.props
-        const {timestamp, user} = this.props
+        const {location, title, text, coords, uid, user, timestamp, handleInfoPress, handleMapPress} = this.props
 
         // TODO: Attached location logic must be reordered
         return (
@@ -37,20 +35,20 @@ class Post extends Component {
                         <Text style={styles.title}>{title}</Text>
                     </View>
                     <LinedSeparator noMargins />
-                    <PostInfo timestamp={timestamp} user={user} onPress={this.props.handleInfoPress} />
+                    <PostInfo timestamp={timestamp} user={user} onPress={handleInfoPress} />
                     <LinedSeparator noMargins />
                     <View style={styles.row}>
                         <Text style={styles.text}>{text}</Text>
                     </View>
 
                     {location && (
-                        <AttachedLocation location={location} onPress={this.props.openMap} style={{marginBottom: 8}} />
+                        <AttachedLocation location={location} onPress={handleMapPress} style={{marginBottom: 8}} />
                     )}
 
-                    {coords && <AttachedMap coords={coords} onPress={this.props.openMap} style={{marginBottom: 8}} />}
+                    {coords && <AttachedMap coords={coords} onPress={handleMapPress} style={{marginBottom: 8}} />}
 
                     <LinedSeparator noMargins />
-                    <PostControlRow uid={uid} />
+                    <PostControlRow postId={uid} />
                 </ScrollView>
             </SafeAreaView>
         )

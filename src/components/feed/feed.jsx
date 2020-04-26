@@ -1,22 +1,23 @@
-import React, {Component} from 'react'
-import {FlatList, View, StyleSheet, SafeAreaView, LayoutAnimation} from 'react-native'
-import {observer, inject} from 'mobx-react'
-import PropTypes from 'prop-types'
-import PostCard from './post-card'
-import {FEED_STORE, INACTIVE_BACKGROUND_COLOR} from '../../constants'
 import {reaction} from 'mobx'
-import ListLoader from '../common/list-loader'
+import {inject, observer} from 'mobx-react'
+import {bool, func, shape} from 'prop-types'
+import React, {Component} from 'react'
+import {FlatList, LayoutAnimation, SafeAreaView} from 'react-native'
+import {FEED_STORE} from '../../constants'
+import ListLoader from '../ui/list-loader'
+import PostCard from './post-card'
+import {styles} from './styles'
 
 @inject(FEED_STORE)
 @observer
 class Feed extends Component {
     static propTypes = {
-        feed: PropTypes.shape({
-            fetchPosts: PropTypes.func.isRequired,
-            loading: PropTypes.bool.isRequired,
-            loaded: PropTypes.bool.isRequired,
-            setLike: PropTypes.func.isRequired,
-            refreshFeed: PropTypes.func.isRequired
+        feed: shape({
+            fetchPosts: func.isRequired,
+            loading: bool.isRequired,
+            loaded: bool.isRequired,
+            setLike: func.isRequired,
+            refreshFeed: func.isRequired
         })
     }
 
@@ -35,9 +36,6 @@ class Feed extends Component {
 
     render() {
         const {feed} = this.props
-        // const {onLikeNumberPress} = this.props
-
-        // const ItemSeparatorComponent = () => <View style = {{height: 4}}/>
 
         return (
             <SafeAreaView style={styles.container}>
@@ -50,19 +48,10 @@ class Feed extends Component {
                     onEndReachedThreshold={0.1}
                     renderItem={this.renderItem}
                     ListFooterComponent={feed.loading && ListLoader}
-                    // ItemSeparatorComponent = {ItemSeparatorComponent}
-                    // ListHeaderComponent = {<View style = {{height: 8}}/>}
                 />
             </SafeAreaView>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: INACTIVE_BACKGROUND_COLOR
-    }
-})
 
 export default Feed

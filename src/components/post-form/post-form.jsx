@@ -1,15 +1,16 @@
+import {computed, reaction} from 'mobx'
+import {inject, observer} from 'mobx-react'
+import {array, func, number, shape, string} from 'prop-types'
 import React, {Component} from 'react'
-import {reaction, computed} from 'mobx'
-import {observer, inject} from 'mobx-react'
-import {StyleSheet, LayoutAnimation} from 'react-native'
-import {bool, string, func, shape, objectOf, number, array} from 'prop-types'
-import {KEYBOARD, FEED_STORE, WHITE_BACKGROUND_COLOR, NAVIGATION_STORE} from '../../constants'
-import withAnimation from '../common/with-animation'
+import {LayoutAnimation} from 'react-native'
+import {FEED_STORE, KEYBOARD, NAVIGATION_STORE} from '../../constants'
+import Form from '../ui/form/form'
+import FormAttachments from '../ui/form/form-attachments'
+import FormInputs from '../ui/form/form-inputs'
+import LinedSeparator from '../ui/separator/lined-separator'
+import withAnimation from '../ui/with-animation'
 import PostFormControlRow from './post-form-control-row'
-import Form from '../common/form/form'
-import FormInputs from '../common/form/form-inputs'
-import FormAttachments from '../common/form/form-attachments'
-import LinedSeparator from '../common/separator/lined-separator'
+import {styles} from './styles'
 
 @withAnimation(KEYBOARD)
 @inject(NAVIGATION_STORE)
@@ -103,11 +104,5 @@ class PostForm extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: WHITE_BACKGROUND_COLOR
-    }
-})
 
 export default PostForm

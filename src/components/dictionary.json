@@ -1,3 +1,12 @@
 {
-    "post.by": "by "
+    "post.by": "by",
+    "settings.user-card.hint": "Enter your name and add photo here",
+    "settings.user-bio.hint": "Enter your additional information here, like your bio, age or something like that",
+    "settings.user-bio.placeholder": "Info",
+    "settings.theme.title": "Dark Theme",
+    "settings.notifications.title": "Notifications",
+    "settings.sign-out.title": "Sign out",
+    "settings.sign-out.hint": "Press button to log out",
+    "settings.user-card.first-name": "First Name",
+    "settings.user-card.last-name": "Last Name"
 }

@@ -4,9 +4,9 @@ import {observer, inject} from 'mobx-react'
 import ChatCard from './chat-card'
 import {AUTH_STORE, INACTIVE_BACKGROUND_COLOR, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {array, string, func, shape} from 'prop-types'
-import EmptyList from '../common/empty-list'
-import ListLoader from '../common/list-loader'
-import LinedSeparator from '../common/separator/lined-separator'
+import EmptyList from '../ui/empty-list'
+import ListLoader from '../ui/list-loader'
+import LinedSeparator from '../ui/separator/lined-separator'
 
 @inject(MESSENGER_STORE)
 @inject(AUTH_STORE)

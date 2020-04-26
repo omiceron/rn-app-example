@@ -15,7 +15,7 @@ import {
 } from '../../constants'
 import {inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import Attachments from '../common/attachments'
+import Attachments from '../ui/attachments'
 
 @inject(AUTH_STORE)
 class Message extends Component {

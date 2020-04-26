@@ -3,10 +3,10 @@ import {View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated, Toucha
 import {observer, inject} from 'mobx-react'
 import SocialMedia from './social-media'
 import InputRow from './auth-input-row'
-import BackgroundImage from '../common/background-image'
+import BackgroundImage from '../ui/background-image'
 import {config} from '../../config'
 import Button from './button'
-import withAnimation from '../common/with-animation'
+import withAnimation from '../ui/with-animation'
 import {bool, string, func, shape, objectOf, number} from 'prop-types'
 
 import {

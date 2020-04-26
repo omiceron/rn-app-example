@@ -1,8 +1,8 @@
 import {computed} from 'mobx'
 import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
-import Like from '../like'
-import LikesCounter from '../like/likes-counter'
+import Like from '../ui/like'
+import LikesCounter from '../ui/like/likes-counter'
 import {string, object} from 'prop-types'
 import {inject, observer} from 'mobx-react'
 import {FEED_STORE, NAVIGATION_STORE} from '../../constants'
@@ -14,33 +14,33 @@ import {FEED_STORE, NAVIGATION_STORE} from '../../constants'
 @observer
 class PostControlRow extends Component {
     static propTypes = {
-        uid: string.isRequired,
+        postId: string.isRequired,
         feed: object,
         navigation: object
     }
 
     @computed get likesNumber() {
-        const {feed, uid} = this.props
+        const {feed, postId} = this.props
 
-        return feed.getPostLikesNumber(uid)
+        return feed.getPostLikesNumber(postId)
     }
 
     @computed get isLiked() {
-        const {feed, uid} = this.props
+        const {feed, postId} = this.props
 
-        return feed.isPostLiked(uid)
+        return feed.isPostLiked(postId)
     }
 
     handleLikePress = () => {
-        const {feed, uid} = this.props
+        const {feed, postId} = this.props
 
-        feed.setLike(uid)
+        feed.setLike(postId)
     }
 
     handleCounterPress = () => {
-        const {navigation, uid} = this.props
+        const {navigation, postId} = this.props
 
-        navigation.push('likesList', {postId: uid})
+        navigation.push('likesList', {postId})
     }
 
     // renderComments = () => {
@@ -48,14 +48,15 @@ class PostControlRow extends Component {
     // }
 
     render() {
+        console.log('render post-control-row')
         return (
             <View style={styles.container}>
                 <Like style={styles.button} onPress={this.handleLikePress} activated={this.isLiked} />
                 <LikesCounter
                     style={styles.button}
                     likesNumber={this.likesNumber}
-                    onPress={this.handleCounterPress}
                     isLiked={this.isLiked}
+                    onPress={this.handleCounterPress}
                 />
             </View>
         )

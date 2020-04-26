@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
 import Feed from '../../components/feed'
 import {FEED_STORE} from '../../constants'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 import NavigationButton from '../../components/navigation/navigation-button'
 import PropTypes from 'prop-types'
 import {DEFAULT_HEADER_COLOR} from '../../constants'
-import EmptyList from '../../components/common/empty-list'
+import EmptyList from '../../components/ui/empty-list'
 
 @inject(FEED_STORE)
 @observer
@@ -25,10 +25,6 @@ class FeedScreen extends Component {
         }
     }
 
-    // handleOnLikeNumberPress = (postId) => {
-    //   this.props.navigation.push('likesList', {postId})
-    // }
-
     render() {
         const {posts, loading, loaded} = this.props.feed
 
@@ -36,7 +32,6 @@ class FeedScreen extends Component {
         if (!posts.length) return <EmptyList title={'There are no posts yet...'} />
 
         return <Feed />
-        // return <Feed onLikeNumberPress = {this.handleOnLikeNumberPress}/>
     }
 }
 

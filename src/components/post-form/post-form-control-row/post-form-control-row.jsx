@@ -1,13 +1,10 @@
-import React, {Component} from 'react'
-import {View, StyleSheet} from 'react-native'
-import PropTypes from 'prop-types'
-import PostButton from './post-button'
 import {inject} from 'mobx-react'
-import {NAVIGATION_STORE} from '../../constants'
-import TableRow from '../common/table/table-row'
-import BasicCard from '../common/basic-card'
-import BasicList from '../common/grid/basic-list'
-import BasicRow from '../common/grid/basic-row'
+import PropTypes from 'prop-types'
+import React, {Component} from 'react'
+import {NAVIGATION_STORE} from '../../../constants'
+import BasicRow from '../../ui/grid/basic-row'
+import PostButton from './post-button'
+import {styles} from './styles'
 
 @inject(NAVIGATION_STORE)
 class PostFormControlRow extends Component {
@@ -27,13 +24,5 @@ class PostFormControlRow extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        paddingVertical: 0,
-        paddingHorizontal: 0,
-        justifyContent: 'space-around'
-    }
-})
 
 export default PostFormControlRow

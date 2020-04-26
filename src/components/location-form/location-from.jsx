@@ -1,24 +1,17 @@
-import React, {Component} from 'react'
-import {View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
-import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
+import {action, observable} from 'mobx'
+import {inject, observer} from 'mobx-react'
+import {func, number, shape, string} from 'prop-types'
+import React, {Component} from 'react'
+import {KeyboardAvoidingView, TextInput} from 'react-native'
 import MapView from 'react-native-maps'
-import TableBlock from '../common/table/table-block'
-import TableRow from '../common/table/table-row'
-import Icon from 'react-native-vector-icons/Ionicons'
-import {observer, inject} from 'mobx-react'
-import {
-    BLACK_TEXT_COLOR,
-    FEED_STORE,
-    HIT_SLOP,
-    INACTIVE_TEXT_COLOR,
-    NAVIGATION_STORE,
-    REGION_DELTAS
-} from '../../constants'
-import {observable, action} from 'mobx'
-import Loader from '../common/loader'
-import List from '../common/list/list'
+import {FEED_STORE, NAVIGATION_STORE, REGION_DELTAS} from '../../constants'
+import BasicList from '../ui/basic-list/basic-list'
+import Loader from '../ui/loader'
+import TableBlock from '../ui/table/table-block'
+import TableRow from '../ui/table/table-row'
+import {styles} from './styles'
 
 @inject(NAVIGATION_STORE)
 @inject(FEED_STORE)
@@ -139,7 +132,7 @@ class LocationForm extends Component {
             }
         ]
 
-        return <List sections={sections} scrollable={false} />
+        return <BasicList sections={sections} scrollable={false} />
     }
 
     render() {
@@ -180,16 +173,5 @@ class LocationForm extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: '100',
-        color: BLACK_TEXT_COLOR
-    }
-})
 
 export default LocationForm

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
 import {View, StyleSheet, StatusBar} from 'react-native'
 import EventList from '../../components/events/event-list'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 // import Loader from '../common/initial-loader'
 
 import Icon from 'react-native-vector-icons/Ionicons'

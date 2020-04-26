@@ -3,10 +3,10 @@ import {View, Text, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Animated
 import {observer, inject} from 'mobx-react'
 import {bool, string, func, shape, objectOf, number} from 'prop-types'
 import InputRow from './auth-input-row'
-import BackgroundImage from '../common/background-image'
+import BackgroundImage from '../ui/background-image'
 import Button from './button'
 import BackButton from './auth-back-button'
-import withAnimation from '../common/with-animation'
+import withAnimation from '../ui/with-animation'
 import {
     BACK_BUTTON_HEIGHT,
     AUTH_STORE,

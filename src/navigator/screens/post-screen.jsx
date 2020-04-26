@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
-import {inject} from 'mobx-react'
+import {inject, observer} from 'mobx-react'
 import {FEED_STORE} from '../../constants'
-import Post from '../../components/post/post'
+import Post from '../../components/post'
 import {computed} from 'mobx'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 
 @inject(FEED_STORE)
+// @observer
 class PostScreen extends Component {
     static navigationOptions = () => {
         return {
@@ -17,7 +18,11 @@ class PostScreen extends Component {
     get post() {
         const {postId} = this.props.navigation.state.params
         const post = this.props.feed.getPost(postId)
-        if (!post) this.props.feed.refreshPost(postId)
+
+        if (!post) {
+            this.props.feed.refreshPost(postId)
+        }
+
         return post
     }
 
@@ -30,12 +35,7 @@ class PostScreen extends Component {
     //   return user
     // }
 
-    openLikedPosts = () => {
-        const {postId} = this.props.navigation.state.params
-        this.props.navigation.push('likesList', {postId})
-    }
-
-    openMap = () => {
+    handleMapPress = () => {
         const {coords} = this.post
         this.props.navigation.navigate('mapScreen', {coords})
     }
@@ -45,20 +45,23 @@ class PostScreen extends Component {
     }
 
     render() {
-        if (!this.post /*|| !this.user*/) return <Loader />
-        const {title, text, coords, timestamp, uid, location, user} = this.post
+        console.log('render post-screen')
+        if (!this.post) {
+            return <Loader />
+        }
+
+        const {coords, location, text, timestamp, title, uid, user} = this.post
 
         return (
             <Post
-                location={location}
-                title={title}
-                text={text}
                 coords={coords}
+                location={location}
+                text={text}
                 timestamp={timestamp}
+                title={title}
                 uid={uid}
                 user={user}
-                openLikedPosts={this.openLikedPosts}
-                openMap={this.openMap}
+                handleMapPress={this.handleMapPress}
                 handleInfoPress={this.handleInfoPress}
             />
         )

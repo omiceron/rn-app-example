@@ -1,20 +1,13 @@
-import React, {Component, PureComponent} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Animated, Easing, Image} from 'react-native'
-import PropTypes from 'prop-types'
 import {inject, observer} from 'mobx-react'
-import {computed} from 'mobx'
-import {FEED_STORE, HIT_SLOP} from '../../constants'
-import {
-    NAVIGATION_STORE,
-    WHITE_BACKGROUND_COLOR,
-    INACTIVE_TEXT_COLOR,
-    BLACK_TEXT_COLOR,
-    POST_IMAGE_SIZE
-} from '../../constants'
-import AttachedLocation from './attached-location'
-import PostControlRow from '../post/post-control-row'
-import Attachments from '../common/attachments'
-import LinedSeparator from '../common/separator/lined-separator'
+import PropTypes from 'prop-types'
+import React, {Component} from 'react'
+import {Text, TouchableOpacity, View} from 'react-native'
+import {NAVIGATION_STORE, POST_IMAGE_SIZE} from '../../../constants'
+import AttachedLocation from '../../attached-location'
+import Attachments from '../../ui/attachments'
+import LinedSeparator from '../../ui/separator/lined-separator'
+import PostControlRow from '../../post-control-row'
+import {styles} from './styles'
 
 @inject(NAVIGATION_STORE)
 @observer
@@ -64,43 +57,10 @@ class PostCard extends Component {
 
                 <LinedSeparator />
 
-                <PostControlRow uid={uid} />
+                <PostControlRow postId={uid} />
             </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-        display: 'flex',
-        backgroundColor: WHITE_BACKGROUND_COLOR,
-        paddingHorizontal: 8,
-        borderColor: 'rgba(192,192,192,0.5)',
-        // borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: 6,
-        shadowOffset: {
-            width: 3,
-            height: 3
-        },
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        margin: 8
-    },
-    text: {
-        color: INACTIVE_TEXT_COLOR,
-        fontSize: 16,
-        fontWeight: '100'
-    },
-    title: {
-        color: BLACK_TEXT_COLOR,
-        fontSize: 16,
-        fontWeight: '600'
-    },
-    row: {
-        marginVertical: 8
-    }
-})
 
 export default PostCard

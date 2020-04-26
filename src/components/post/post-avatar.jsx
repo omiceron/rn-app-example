@@ -1,6 +1,5 @@
-import {observer} from 'mobx-react'
 import React from 'react'
-import BasicAvatar from '../common/basic-avatar'
+import BasicAvatar from '../ui/basic-avatar'
 import {styles} from './styles'
 
 const PostAvatar = ({uri}) => {

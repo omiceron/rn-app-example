@@ -1,7 +1,7 @@
 import React, {Component, PureComponent} from 'react'
 import {Text, StyleSheet, View} from 'react-native'
-import SwipeableCard from '../common/swipeable-card'
-import Avatar from '../common/basic-avatar'
+import SwipeableCard from '../ui/swipeable-card'
+import Avatar from '../ui/basic-avatar'
 import {
     AUTH_STORE,
     INFO_COLOR,
@@ -17,7 +17,7 @@ import {array, string, func, shape, objectOf, number, object} from 'prop-types'
 import {getTime} from '../../stores/utils'
 import {inject, observer} from 'mobx-react'
 import {observable, action} from 'mobx'
-import SegmentedCard from '../common/segmented-card'
+import SegmentedCard from '../ui/segmented-card'
 
 @inject(AUTH_STORE)
 @inject(CURRENT_USER_STORE)

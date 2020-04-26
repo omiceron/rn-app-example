@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {Text, StyleSheet} from 'react-native'
-import Card from '../common/basic-card'
-import Avatar from '../common/basic-avatar'
-import SwipeableCard from '../common/swipeable-card'
+import Card from '../ui/basic-card'
+import Avatar from '../ui/basic-avatar'
+import SwipeableCard from '../ui/swipeable-card'
 import PropTypes from 'prop-types'
 import {BLACK_TEXT_COLOR, ROW_HEIGHT} from '../../constants'
-import SegmentedCard from '../common/segmented-card'
+import SegmentedCard from '../ui/segmented-card'
 
 class PersonCard extends Component {
     static propTypes = {

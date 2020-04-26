@@ -1,9 +1,10 @@
+import {array, func} from 'prop-types'
 import React, {Component} from 'react'
-import {StyleSheet, FlatList, SafeAreaView, View} from 'react-native'
-import {array, string, func, shape, objectOf, number} from 'prop-types'
+import {FlatList, SafeAreaView} from 'react-native'
+import {WHITE_BACKGROUND_COLOR} from '../../constants'
+import LinedSeparator from '../ui/separator/lined-separator'
 import PersonCard from '../people/person-card'
-import {INACTIVE_BACKGROUND_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
-import LinedSeparator from '../common/separator/lined-separator'
+import {styles} from './styles'
 
 class LikesList extends Component {
     static propTypes = {
@@ -28,15 +29,5 @@ class LikesList extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: INACTIVE_BACKGROUND_COLOR
-    },
-    separator: {
-        marginLeft: 48
-    }
-})
 
 export default LikesList

@@ -1,10 +1,11 @@
-import React, {PureComponent, Component} from 'react'
-import {View, StyleSheet, Animated, TouchableWithoutFeedback} from 'react-native'
 import {reaction} from 'mobx'
 import {observer} from 'mobx-react'
-import Icon from '../common/meowchat-icon'
 import PropTypes from 'prop-types'
-import {INACTIVE_TEXT_COLOR} from '../../constants'
+import React, {Component} from 'react'
+import {Animated, TouchableWithoutFeedback, View} from 'react-native'
+import {INACTIVE_TEXT_COLOR, LIKE_COLOR} from '../../../constants'
+import Icon from '../meowchat-icon'
+import {styles} from './styles'
 
 @observer
 class Like extends Component {
@@ -49,7 +50,7 @@ class Like extends Component {
             <TouchableWithoutFeedback onPress={onPress}>
                 <View style={[styles.container, style]}>
                     <AnimatedIcon
-                        color={activated ? '#f40003' : INACTIVE_TEXT_COLOR}
+                        color={activated ? LIKE_COLOR : INACTIVE_TEXT_COLOR}
                         size={30}
                         name={`cat${activated ? '' : '-outline'}`}
                         style={{transform: [{scale: this.interpolation}]}}
@@ -59,14 +60,5 @@ class Like extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        height: 34,
-        width: 26,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-})
 
 export default Like

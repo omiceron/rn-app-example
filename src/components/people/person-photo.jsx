@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {View, StyleSheet, Modal, ActivityIndicator, Image} from 'react-native'
-import Photo from '../common/photo'
+import Photo from '../ui/photo'
 import {observer, inject} from 'mobx-react'
 import {observable, action} from 'mobx'
 import {PEOPLE_STORE} from '../../constants'

@@ -12,9 +12,7 @@
 //   user: obj
 //   timestamp: number
 //   likes: ?obj {
-//     [likeId]: {
-//       userId: string
-//     }
+//     [likeId]: {userId: string}
 //   }
 // }
 
@@ -255,7 +253,10 @@ class FeedStore extends EntitiesStore {
     @action setLike = async (postId) => {
         const ref = this.getLikesReference(postId)
 
-        if (this.entities[postId].likePending) return
+        if (this.entities[postId].likePending) {
+            return
+        }
+
         this.entities[postId].likePending = true
 
         if (this.isPostLiked(postId)) {
@@ -264,15 +265,23 @@ class FeedStore extends EntitiesStore {
             await Promise.all(
                 Object.entries(this.entities[postId].likes).map(async ([key, like]) => {
                     if (like.userId === this.user.uid) {
+                        // deleting like on frontend
                         delete this.entities[postId].likes[key]
+
+                        // deleting like on backend
                         return await ref.child(key).remove()
                     }
                 })
             )
         } else {
-            if (!this.entities[postId].likes) this.entities[postId].likes = {}
+            if (!this.entities[postId].likes) {
+                this.entities[postId].likes = {}
+            }
+
+            // add new like with key 'pending' on frontend
             this.entities[postId].likes.pending = {userId: this.user.uid}
 
+            // send like to backend
             await ref.push({userId: this.user.uid})
         }
 

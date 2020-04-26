@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import SlideShow from '../../components/common/slide-show'
+import SlideShow from '../../components/ui/slide-show'
 import {StatusBar} from 'react-native'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 import {PEOPLE_STORE} from '../../constants'
 
 @inject(PEOPLE_STORE)

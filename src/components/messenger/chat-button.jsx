@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {INACTIVE_BACKGROUND_COLOR, USER_MESSAGE_COLOR, WHITE_TEXT_COLOR} from '../../constants'
-import BasicButton from '../common/basic-button'
+import BasicButton from '../ui/basic-button'
 
 class ChatButton extends Component {
     static propTypes = {

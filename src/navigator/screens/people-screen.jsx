@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
 import PeopleList from '../../components/people/people-list'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 import {PEOPLE_STORE} from '../../constants'
 import {SafeAreaView, ActivityIndicator} from 'react-native'
 

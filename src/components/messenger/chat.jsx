@@ -14,14 +14,14 @@ import {observer, inject} from 'mobx-react'
 import Message from './message'
 import {observable, action} from 'mobx'
 import {string, func, shape, object, any} from 'prop-types'
-import EmptyList from '../common/empty-list'
+import EmptyList from '../ui/empty-list'
 import {reaction, computed} from 'mobx'
 import {isIphoneX, getBottomSpace} from 'react-native-iphone-x-helper'
 
 import {AUTH_STORE, MESSENGER_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 
-import ListLoader from '../common/list-loader'
-import AttachedImagesRow from '../common/attachments/attached-images-row'
+import ListLoader from '../ui/list-loader'
+import AttachedImagesRow from '../ui/attachments/attached-images-row'
 import ChatButton from './chat-button'
 
 // TODO: redesign the chat

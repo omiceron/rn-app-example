@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
 import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
 import PersonCard from './person-card'
-import Loader from '../common/loader'
+import Loader from '../ui/loader'
 import {INACTIVE_BACKGROUND_COLOR, PEOPLE_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
 import {shape, bool, func, array} from 'prop-types'
-import LinedSeparator from '../common/separator/lined-separator'
+import LinedSeparator from '../ui/separator/lined-separator'
 
 @inject(PEOPLE_STORE)
 @observer

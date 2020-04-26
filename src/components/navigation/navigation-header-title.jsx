@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import BasicAvatar from '../common/basic-avatar'
+import BasicAvatar from '../ui/basic-avatar'
 import {HeaderTitle} from 'react-navigation'
 
 const newHeaderTitle = ({user, ...rest}) => (

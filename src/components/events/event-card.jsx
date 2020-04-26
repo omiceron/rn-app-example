@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import {Text, StyleSheet, View, TouchableHighlight} from 'react-native'
-import SwipeableCard from '../common/swipeable-card'
-import Avatar from '../common/basic-avatar'
+import SwipeableCard from '../ui/swipeable-card'
+import Avatar from '../ui/basic-avatar'
 
 class EventCard extends PureComponent {
     static propTypes = {}

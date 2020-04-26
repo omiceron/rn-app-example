@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {Text, ActivityIndicator, StyleSheet, ScrollView, View} from 'react-native'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
-import Avatar from '../common/touchable-avatar'
+import Avatar from '../ui/touchable-avatar'
 import PropTypes from 'prop-types'
-import SegmentedCard from '../common/segmented-card'
-import TableRow from '../common/table/table-row'
-import TableBlock from '../common/table/table-block'
+import SegmentedCard from '../ui/segmented-card'
+import TableRow from '../ui/table/table-row'
+import TableBlock from '../ui/table/table-block'
 import {
     INACTIVE_BACKGROUND_COLOR,
     DEFAULT_HEADER_COLOR,
@@ -17,8 +17,8 @@ import {
     WHITE_BACKGROUND_COLOR
 } from '../../constants'
 import {getDate, getTime} from '../../stores/utils'
-import Table from '../common/table/table'
-import List from '../common/list/list'
+import Table from '../ui/table/table'
+import BasicList from '../ui/basic-list/basic-list'
 
 @inject(FEED_STORE)
 @observer
@@ -160,7 +160,7 @@ class UserInfo extends Component {
             }
         ]
 
-        return <List sections={sections} />
+        return <BasicList sections={sections} />
     }
 
     render2() {

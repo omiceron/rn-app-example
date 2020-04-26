@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
-import LocationForm from '../../components/feed/location-form'
+import LocationForm from '../../components/location-form'
 import {observer, inject} from 'mobx-react'
 import {FEED_STORE} from '../../constants'
 // import {HeaderBackButton} from 'react-navigation'

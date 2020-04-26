@@ -36,6 +36,7 @@ export const WARNING_COLOR = '#c7444a'
 export const INFO_COLOR = '#eadcc1'
 export const UNDERLAY_COLOR = '#F6F6F9'
 export const OFFLINE_COLOR = '#7f7f7f'
+export const LIKE_COLOR = '#f40003'
 
 // export const DEFAULT_BACKGROUND_COLOR = '#eff4f4'
 

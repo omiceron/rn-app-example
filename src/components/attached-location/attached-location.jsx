@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
+import React, {Component} from 'react'
+import {Text, TouchableOpacity, View} from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
 import {OFFLINE_COLOR} from '../../constants'
+import {styles} from './styles'
 
 class AttachedLocation extends Component {
     static propTypes = {
@@ -31,28 +32,5 @@ class AttachedLocation extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
-    },
-    iconContainer: {
-        marginRight: 4,
-        height: 24,
-        width: 16,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    textContainer: {
-        flex: 1
-    },
-    text: {
-        color: OFFLINE_COLOR,
-        fontSize: 16,
-        fontWeight: '100'
-    }
-})
 
 export default AttachedLocation

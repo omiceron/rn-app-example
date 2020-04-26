@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {View, Text, Image, StyleSheet, Button, TouchableOpacity} from 'react-native'
-import ConfirmModal from '../common/confirm-modal'
+import ConfirmModal from '../ui/confirm-modal'
 import {web} from 'react-native-communications'
 
 class Event extends Component {

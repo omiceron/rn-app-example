@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
-import BasicCard from '../common/basic-card'
+import BasicCard from '../ui/basic-card'
 
 class AuthRow extends Component {
     static propTypes = {

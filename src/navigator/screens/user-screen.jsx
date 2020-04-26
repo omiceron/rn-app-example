@@ -3,7 +3,7 @@ import UserInfo from '../../components/user-info'
 import {inject, observer} from 'mobx-react'
 import {PEOPLE_STORE} from '../../constants'
 import {observable} from 'mobx'
-import Loader from '../../components/common/loader'
+import Loader from '../../components/ui/loader'
 
 @inject(PEOPLE_STORE)
 @observer

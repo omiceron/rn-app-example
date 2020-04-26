@@ -1,4 +1,5 @@
 import React from 'react'
+import {observer} from 'mobx-react'
 import {Text, TouchableOpacity, View} from 'react-native'
 import {getDate} from '../../stores/utils'
 import {getFullName, translate} from '../utils'
@@ -18,7 +19,7 @@ const PostInfo = (props) => {
                 <View style={styles.author}>
                     <View style={styles.authorName}>
                         <Text style={styles.caption} numberOfLines={1}>
-                            {translate('post.by')}
+                            {`${translate('post.by')} `}
                             <Text style={styles.name}>{getFullName(user)}</Text>
                         </Text>
                     </View>
@@ -29,4 +30,4 @@ const PostInfo = (props) => {
     )
 }
 
-export default PostInfo
+export default observer(PostInfo)
