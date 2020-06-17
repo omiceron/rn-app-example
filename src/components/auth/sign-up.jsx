@@ -7,16 +7,7 @@ import BackgroundImage from '../ui/background-image'
 import Button from './button'
 import BackButton from './auth-back-button'
 import withAnimation from '../ui/with-animation'
-import {
-    BACK_BUTTON_HEIGHT,
-    AUTH_STORE,
-    KEYBOARD_STORE,
-    INPUT,
-    TITLE,
-    TRANSLATE,
-    Y,
-    OPACITY
-} from '../../constants/index'
+import {BACK_BUTTON_HEIGHT, AUTH_STORE, KEYBOARD_STORE, INPUT, TITLE, TRANSLATE, Y, OPACITY} from '../../constants'
 
 @inject(KEYBOARD_STORE)
 @inject(AUTH_STORE)

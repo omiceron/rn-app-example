@@ -2,8 +2,8 @@ import {number, object, shape, string} from 'prop-types'
 import React, {Component} from 'react'
 import {SafeAreaView, ScrollView, Text, View} from 'react-native'
 import LinedSeparator from '../ui/separator/lined-separator'
-import AttachedLocation from '../attached-location'
-import AttachedMap from './attached-map'
+import AttachedLocation from '../ui/attachments/attached-location'
+import AttachedMap from '../ui/attachments/attached-location/attached-map'
 import PostControlRow from '../post-control-row'
 import PostInfo from './post-info'
 import {styles} from './styles'
@@ -42,10 +42,13 @@ class Post extends Component {
                     </View>
 
                     {location && (
-                        <AttachedLocation location={location} onPress={handleMapPress} style={{marginBottom: 8}} />
+                        <AttachedLocation
+                            location={location}
+                            coords={coords}
+                            onPress={handleMapPress}
+                            style={{marginBottom: 8}}
+                        />
                     )}
-
-                    {coords && <AttachedMap coords={coords} onPress={handleMapPress} style={{marginBottom: 8}} />}
 
                     <LinedSeparator noMargins />
                     <PostControlRow postId={uid} />

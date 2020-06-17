@@ -6,8 +6,7 @@ import {AppLoading} from 'expo'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as Font from 'expo-font'
 import {Asset} from 'expo-asset'
-import Navigator from './src/navigator'
-import stores from './src/stores'
+import {Navigator, stores} from './src'
 
 configure({enforceActions: 'never'})
 

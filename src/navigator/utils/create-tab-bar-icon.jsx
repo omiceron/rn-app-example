@@ -1,7 +1,7 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-export const createTabBarIcon = (name) => ({tintColor, focused}) => (
+const createTabBarIcon = (name) => ({tintColor, focused}) => (
     <Icon
         name={`ios-${name}`}
         // TODO: make custom font
@@ -10,3 +10,5 @@ export const createTabBarIcon = (name) => ({tintColor, focused}) => (
         style={{color: tintColor}}
     />
 )
+
+export default createTabBarIcon

@@ -1,11 +1,11 @@
-import React, {Component} from 'react'
 import {inject, observer} from 'mobx-react'
-import {Text, SectionList, StyleSheet, SafeAreaView} from 'react-native'
-import UsersCard from './users-card'
-import Loader from '../ui/loader'
-import {INACTIVE_BACKGROUND_COLOR, USERS_STORE, INACTIVE_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
-import {shape, bool, func, array} from 'prop-types'
+import {array, func, shape} from 'prop-types'
+import React, {Component} from 'react'
+import {SafeAreaView, SectionList, Text} from 'react-native'
+import {USERS_STORE, WHITE_BACKGROUND_COLOR} from '../../constants'
 import LinedSeparator from '../ui/separator/lined-separator'
+import {styles} from './styles'
+import UserItem from './user-item'
 
 @inject(USERS_STORE)
 @observer
@@ -25,7 +25,7 @@ class UsersList extends Component {
         const {getPhoto, openChatScreen, openUserInfoScreen} = this.props
 
         return (
-            <UsersCard
+            <UserItem
                 onPress={openChatScreen.bind(null, user.uid)}
                 getPhoto={getPhoto.bind(null, user.uid)}
                 openUserInfoScreen={openUserInfoScreen.bind(null, user.uid)}
@@ -59,25 +59,5 @@ class UsersList extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: INACTIVE_BACKGROUND_COLOR
-    },
-    header: {
-        backgroundColor: WHITE_BACKGROUND_COLOR,
-        color: INACTIVE_TEXT_COLOR,
-        padding: 8,
-        fontSize: 16,
-        fontWeight: '600'
-    },
-    sectionSeparator: {
-        marginTop: 8
-    },
-    itemSeparator: {
-        marginLeft: 48
-    }
-})
 
 export default UsersList

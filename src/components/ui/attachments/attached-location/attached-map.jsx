@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {StyleSheet, View} from 'react-native'
 import PropTypes from 'prop-types'
 import MapView from 'react-native-maps'
-import {REGION_DELTAS} from '../../constants'
+import {REGION_DELTAS} from '../../../../constants'
 
 class AttachedMap extends Component {
     static propTypes = {
@@ -14,14 +14,11 @@ class AttachedMap extends Component {
     }
 
     render() {
-        const {coords, onPress, style} = this.props
-
-        if (!coords) return null
+        const {coords, style} = this.props
 
         return (
             <MapView
                 style={[styles.container, style]}
-                onPress={onPress}
                 zoomEnabled={false}
                 rotateEnabled={false}
                 pitchEnabled={false}

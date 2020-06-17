@@ -1,11 +1,12 @@
 import {StyleSheet} from 'react-native'
-import {OFFLINE_COLOR} from '../../constants'
+import {OFFLINE_COLOR} from '../../../../constants'
 
 export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center'
+        // marginBottom: 8
     },
     iconContainer: {
         marginRight: 4,

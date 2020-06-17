@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import {Text, StyleSheet} from 'react-native'
-import Card from '../ui/basic-card'
-import Avatar from '../ui/basic-avatar'
-import SwipeableCard from '../ui/swipeable-card'
 import PropTypes from 'prop-types'
-import {BLACK_TEXT_COLOR, ROW_HEIGHT} from '../../constants'
-import SegmentedCard from '../ui/segmented-card'
+import React, {Component} from 'react'
+import {Text} from 'react-native'
+import {ROW_HEIGHT} from '../../../constants'
+import Avatar from '../../ui/basic-avatar'
+import SegmentedCard from '../../ui/segmented-card'
+import SwipeableCard from '../../ui/swipeable-card'
+import {styles} from './styles'
 
-class UsersCard extends Component {
+class UserItem extends Component {
     static propTypes = {
         user: PropTypes.shape({
             firstName: PropTypes.string.isRequired,
@@ -64,15 +64,4 @@ class UsersCard extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    text: {
-        color: BLACK_TEXT_COLOR,
-        fontSize: 16,
-        fontWeight: '100'
-    },
-    textContainer: {
-        justifyContent: 'space-around'
-    }
-})
-
-export default UsersCard
+export default UserItem

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {BLACK_TEXT_COLOR} from '../../../constants'
 import TableRow from '../table/table-row'
 import AttachedImagesRow from '../attachments/attached-images-row'
-import AttachedLocation from '../../attached-location'
+import AttachedLocation from '../attachments/attached-location'
 
 class FormAttachments extends Component {
     static propTypes = {

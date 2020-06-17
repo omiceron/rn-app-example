@@ -14,7 +14,7 @@ import {
 import * as Facebook from 'expo-facebook'
 import * as Google from 'expo-google-app-auth'
 import * as MediaLibrary from 'expo-media-library'
-import {facebookAppId, googleClientId} from '../config'
+import {facebookAppId, googleClientId} from '../backend/firebase.config'
 // import {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import EntitiesStore from './entities-store'
 // import {FileSystem} from 'expo'

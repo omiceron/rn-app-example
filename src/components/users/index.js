@@ -1,6 +1,6 @@
 import UsersList from './users-list'
 
-export UsersCard from './users-card'
+export UserItem from './user-item'
 export UsersPhoto from './users-photo'
 
 export default UsersList

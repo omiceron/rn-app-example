@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Text, TouchableOpacity, View} from 'react-native'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import {OFFLINE_COLOR} from '../../constants'
+import {OFFLINE_COLOR} from '../../../../constants'
+import AttachedMap from './attached-map'
 import {styles} from './styles'
 
 class AttachedLocation extends Component {
@@ -13,10 +14,12 @@ class AttachedLocation extends Component {
     }
 
     render() {
+        const {coords, disableIcon, location, onPress, style} = this.props
+
         return (
-            <TouchableOpacity onPress={this.props.onPress}>
-                <View style={[styles.container, this.props.style]}>
-                    {this.props.disableIcon ? null : (
+            <TouchableOpacity onPress={onPress}>
+                <View style={[styles.container, style]}>
+                    {!disableIcon && (
                         <View style={styles.iconContainer}>
                             <Icon size={16} color={OFFLINE_COLOR} name="ios-pin" />
                         </View>
@@ -24,10 +27,14 @@ class AttachedLocation extends Component {
 
                     <View style={styles.textContainer}>
                         <Text style={styles.text} numberOfLines={1}>
-                            {this.props.location}
+                            {location}
                         </Text>
                     </View>
                 </View>
+
+                {coords && <AttachedMap coords={coords} />}
+
+                <View style={{marginBottom: 8}} />
             </TouchableOpacity>
         )
     }
