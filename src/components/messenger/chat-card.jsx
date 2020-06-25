@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     text: {
         color: INACTIVE_TEXT_COLOR,
         fontSize: 16,
-        fontWeight: '100'
+        fontWeight: '300'
     },
 
     title: {

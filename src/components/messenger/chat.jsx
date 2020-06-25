@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     sendMessageInput: {
         paddingTop: 0, // multiline flag forcing 'paddingTop: 5'
         fontSize: 16,
-        fontWeight: '100'
+        fontWeight: '300'
     },
     loader: {
         backgroundColor: WHITE_BACKGROUND_COLOR

@@ -1,12 +1,12 @@
 import {number, object, shape, string} from 'prop-types'
 import React, {Component} from 'react'
-import {SafeAreaView, ScrollView, Text, View} from 'react-native'
+import {SafeAreaView, StyleSheet, Text} from 'react-native'
 import LinedSeparator from '../ui/separator/lined-separator'
 import AttachedLocation from '../ui/attachments/attached-location'
-import AttachedMap from '../ui/attachments/attached-location/attached-map'
 import PostControlRow from '../post-control-row'
 import PostInfo from './post-info'
-import {styles} from './styles'
+import {BLACK_TEXT_COLOR, WHITE_BACKGROUND_COLOR} from '../../constants'
+import BasicList from '../ui/grid/basic-list'
 
 class Post extends Component {
     static propTypes = {
@@ -22,6 +22,8 @@ class Post extends Component {
         }).isRequired
     }
 
+    renderSeparator = () => <LinedSeparator noMargins style={styles.separator} />
+
     render() {
         console.log('render post')
 
@@ -30,32 +32,42 @@ class Post extends Component {
         // TODO: Attached location logic must be reordered
         return (
             <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scroll}>
-                    <View style={styles.row}>
-                        <Text style={styles.title}>{title}</Text>
-                    </View>
-                    <LinedSeparator noMargins />
+                <BasicList scrollable style={styles.content} separator={this.renderSeparator}>
+                    <Text style={styles.title}>{title}</Text>
                     <PostInfo timestamp={timestamp} user={user} onPress={handleInfoPress} />
-                    <LinedSeparator noMargins />
-                    <View style={styles.row}>
-                        <Text style={styles.text}>{text}</Text>
-                    </View>
-
+                    <Text style={styles.text}>{text}</Text>
                     {location && (
-                        <AttachedLocation
-                            location={location}
-                            coords={coords}
-                            onPress={handleMapPress}
-                            style={{marginBottom: 8}}
-                        />
+                        <AttachedLocation location={location} coords={coords} onPress={handleMapPress} showIcon />
                     )}
-
-                    <LinedSeparator noMargins />
                     <PostControlRow postId={uid} />
-                </ScrollView>
+                </BasicList>
             </SafeAreaView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: WHITE_BACKGROUND_COLOR
+    },
+    content: {
+        paddingHorizontal: 16,
+        paddingVertical: 8
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: '300',
+        color: BLACK_TEXT_COLOR
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: '200',
+        color: BLACK_TEXT_COLOR
+    },
+    separator: {
+        marginVertical: 8
+    }
+})
 
 export default Post

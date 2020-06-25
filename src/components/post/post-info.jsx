@@ -1,17 +1,17 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import {Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {getDate} from '../../stores/utils'
 import {getFullName, translate} from '../utils'
 import PostAvatar from './post-avatar'
-import {styles} from './styles'
+import {INACTIVE_TEXT_COLOR} from '../../constants'
 
 const PostInfo = (props) => {
     const {timestamp, user, onPress} = props
 
     console.log('render post-info')
     return (
-        <View style={styles.postInfoContainer}>
+        <View style={styles.container}>
             <View style={styles.date}>
                 <Text style={styles.caption}>{getDate(timestamp)}</Text>
             </View>
@@ -29,5 +29,35 @@ const PostInfo = (props) => {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row'
+    },
+    date: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    author: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    authorButton: {
+        flex: 1
+    },
+    authorName: {
+        flex: 1,
+        alignItems: 'flex-end'
+    },
+    name: {
+        fontWeight: '500'
+    },
+    caption: {
+        fontSize: 12,
+        fontWeight: '100',
+        color: INACTIVE_TEXT_COLOR
+    }
+})
 
 export default observer(PostInfo)

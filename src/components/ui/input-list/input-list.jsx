@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: INACTIVE_BACKGROUND_COLOR
     },
     text: {
-        fontWeight: '100',
+        fontWeight: '300',
         color: INACTIVE_TEXT_COLOR
     },
     hint: {

@@ -65,12 +65,12 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        fontWeight: '100',
+        fontWeight: '300',
         color: BLACK_TEXT_COLOR
     },
     caption: {
         marginTop: 4,
-        fontWeight: '100',
+        fontWeight: '300',
         color: INACTIVE_TEXT_COLOR
     },
     textView: {

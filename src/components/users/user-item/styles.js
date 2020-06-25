@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     text: {
         color: BLACK_TEXT_COLOR,
         fontSize: 16,
-        fontWeight: '100'
+        fontWeight: '300'
     },
     textContainer: {
         justifyContent: 'space-around'

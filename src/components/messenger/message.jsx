@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontWeight: '100'
+        fontWeight: '300'
     },
     status: {
         alignSelf: 'flex-end',

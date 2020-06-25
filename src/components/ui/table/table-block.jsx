@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         borderColor: TABLE_VIEW_BORDER_COLOR
     },
     text: {
-        fontWeight: '100',
+        fontWeight: '300',
         color: INACTIVE_TEXT_COLOR
     },
     hint: {

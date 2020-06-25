@@ -1,40 +1,28 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
-import {OFFLINE_COLOR} from '../../../../constants'
+import {TouchableOpacity} from 'react-native'
 import AttachedMap from './attached-map'
-import {styles} from './styles'
+import IconText from '../../icon-text'
+import BasicList from '../../grid/basic-list'
+import BasicSeparator from '../../separator/basic-separator'
 
 class AttachedLocation extends Component {
     static propTypes = {
         location: PropTypes.string.isRequired,
         onPress: PropTypes.func,
-        disableIcon: PropTypes.bool
+        showIcon: PropTypes.bool
     }
 
     render() {
-        const {coords, disableIcon, location, onPress, style} = this.props
+        const {coords, showIcon, location, onPress, style} = this.props
 
         return (
             <TouchableOpacity onPress={onPress}>
-                <View style={[styles.container, style]}>
-                    {!disableIcon && (
-                        <View style={styles.iconContainer}>
-                            <Icon size={16} color={OFFLINE_COLOR} name="ios-pin" />
-                        </View>
-                    )}
+                <BasicList separator={BasicSeparator}>
+                    <IconText text={location} size={16} style={style} icon={showIcon && 'ios-pin'} />
 
-                    <View style={styles.textContainer}>
-                        <Text style={styles.text} numberOfLines={1}>
-                            {location}
-                        </Text>
-                    </View>
-                </View>
-
-                {coords && <AttachedMap coords={coords} />}
-
-                <View style={{marginBottom: 8}} />
+                    {coords && <AttachedMap onPress={onPress} coords={coords} />}
+                </BasicList>
             </TouchableOpacity>
         )
     }

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontWeight: '100',
+        fontWeight: '300',
         color: BLACK_TEXT_COLOR
     }
 })

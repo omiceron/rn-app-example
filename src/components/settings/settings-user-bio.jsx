@@ -23,7 +23,7 @@ const SettingsUserBio = ({currentUser, addInputRef}) => (
 const styles = StyleSheet.create({
     content: {
         fontSize: 16,
-        fontWeight: '100',
+        fontWeight: '300',
         color: BLACK_TEXT_COLOR
     }
 })

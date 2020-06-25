@@ -1,6 +1,6 @@
 import {computed} from 'mobx'
 import React, {Component} from 'react'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import Like from '../ui/like'
 import LikesCounter from '../ui/like/likes-counter'
 import {string, object} from 'prop-types'
@@ -70,8 +70,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        marginRight: 4,
-        marginVertical: 4
+        marginRight: 4
     }
 })
 

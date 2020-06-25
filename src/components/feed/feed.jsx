@@ -2,11 +2,11 @@ import {reaction} from 'mobx'
 import {inject, observer} from 'mobx-react'
 import {bool, func, shape} from 'prop-types'
 import React, {Component} from 'react'
-import {FlatList, LayoutAnimation, SafeAreaView} from 'react-native'
-import {FEED_STORE} from '../../constants'
+import {FlatList, LayoutAnimation, SafeAreaView, StyleSheet} from 'react-native'
+import {FEED_STORE, INACTIVE_BACKGROUND_COLOR} from '../../constants'
 import ListLoader from '../ui/list-loader'
 import PostCard from './post-card'
-import {styles} from './styles'
+import BasicSeparator from '../ui/separator/basic-separator'
 
 @inject(FEED_STORE)
 @observer
@@ -34,6 +34,7 @@ class Feed extends Component {
 
     renderItem = ({item: {likes, ...props}}) => <PostCard {...props} />
 
+    renderSeparator = () => <BasicSeparator size={16} />
     render() {
         const {feed} = this.props
 
@@ -41,17 +42,33 @@ class Feed extends Component {
             <SafeAreaView style={styles.container}>
                 <FlatList
                     data={feed.posts}
+                    style={styles.content}
+                    ItemSeparatorComponent={this.renderSeparator}
                     // refreshing = {feed.loading}
                     // onRefresh = {feed.refreshFeed}
                     onEndReached={feed.fetchPosts}
                     initialNumToRender={Number.MAX_SAFE_INTEGER}
                     onEndReachedThreshold={0.1}
                     renderItem={this.renderItem}
-                    ListFooterComponent={feed.loading && ListLoader}
+                    ListFooterComponent={feed.loading ? ListLoader : this.renderSeparator}
+                    ListFooterComponentStyle={styles.footer}
                 />
             </SafeAreaView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: INACTIVE_BACKGROUND_COLOR
+    },
+    content: {
+        padding: 10
+    },
+    footer: {
+        paddingBottom: 10
+    }
+})
 
 export default Feed

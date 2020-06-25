@@ -9,32 +9,30 @@ class AttachedMap extends Component {
         coords: PropTypes.shape({
             latitude: PropTypes.number.isRequired,
             longitude: PropTypes.number.isRequired
-        }).isRequired,
-        onPress: PropTypes.func
+        }).isRequired
     }
 
     render() {
-        const {coords, style} = this.props
+        const {coords} = this.props
 
         return (
-            <MapView
-                style={[styles.container, style]}
-                zoomEnabled={false}
-                rotateEnabled={false}
-                pitchEnabled={false}
-                scrollEnabled={false}
-                cacheEnabled={true}
-                // onMapReady = {e => console.log('ready')}
-                region={{...coords, ...REGION_DELTAS}}
-            >
-                {/*<MapView.Marker coordinate = {{...coords}}/>*/}
-            </MapView>
+            <View pointerEvents="none">
+                <MapView
+                    style={styles.map}
+                    zoomEnabled={false}
+                    rotateEnabled={false}
+                    pitchEnabled={false}
+                    scrollEnabled={false}
+                    cacheEnabled={true}
+                    region={{...coords, ...REGION_DELTAS}}
+                />
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
+    map: {
         height: 100,
         borderRadius: 10
     }
