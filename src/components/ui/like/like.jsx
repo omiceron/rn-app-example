@@ -24,11 +24,13 @@ class Like extends Component {
                 Animated.sequence([
                     Animated.timing(this.animation, {
                         toValue: 1,
-                        duration: 200
+                        duration: 200,
+                        useNativeDriver: false
                     }),
                     Animated.timing(this.animation, {
                         toValue: 0,
-                        duration: 0
+                        duration: 0,
+                        useNativeDriver: false
                     })
                 ]).start()
         )
