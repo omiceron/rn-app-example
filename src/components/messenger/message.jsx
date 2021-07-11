@@ -30,7 +30,11 @@ class Message extends Component {
 
     renderStatus = () => (
         <View style={styles.status}>
-            <Icon name={`ios-${this.props.pending ? 'checkmark' : 'done-all'}`} color={INACTIVE_TEXT_COLOR} size={30} />
+            <Icon
+                name={`ios-${this.props.pending ? 'checkmark' : 'checkmark-done'}`}
+                color={INACTIVE_TEXT_COLOR}
+                size={30}
+            />
         </View>
     )
 

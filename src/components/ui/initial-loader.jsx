@@ -20,7 +20,8 @@ class Loader extends Component {
         Animated.timing(this.spinValue, {
             toValue: 1,
             duration: timing,
-            easing: Easing.linear
+            easing: Easing.linear,
+            useNativeDriver: false
         }).start(() => this.spin())
     }
 

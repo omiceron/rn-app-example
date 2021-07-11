@@ -113,7 +113,7 @@ const createCommonTabRouteConfig = (mainScreen, icon) => ({
 
 const TabNavigator = createBottomTabNavigator(
     {
-        feed: createCommonTabRouteConfig(FeedScreen, 'paper'),
+        feed: createCommonTabRouteConfig(FeedScreen, 'newspaper'),
         messenger: createCommonTabRouteConfig(MessengerScreen, 'chatbubbles'),
         people: createCommonTabRouteConfig(PeopleScreen, 'people'),
         settings: {
