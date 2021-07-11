@@ -7,7 +7,7 @@ import * as MediaLibrary from 'expo-media-library'
 import * as ImagePicker from 'expo-image-picker'
 import {observable, action, toJS} from 'mobx'
 import {observer} from 'mobx-react'
-import {SafeAreaView, View, Image, FlatList} from 'react-native'
+// import {SafeAreaView, View, Image, FlatList} from 'react-native'
 
 @inject(AVATAR_STORE)
 @observer
