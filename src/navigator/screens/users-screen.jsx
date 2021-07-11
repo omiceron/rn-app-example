@@ -3,7 +3,7 @@ import {observer, inject} from 'mobx-react'
 import UsersList from '../../components/users/users-list'
 import Loader from '../../components/ui/loader'
 import {USERS_STORE} from '../../constants'
-import {SafeAreaView, ActivityIndicator} from 'react-native'
+// import {SafeAreaView, ActivityIndicator} from 'react-native'
 
 @inject(USERS_STORE)
 @observer

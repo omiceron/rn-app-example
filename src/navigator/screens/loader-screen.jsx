@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {AsyncStorage, ImageBackground, StyleSheet} from 'react-native'
-import {SplashScreen} from 'expo'
+import * as SplashScreen from 'expo-splash-screen'
 import image from '../../../assets/images/splash.png'
 import {WHITE_BACKGROUND_COLOR} from '../../constants'
 import {LayoutAnimation} from 'react-native'
@@ -16,6 +16,7 @@ class AuthLoadingScreen extends Component {
         const initialRouteName = user ? 'app' : 'auth'
         this.props.navigation.navigate(initialRouteName)
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        // TODO: deprecated
         SplashScreen.hide()
     }
 
