@@ -1,6 +1,6 @@
-import { observable, action } from 'mobx'
-import { ATTACHMENTS_STORE } from '../constants'
-import { StatusBar } from 'react-native'
+import {observable, action} from 'mobx'
+import {ATTACHMENTS_STORE} from '../constants'
+import {StatusBar} from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
 const withAttachments = (extractor) => (Store) =>
@@ -38,13 +38,13 @@ const withAttachments = (extractor) => (Store) =>
             StatusBar.setBarStyle('light-content', true)
         }
 
-        @action _attachFile = async (context, { uri, cancelled }) => {
+        @action _attachFile = async (context, {uri, cancelled}) => {
             if (cancelled) return
 
             const store = this.getStore(ATTACHMENTS_STORE)
 
-            const attachFile = store.attachFileSequence({ uri })
-            const { value: uid } = await attachFile.next()
+            const attachFile = store.attachFileSequence({uri})
+            const {value: uid} = await attachFile.next()
 
             this._addAttachment(context, uid)
 
@@ -61,7 +61,7 @@ const withAttachments = (extractor) => (Store) =>
             const store = this.getStore(ATTACHMENTS_STORE)
 
             return (this._getContext(params).attachments || []).reduce(
-                (acc, uid) => ({ ...acc, [uid]: store.getAttachment(uid).url }),
+                (acc, uid) => ({...acc, [uid]: store.getAttachment(uid).url}),
                 {}
             )
         }

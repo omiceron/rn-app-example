@@ -12,17 +12,15 @@
 //   user: obj
 //   timestamp: number
 //   likes: ?obj {
-//     [likeId]: {
-//       userId: string
-//     }
+//     [likeId]: {userId: string}
 //   }
 // }
 
-import { observable, action, computed } from 'mobx'
+import {observable, action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {
-    PEOPLE_STORE,
+    USERS_STORE,
     FEED_CHUNK_LENGTH,
     POSTS_REFERENCE,
     LIKES_REFERENCE,
@@ -32,7 +30,7 @@ import {
 } from '../constants'
 import loremIpsum from 'lorem-ipsum'
 import * as Location from 'expo-location'
-import { toJS } from 'mobx'
+import {toJS} from 'mobx'
 import withAttachments from './with-attachments'
 
 // TODO move post form to new store?
@@ -52,7 +50,7 @@ class FeedStore extends EntitiesStore {
     @action setAddress = (address) => (this.address = address)
     @action setCoords = async (coords) => {
         this.coords = coords
-        const [{ name, city, country }] = await Location.reverseGeocodeAsync({ ...coords })
+        const [{name, city, country}] = await Location.reverseGeocodeAsync({...coords})
         this.setAddress(name + (city ? ', ' + city : '') + (country ? ', ' + country : ''))
     }
 
@@ -137,7 +135,7 @@ class FeedStore extends EntitiesStore {
     cacheFeed = async () => {
         const posts = this.posts
             .slice(0, FEED_CHUNK_LENGTH)
-            .reduce((acc, post) => ({ ...acc, [post.uid]: toJS(post) }), {})
+            .reduce((acc, post) => ({...acc, [post.uid]: toJS(post)}), {})
 
         return await this.cache(posts)
     }
@@ -145,7 +143,7 @@ class FeedStore extends EntitiesStore {
     @action appendFetchedPosts = async (payload) => {
         const posts = await this.convertPosts(payload)
 
-        this.entities = { ...this.entities, ...posts }
+        this.entities = {...this.entities, ...posts}
         await this.cacheFeed()
         return true
     }
@@ -154,7 +152,7 @@ class FeedStore extends EntitiesStore {
         return Object.entries(payload).reduce(async (postsPromise, [key, post]) => {
             const posts = await postsPromise
             post = await this.convertPost(key, post)
-            return { ...posts, [key]: post }
+            return {...posts, [key]: post}
         }, Promise.resolve({}))
 
         // code with map and reduce:
@@ -173,7 +171,7 @@ class FeedStore extends EntitiesStore {
         // if (post.likes) {}
 
         if (post.coords) {
-            const [{ name, city, country }] = await Location.reverseGeocodeAsync({ ...post.coords })
+            const [{name, city, country}] = await Location.reverseGeocodeAsync({...post.coords})
             post.location = name + (city ? ', ' + city : '') + (country ? ', ' + country : '')
         }
 
@@ -181,7 +179,7 @@ class FeedStore extends EntitiesStore {
             post.attachments = await this.getStore(ATTACHMENTS_STORE).convertAttachments(post.attachments)
         }
 
-        post.user = await this.getStore(PEOPLE_STORE).getUserLazily(post.userId)
+        post.user = await this.getStore(USERS_STORE).getUserLazily(post.userId)
 
         return post
     }
@@ -255,7 +253,10 @@ class FeedStore extends EntitiesStore {
     @action setLike = async (postId) => {
         const ref = this.getLikesReference(postId)
 
-        if (this.entities[postId].likePending) return
+        if (this.entities[postId].likePending) {
+            return
+        }
+
         this.entities[postId].likePending = true
 
         if (this.isPostLiked(postId)) {
@@ -264,16 +265,24 @@ class FeedStore extends EntitiesStore {
             await Promise.all(
                 Object.entries(this.entities[postId].likes).map(async ([key, like]) => {
                     if (like.userId === this.user.uid) {
+                        // deleting like on frontend
                         delete this.entities[postId].likes[key]
+
+                        // deleting like on backend
                         return await ref.child(key).remove()
                     }
                 })
             )
         } else {
-            if (!this.entities[postId].likes) this.entities[postId].likes = {}
-            this.entities[postId].likes.pending = { userId: this.user.uid }
+            if (!this.entities[postId].likes) {
+                this.entities[postId].likes = {}
+            }
 
-            await ref.push({ userId: this.user.uid })
+            // add new like with key 'pending' on frontend
+            this.entities[postId].likes.pending = {userId: this.user.uid}
+
+            // send like to backend
+            await ref.push({userId: this.user.uid})
         }
 
         await this.refreshPost(postId)
@@ -284,8 +293,8 @@ class FeedStore extends EntitiesStore {
     }
 
     @action attachLocation = () => {
-        const { latitude, longitude } = this.coords
-        this.attachedCoords = { latitude, longitude }
+        const {latitude, longitude} = this.coords
+        this.attachedCoords = {latitude, longitude}
         this.attachedLocation = this.address
         this.getStore(NAVIGATION_STORE).goBack()
     }
@@ -328,7 +337,7 @@ class FeedStore extends EntitiesStore {
             attachments
         }
 
-        const { key } = await this.reference.push(newPost)
+        const {key} = await this.reference.push(newPost)
         // this.refreshFeed()
         this.refreshPost(key)
         this.getStore(NAVIGATION_STORE).goBack()
@@ -348,13 +357,13 @@ class FeedStore extends EntitiesStore {
     }
 
     getPostLikes = async (postId) => {
-        const { likes } = this.entities[postId]
-        const people = this.getStore(PEOPLE_STORE)
+        const {likes} = this.entities[postId]
+        const people = this.getStore(USERS_STORE)
 
         return Promise.all(
-            Object.entries(likes).map(async ([key, { userId }]) => {
+            Object.entries(likes).map(async ([key, {userId}]) => {
                 const user = await people.getUserGreedily(userId)
-                return { userId, user, key }
+                return {userId, user, key}
             })
         )
     }
@@ -362,10 +371,8 @@ class FeedStore extends EntitiesStore {
     getUserLikedPosts = async (uid) => {
         const callback = (snapshot) =>
             Object.entries(snapshot.val() || {}).reduce(
-                (acc, [postId, { likes, title }]) =>
-                    likes && Object.values(likes).some(({ userId }) => userId === uid)
-                        ? [...acc, { postId, title }]
-                        : acc,
+                (acc, [postId, {likes, title}]) =>
+                    likes && Object.values(likes).some(({userId}) => userId === uid) ? [...acc, {postId, title}] : acc,
                 []
             )
 
@@ -374,7 +381,7 @@ class FeedStore extends EntitiesStore {
 
     getUserPosts = async (uid) => {
         const callback = (snapshot) =>
-            Object.entries(snapshot.val() || {}).map(([postId, { title }]) => ({ postId, title }))
+            Object.entries(snapshot.val() || {}).map(([postId, {title}]) => ({postId, title}))
 
         return await this.reference.orderByChild('userId').equalTo(uid).limitToLast(10).once('value').then(callback)
     }
@@ -405,12 +412,10 @@ class FeedStore extends EntitiesStore {
             .then((snapshot) => Object.keys(snapshot.val()))
         console.log(users)
 
-        const feedFixtures = Array.from({ length: 50 }, (_, i) => ({
+        const feedFixtures = Array.from({length: 50}, (_, i) => ({
             title:
-                i +
-                ' ' +
-                loremIpsum({ count: Math.random() * 8, units: 'words' }).replace(/\w/, (x) => x.toUpperCase()),
-            text: loremIpsum({ count: Math.random() * 20, units: 'sentences' }),
+                i + ' ' + loremIpsum({count: Math.random() * 8, units: 'words'}).replace(/\w/, (x) => x.toUpperCase()),
+            text: loremIpsum({count: Math.random() * 20, units: 'sentences'}),
             // comments: [],
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             userId: users[Math.round(Math.random() * (users.length - 1))],
@@ -425,7 +430,7 @@ class FeedStore extends EntitiesStore {
 
         feedFixtures.forEach((post) => {
             const ref = this.reference.push(post)
-            users.forEach((userId) => Math.round(Math.random()) && this.getLikesReference(ref.key).push({ userId }))
+            users.forEach((userId) => Math.round(Math.random()) && this.getLikesReference(ref.key).push({userId}))
         })
     }
 }

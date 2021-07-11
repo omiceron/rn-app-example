@@ -16,7 +16,7 @@
 //   loading: bool
 // }
 
-import { action, computed, observable } from 'mobx'
+import {action, computed, observable} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
 import {
@@ -25,10 +25,10 @@ import {
     CHATS_REFERENCE,
     MESSAGES_CHUNK_LENGTH,
     MESSAGES_REFERENCE,
-    PEOPLE_REFERENCE,
-    PEOPLE_STORE
+    USERS_REFERENCE,
+    USERS_STORE
 } from '../constants'
-import { toJS } from 'mobx'
+import {toJS} from 'mobx'
 import withAttachments from './with-attachments'
 
 @withAttachments((store, uid) => store.entities[uid])
@@ -38,7 +38,7 @@ class MessengerStore extends EntitiesStore {
     }
 
     getUserChatsReference = (userId) => {
-        return firebase.database().ref(PEOPLE_REFERENCE).child(userId).child(CHATS_REFERENCE)
+        return firebase.database().ref(USERS_REFERENCE).child(userId).child(CHATS_REFERENCE)
     }
 
     get currentUserChatsReference() {
@@ -48,8 +48,8 @@ class MessengerStore extends EntitiesStore {
     @computed
     get chats() {
         return this.list
-            .filter(({ lastMessage }) => lastMessage)
-            .sort(({ lastMessage: a }, { lastMessage: b }) => b.timestamp - a.timestamp)
+            .filter(({lastMessage}) => lastMessage)
+            .sort(({lastMessage: a}, {lastMessage: b}) => b.timestamp - a.timestamp)
     }
 
     isChatLoaded = (chatId) => {
@@ -126,17 +126,15 @@ class MessengerStore extends EntitiesStore {
     }
 
     cacheMessenger = async () => {
-        const chats = this.chats
-            .slice(0, CHATS_CHUNK_LENGTH)
-            .reduce((acc, { subscribed, loaded, loading, ...chat }) => {
-                // if (chat.messages) {
-                //   chat.messages = this.getMessages(chat.chatId)
-                //     .slice(0, MESSAGES_CHUNK_LENGTH)
-                //     .reduce((acc, message) => ({...acc, [message.key]: message}), {})
-                // }
+        const chats = this.chats.slice(0, CHATS_CHUNK_LENGTH).reduce((acc, {subscribed, loaded, loading, ...chat}) => {
+            // if (chat.messages) {
+            //   chat.messages = this.getMessages(chat.chatId)
+            //     .slice(0, MESSAGES_CHUNK_LENGTH)
+            //     .reduce((acc, message) => ({...acc, [message.key]: message}), {})
+            // }
 
-                return { ...acc, [chat.chatId]: toJS(chat) }
-            }, {})
+            return {...acc, [chat.chatId]: toJS(chat)}
+        }, {})
         console.log('cacheMessenger')
         return await this.cache(chats)
     }
@@ -209,7 +207,7 @@ class MessengerStore extends EntitiesStore {
         // const {value: chats} = await this.convertChatsSequence(payload).next()
 
         // TODO merge
-        this.entities = { ...this.entities, ...chats }
+        this.entities = {...this.entities, ...chats}
 
         await this.cacheMessenger()
 
@@ -220,7 +218,7 @@ class MessengerStore extends EntitiesStore {
 
     convertChats = async (payload) => {
         const chatsPromises = Object.entries(payload).map(async ([key, chat]) => {
-            chat.user = await this.getStore(PEOPLE_STORE).getUserLazily(chat.userId)
+            chat.user = await this.getStore(USERS_STORE).getUserLazily(chat.userId)
             chat.key = key
 
             if (!chat.lastMessage) {
@@ -236,16 +234,16 @@ class MessengerStore extends EntitiesStore {
         // TODO: should create new store for messages to get rid of that
         return chats.reduce((acc, chat) => {
             if (this.entities[chat.chatId]) {
-                chat.messages = { ...this.entities[chat.chatId].messages }
+                chat.messages = {...this.entities[chat.chatId].messages}
             }
 
-            return { ...acc, [chat.chatId]: chat }
+            return {...acc, [chat.chatId]: chat}
         }, {})
     }
 
     @action appendChat = async (chat) => {
         const oldChat = this.entities[chat.chatId] || {}
-        this.entities[chat.chatId] = { ...oldChat, ...chat }
+        this.entities[chat.chatId] = {...oldChat, ...chat}
         await this.cacheMessenger()
         return this.entities[chat.chatId]
     }
@@ -278,15 +276,15 @@ class MessengerStore extends EntitiesStore {
     createChatWith = async (userId) => {
         console.log('CREATE CHAT:', 'start')
 
-        const { chatId, key } = await firebase
+        const {chatId, key} = await firebase
             .functions()
-            .httpsCallable('createChatWith')({ userId })
+            .httpsCallable('createChatWith')({userId})
             .then((res) => res.data)
             .catch(console.error)
 
         console.log('CREATE CHAT:', 'chat created', chatId)
 
-        await this.appendChat({ chatId, userId, key, messages: {}, loaded: true })
+        await this.appendChat({chatId, userId, key, messages: {}, loaded: true})
 
         console.log('CREATE CHAT:', 'chat appended')
 
@@ -371,7 +369,7 @@ class MessengerStore extends EntitiesStore {
 
         const messages = await Promise.all(messagesPromises)
 
-        return messages.reduce((acc, message) => ({ ...acc, [message.key]: message }), {})
+        return messages.reduce((acc, message) => ({...acc, [message.key]: message}), {})
     }
 
     @action appendFetchedMessages = async (chatId, payload) => {
@@ -382,7 +380,7 @@ class MessengerStore extends EntitiesStore {
             this.entities[chatId].messages = {}
         }
 
-        this.entities[chatId].messages = { ...this.entities[chatId].messages, ...messages }
+        this.entities[chatId].messages = {...this.entities[chatId].messages, ...messages}
         // this.cacheMessenger()
     }
 
@@ -440,7 +438,7 @@ class MessengerStore extends EntitiesStore {
     @action deleteChat = (chatId) => {
         if (!this.entities[chatId]) return
 
-        this.currentUserChatsReference.child(this.entities[chatId].key).update({ deleted: true })
+        this.currentUserChatsReference.child(this.entities[chatId].key).update({deleted: true})
 
         delete this.entities[chatId]
     }
@@ -448,7 +446,7 @@ class MessengerStore extends EntitiesStore {
     @action archiveChat = (chatId) => {
         if (!this.entities[chatId]) return
 
-        this.currentUserChatsReference.child(this.entities[chatId].key).update({ archived: true })
+        this.currentUserChatsReference.child(this.entities[chatId].key).update({archived: true})
 
         delete this.entities[chatId]
     }

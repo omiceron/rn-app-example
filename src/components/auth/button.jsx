@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
+import React, {Component} from 'react'
+import {Text, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native'
 import PropTypes from 'prop-types'
 import AuthRow from './auth-row'
 
@@ -12,16 +12,13 @@ class AuthButton extends Component {
     }
 
     render() {
-        const { title, onPress, disabled, loading } = this.props
+        const {title, onPress, disabled, loading} = this.props
         return (
             <TouchableOpacity disabled={disabled} onPress={onPress}>
                 <AuthRow style={disabled ? styles.disabled : styles.container}>
                     <Text style={disabled ? styles.disabledText : styles.text}>{title}</Text>
                     {loading && (
-                        <ActivityIndicator
-                            style={{ position: 'absolute', right: 8 }}
-                            color={'rgba(255,255,255, 0.8)'}
-                        />
+                        <ActivityIndicator style={{position: 'absolute', right: 8}} color={'rgba(255,255,255, 0.8)'} />
                     )}
                 </AuthRow>
             </TouchableOpacity>

@@ -1,17 +1,17 @@
-import mobx, { action, computed } from 'mobx'
+import mobx, {action, computed} from 'mobx'
 import firebase from 'firebase/app'
 import EntitiesStore from './entities-store'
-import { AsyncStorage } from 'react-native'
+import {AsyncStorage} from 'react-native'
 import * as FileSystem from 'expo-file-system'
-import { CACHE_DIR, PEOPLE_REFERENCE } from '../constants'
-import { entitiesFromFB } from './utils'
-import { observer } from 'mobx-react'
-import { autorun } from 'mobx'
-import { toJS } from 'mobx'
+import {CACHE_DIR, USERS_REFERENCE} from '../constants'
+import {entitiesFromFB} from './utils'
+import {observer} from 'mobx-react'
+import {autorun} from 'mobx'
+import {toJS} from 'mobx'
 
 class UserStore extends EntitiesStore {
     get currentUserReference() {
-        return firebase.database().ref(PEOPLE_REFERENCE).child(this.user.uid)
+        return firebase.database().ref(USERS_REFERENCE).child(this.user.uid)
     }
 
     @computed
@@ -58,10 +58,10 @@ class UserStore extends EntitiesStore {
             this.loading = true
 
             // TODO undefined entities
-            const { firstName = null, lastName = null, userInfo = null } = snapshot.val() || {}
+            const {firstName = null, lastName = null, userInfo = null} = snapshot.val() || {}
             const uid = snapshot.key || null
 
-            this.entities = { ...this.entities, firstName, lastName, userInfo, uid }
+            this.entities = {...this.entities, firstName, lastName, userInfo, uid}
 
             await this.cacheEntities()
 
@@ -88,7 +88,7 @@ class UserStore extends EntitiesStore {
     }
 
     async updatePerson(uid, data) {
-        await firebase.database().ref(PEOPLE_REFERENCE).child(uid).update(data)
+        await firebase.database().ref(USERS_REFERENCE).child(uid).update(data)
     }
 }
 

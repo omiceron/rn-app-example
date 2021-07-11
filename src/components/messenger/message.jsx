@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { string, bool, shape, array, number, object } from 'prop-types'
+import React, {Component} from 'react'
+import {View, Text, StyleSheet} from 'react-native'
+import {string, bool, shape, array, number, object} from 'prop-types'
 import {
     AUTH_STORE,
     MESSAGE_COLOR,
@@ -13,9 +13,9 @@ import {
     MESSAGE_BORDER_RADIUS,
     MESSAGE_CONTAINER_WIDTH
 } from '../../constants'
-import { inject } from 'mobx-react'
+import {inject} from 'mobx-react'
 import Icon from 'react-native-vector-icons/Ionicons'
-import Attachments from '../common/attachments'
+import Attachments from '../ui/attachments'
 
 @inject(AUTH_STORE)
 class Message extends Component {
@@ -35,18 +35,18 @@ class Message extends Component {
     )
 
     render() {
-        const { userId, text, timestamp, pending, attachments } = this.props
+        const {userId, text, timestamp, pending, attachments} = this.props
 
         const isCurrentUser = this.props.auth.user.uid === userId
 
-        const containerStyle = [styles.container, { alignSelf: isCurrentUser ? 'flex-end' : 'flex-start' }]
+        const containerStyle = [styles.container, {alignSelf: isCurrentUser ? 'flex-end' : 'flex-start'}]
 
         const messageContainerStyle = [
             styles.messageContainer,
-            { backgroundColor: isCurrentUser ? USER_MESSAGE_COLOR : MESSAGE_COLOR }
+            {backgroundColor: isCurrentUser ? USER_MESSAGE_COLOR : MESSAGE_COLOR}
         ]
 
-        const textStyle = [styles.text, { color: isCurrentUser ? WHITE_BACKGROUND_COLOR : BLACK_TEXT_COLOR }]
+        const textStyle = [styles.text, {color: isCurrentUser ? WHITE_BACKGROUND_COLOR : BLACK_TEXT_COLOR}]
 
         return (
             <View style={containerStyle}>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontWeight: '100'
+        fontWeight: '300'
     },
     status: {
         alignSelf: 'flex-end',

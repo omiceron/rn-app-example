@@ -1,22 +1,13 @@
-import React, { Component, PureComponent } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Animated } from 'react-native'
-import { observer, inject } from 'mobx-react'
-import { bool, string, func, shape, objectOf, number } from 'prop-types'
+import React, {Component, PureComponent} from 'react'
+import {View, Text, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Animated} from 'react-native'
+import {observer, inject} from 'mobx-react'
+import {bool, string, func, shape, objectOf, number} from 'prop-types'
 import InputRow from './auth-input-row'
-import BackgroundImage from '../common/background-image'
+import BackgroundImage from '../ui/background-image'
 import Button from './button'
 import BackButton from './auth-back-button'
-import withAnimation from '../common/with-animation'
-import {
-    BACK_BUTTON_HEIGHT,
-    AUTH_STORE,
-    KEYBOARD_STORE,
-    INPUT,
-    TITLE,
-    TRANSLATE,
-    Y,
-    OPACITY
-} from '../../constants/index'
+import withAnimation from '../ui/with-animation'
+import {BACK_BUTTON_HEIGHT, AUTH_STORE, KEYBOARD_STORE, INPUT, TITLE, TRANSLATE, Y, OPACITY} from '../../constants'
 
 @inject(KEYBOARD_STORE)
 @inject(AUTH_STORE)
@@ -46,7 +37,7 @@ class SignUp extends Component {
     getAnimation = (type) => this.props.getAnimation(type, this.getOutputRange)
 
     getOutputRange = (type) => {
-        const { layouts } = this.props
+        const {layouts} = this.props
 
         switch (type) {
             case INPUT + TRANSLATE + Y:
@@ -95,7 +86,7 @@ class SignUp extends Component {
             isFirstNameValid
         } = this.props.auth
 
-        const { setLayout } = this.props
+        const {setLayout} = this.props
 
         return (
             <Animated.View
@@ -162,7 +153,7 @@ class SignUp extends Component {
         // >
         return (
             <TouchableWithoutFeedback onPress={this.props.keyboard.dismiss}>
-                <SafeAreaView style={{ flex: 1, backgroundColor: '#7a839e' }}>
+                <SafeAreaView style={{flex: 1, backgroundColor: '#7a839e'}}>
                     <View style={styles.container}>
                         <BackButton />
                         <View style={styles.content}>

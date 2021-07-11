@@ -1,8 +1,8 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import { WHITE_TRANSPARENT_BACKGROUND_COLOR } from '../../constants'
+import {WHITE_TRANSPARENT_BACKGROUND_COLOR} from '../../constants'
 
 class SocialMedia extends Component {
     static propTypes = {

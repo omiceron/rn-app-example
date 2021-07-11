@@ -1,10 +1,10 @@
-import { observable, computed, action } from 'mobx'
+import {observable, computed, action} from 'mobx'
 import BasicStore from './basic-store'
 import firebase from 'firebase'
-import { entitiesFromFB } from './utils'
-import { AUTH_STORE } from '../constants'
-import { AsyncStorage } from 'react-native'
-import { toJS } from 'mobx'
+import {entitiesFromFB} from './utils'
+import {AUTH_STORE} from '../constants'
+import {AsyncStorage} from 'react-native'
+import {toJS} from 'mobx'
 
 class EntitiesStore extends BasicStore {
     constructor(...args) {
